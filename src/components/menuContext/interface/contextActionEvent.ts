@@ -13,3 +13,12 @@ export interface MenuActionEvent<T = any> {
   state: ReactFlowInstance<AppNode, Edge>;
   object: T;
 }
+
+/**
+ * El contexto del menu contextual, que se muestra al hacer click derecho sobre un nodo o arista
+ */
+export interface ContextMenuAction {
+  title: string;
+  show?: () => boolean;
+  action: (context: MenuActionEvent) => void;
+}

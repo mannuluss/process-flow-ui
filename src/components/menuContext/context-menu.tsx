@@ -1,59 +1,20 @@
 import { Menu, MenuItem } from "@mui/material";
-import { useReactFlow } from "@xyflow/react";
+import { Edge, useReactFlow } from "@xyflow/react";
 import React, { forwardRef, useImperativeHandle } from "react";
 import {
-  MenuActionEvent,
+  ContextMenuAction,
   TypeContextMenu,
 } from "./interface/contextActionEvent";
-import {
-  removeEdgeCommand,
-  removeNodeCommand,
-} from "../../commands/remove.command";
 import { AppNode } from "../../nodes/types";
+import { ContextMenuActionByType } from "./constant/menu.const";
 
 export interface ContextMenuRef {
   handleContextMenu: (
     evt: React.MouseEvent,
-    object: any,
+    object: AppNode | Edge,
     type: TypeContextMenu
   ) => void;
 }
-
-export interface ContextMenuAction {
-  title: string;
-  show?: () => boolean;
-  action: (context: MenuActionEvent) => void;
-}
-
-const ActionsMenuEdge: ContextMenuAction[] = [
-  {
-    title: "Eliminar conexión",
-    show: () => true,
-    action: removeEdgeCommand,
-  },
-];
-const ActionsMenuNode: ContextMenuAction[] = [
-  {
-    title: "Eliminar nodo",
-    show: () => true,
-    action: removeNodeCommand,
-  },
-  //   {
-  //     title: "Agregar conexión",
-  //     show: () => true,
-  //     action: () => {},
-  //   },
-  //   {
-  //     title: "Agregar acción",
-  //     show: () => true,
-  //     action: () => {},
-  //   },
-  //   {
-  //     title: "Agregar condición",
-  //     show: () => true,
-  //     action: () => {},
-  //   },
-];
 
 const ContextMenu = forwardRef((_props, ref) => {
   const [contextMenu, setContextMenu] = React.useState<{
@@ -83,7 +44,7 @@ const ContextMenu = forwardRef((_props, ref) => {
         ? {
             mouseX: evt.clientX + 2,
             mouseY: evt.clientY - 6,
-            actions: type === "Edge" ? ActionsMenuEdge : ActionsMenuNode,
+            actions: ContextMenuActionByType[type],
             type: type,
             object,
           }
