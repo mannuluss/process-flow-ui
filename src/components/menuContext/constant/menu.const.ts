@@ -22,7 +22,10 @@ export const ActionsMenuNode: ContextMenuAction[] = [
     show: () => true,
     action: (context) => {
       //se le informa al padre que se va a editar un nodo.
-      sendMessage(EventFlowTypes.SELECT_NODE, context.object);        
+      sendMessage({
+        type: EventFlowTypes.SELECT_NODE,
+        payload: context.object,
+      });
     },
   },
   {

@@ -9,7 +9,7 @@ export function removeEdgeCommand(context: MenuActionEvent<Edge>) {
     .getEdges()
     .filter((e) => e.id !== context.object.id);
   context.state.setEdges(newedges);
-  sendMessage(EventFlowTypes.DELETE_EDGE, context.object.id);
+  sendMessage({ type: EventFlowTypes.DELETE_EDGE, payload: context.object });
 }
 
 export function removeNodeCommand(context: MenuActionEvent) {
