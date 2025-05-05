@@ -1,5 +1,7 @@
 import { Edge } from "@xyflow/react";
 import { MenuActionEvent } from "../components/menuContext/interface/contextActionEvent";
+import { sendMessage } from "../core/services/message.service";
+import { EventFlowTypes } from "../core/types/message";
 
 export function removeEdgeCommand(context: MenuActionEvent<Edge>) {
   console.info("[GRAPH] removeEdgeCommand", context);
@@ -7,10 +9,7 @@ export function removeEdgeCommand(context: MenuActionEvent<Edge>) {
     .getEdges()
     .filter((e) => e.id !== context.object.id);
   context.state.setEdges(newedges);
-  //   window.top?.postMessage({
-  //     type: "PROCESS_FLOW.REMOVE_EDGE",
-  //     data: data,
-  //   });
+  sendMessage(EventFlowTypes.DELETE_EDGE, context.object.id);
 }
 
 export function removeNodeCommand(context: MenuActionEvent) {

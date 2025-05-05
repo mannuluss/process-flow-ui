@@ -16,7 +16,7 @@ export default function ButtonSave() {
         variant="contained"
         loadingPosition="end"
         startIcon={<SaveIcon />}
-        onClick={() => saveGraphCommand(nodes, edges, setSaving)}
+        onClick={() => saveGraphCommand(nodes, edges)}
       >
         Save
       </Button>

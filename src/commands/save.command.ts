@@ -1,6 +1,7 @@
-import { Edge } from "reactflow";
+import { Edge } from "@xyflow/react";
 import { AppNode } from "../nodes/types";
-import { EventFlowTypes } from "../events/manage.event";
+import { EventFlowTypes } from "../core/types/message";
+import { sendMessage } from "../core/services/message.service";
 
 /**
  * Cuando se guarda el grafo, se envia un mensaje al padre para que se entere de que se ejecuto el comando
@@ -8,8 +9,7 @@ import { EventFlowTypes } from "../events/manage.event";
  */
 export default function saveGraphCommand(
   nodes: AppNode[],
-  edges: Edge[],
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>
+  edges: Edge[]
 ) {
   // setLoading(true);
   const data = {
@@ -17,9 +17,5 @@ export default function saveGraphCommand(
     conections: edges,
   };
   console.info("[GRAPH] saveGraphCommand", data);
-  window.top?.postMessage({
-    type: EventFlowTypes.SAVE_GRAPH,
-    data: data,
-  }, "*"
-  );
+  sendMessage(EventFlowTypes.SAVE_GRAPH, data);
 }
