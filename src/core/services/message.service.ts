@@ -1,8 +1,11 @@
 import environments from "../../environments/environments";
-import { CrossAppMessage, TypeEventCrossApp } from "../types/message";
+// Asegúrate de que EventPayloadMap esté exportado desde message.ts
+import { CrossAppMessage, EventFlowTypes } from "../types/message"; // EventPayloadMap puede que ya no sea necesaria aquí directamente, pero la dejamos por si acaso en el futuro
 
-// --- Tipos Internos ---
-export type MessageCallback<T = any> = (payload: T | undefined) => void;
+// Callback ahora recibe el mensaje completo
+export type MessageCallback = (message: CrossAppMessage) => void;
+
+// El registro almacena callbacks genéricos
 type SubscriptionRegistry = Map<string, Set<MessageCallback>>;
 
 // --- Estado del Servicio (Singleton) ---
@@ -18,7 +21,8 @@ const handleIncomingMessage = (event: MessageEvent): void => {
     return;
   }
   // 1. Validar Origen (¡CRUCIAL!)
-  if (!environments.targetHost.some((host) => !event.origin.includes(host))) {
+  // Corregido: permitir mensajes DESDE los hosts configurados
+  if (!environments.targetHost.some((host) => event.origin.includes(host))) {
     console.warn(`Mensaje ignorado de origen no confiable: ${event.origin}`);
     return;
   }
@@ -28,23 +32,28 @@ const handleIncomingMessage = (event: MessageEvent): void => {
   if (
     typeof message !== "object" ||
     message === null ||
-    typeof message.type !== "string"
+    typeof message.type !== "string" ||
+    !Object.values(EventFlowTypes).includes(message.type as EventFlowTypes) // Validar que type sea un EventFlowTypes conocido
   ) {
-    console.warn("Mensaje ignorado: formato inválido.", message);
+    console.warn(
+      "Mensaje ignorado: formato inválido o tipo desconocido.",
+      message
+    );
     return;
   }
 
   console.debug(
     `[MessagingService] Mensaje recibido: Tipo=${message.type}`,
-    message.payload
+    (message as any).payload // Accedemos al payload si existe
   );
 
-  // 3. Notificar a los suscriptores
+  // 3. Notificar a los suscriptores, pasando el mensaje completo
   const callbacks = subscriptions.get(message.type);
   if (callbacks) {
     callbacks.forEach((callback) => {
       try {
-        callback(message.payload);
+        // Pasamos el objeto 'message' completo al callback
+        callback(message);
       } catch (error) {
         console.error(
           `[MessagingService] Error al ejecutar callback para tipo ${message.type}:`,
@@ -64,44 +73,47 @@ const initialize = (): void => {
     window.addEventListener("message", handleIncomingMessage);
     isInitialized = true;
     // Opcional: Informar a Angular que React está listo
-    // sendMessage('REACT_APP_READY');
+    // sendMessage({ type: EventFlowTypes.REACT_APP_READY }); // Ejemplo de cómo enviar sin payload
   }
 };
 
-// Función para enviar mensajes a Angular
-export const sendMessage = <T>(type: TypeEventCrossApp, payload?: T): void => {
+// Función para enviar mensajes a Angular (Simplificada)
+export const sendMessage = (message: CrossAppMessage): void => {
   if (!window.parent || window.parent === window) {
     console.error(
       "[MessagingService] No se puede enviar mensaje: No se detecta un contenedor padre (iframe)."
     );
     return;
   }
-  const message: CrossAppMessage<T> = { type, payload };
-  console.debug(`[MessagingService] Enviando mensaje: Tipo=${type}`, payload);
+
+  console.debug(
+    `[MessagingService] Enviando mensaje: Tipo=${message.type}`,
+    (message as any).payload
+  );
   try {
-    console.log(environments.targetHost);
     environments.targetHost.forEach((host) => {
-      window.top.postMessage(message, host);
+      window.top?.postMessage(message, host);
     });
   } catch (error) {
     console.error(
-      `[MessagingService] Error al enviar mensaje tipo ${type}:`,
+      `[MessagingService] Error al enviar mensaje tipo ${message.type}:`,
       error
     );
   }
 };
 
-// Función para suscribirse a un tipo de mensaje
-export const subscribeMenssage = <T>(
-  type: TypeEventCrossApp,
-  callback: MessageCallback<T>
+// Función para suscribirse a un tipo de mensaje (Simplificada)
+export const subscribeMenssage = (
+  type: EventFlowTypes,
+  callback: MessageCallback
 ): (() => void) => {
   initialize(); // Asegura que el listener esté activo
   if (!subscriptions.has(type)) {
     subscriptions.set(type, new Set());
   }
-  const callbacks = subscriptions.get(type);
-  callbacks?.add(callback);
+  const callbacks = subscriptions.get(type)!;
+
+  callbacks.add(callback); // Añadimos el callback directamente
   console.debug(`[MessagingService] Suscripción añadida para tipo: ${type}`);
 
   // Devuelve una función de desuscripción para limpieza
@@ -110,14 +122,14 @@ export const subscribeMenssage = <T>(
   };
 };
 
-// Opcional: Función explícita para desuscribirse (aunque devolverla en subscribe es más idiomático para hooks)
-export const unsubscribeMessage = <T>(
-  type: TypeEventCrossApp,
-  callback: MessageCallback<T>
+// Función explícita para desuscribirse (Simplificada)
+export const unsubscribeMessage = (
+  type: EventFlowTypes,
+  callback: MessageCallback
 ): void => {
   const callbacks = subscriptions.get(type);
   if (callbacks) {
-    callbacks.delete(callback);
+    callbacks.delete(callback); // Eliminamos el callback directamente
     console.debug(
       `[MessagingService] Suscripción eliminada para tipo: ${type}`
     );
