@@ -74,6 +74,7 @@ export default function Canvas() {
   return (
     <>
       <ReactFlow
+        colorMode="system"
         nodes={nodes}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
