@@ -20,7 +20,11 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
+    "baseUrl": "./",
+    "paths": {
+      "@commands/*": ["src/app/actions/*"],
+    }
   },
-  "include": ["src", "src/environments"],
+  "include": ["src", "src/environments", "src/commands/.register.manager.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

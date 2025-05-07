@@ -1,7 +1,4 @@
-import {
-  removeEdgeCommand,
-  removeNodeCommand,
-} from "../../../commands/remove.command";
+import { removeEdgeCommand } from "@commands/commands/remove.command";
 import { sendMessage } from "../../../core/services/message.service";
 import { EventFlowTypes } from "../../../core/types/message";
 import {
@@ -23,7 +20,7 @@ export const ActionsMenuNode: ContextMenuAction[] = [
     action: (context) => {
       //se le informa al padre que se va a editar un nodo.
       sendMessage({
-        type: EventFlowTypes.SELECT_NODE,
+        type: EventFlowTypes.UPDATE_NODE,
         payload: context.object,
       });
     },
@@ -31,7 +28,14 @@ export const ActionsMenuNode: ContextMenuAction[] = [
   {
     title: "Eliminar nodo",
     show: () => true,
-    action: removeNodeCommand,
+    commandId: "removeNode",
+  },
+];
+
+export const ActionsMenuWindow: ContextMenuAction[] = [
+  {
+    title: "Agregar nodo",
+    commandId: "addNode",
   },
 ];
 

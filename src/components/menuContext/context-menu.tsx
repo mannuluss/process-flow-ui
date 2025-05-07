@@ -7,6 +7,8 @@ import {
 } from "./interface/contextActionEvent";
 import { AppNode } from "../../nodes/types";
 import { ContextMenuActionByType } from "./constant/menu.const";
+import commandManager from "@commands/manager/command.manager";
+import { useAppSelector } from "src/store/store";
 
 export interface ContextMenuRef {
   handleContextMenu: (
@@ -25,6 +27,7 @@ const ContextMenu = forwardRef((_props, ref) => {
     object: any;
   } | null>(null);
   const reacFlowContext = useReactFlow<AppNode>();
+  const store = useAppSelector(state => state);
 
   // Expone métodos al padre
   useImperativeHandle(
@@ -67,11 +70,23 @@ const ContextMenu = forwardRef((_props, ref) => {
 
   const handleClose = (act: ContextMenuAction) => {
     setContextMenu(null);
-    act?.action({
-      type: contextMenu?.type,
-      object: contextMenu.object,
-      state: reacFlowContext,
-    });
+    if(!act) return;
+
+    if (act.commandId) {
+      commandManager.executeCommand(act.commandId, {
+        type: contextMenu?.type,
+        object: contextMenu.object,
+        state: reacFlowContext,
+        appStore: store,
+      });
+    }
+    if(act.action) {
+      act?.action({
+        type: contextMenu?.type,
+        object: contextMenu.object,
+        state: reacFlowContext,
+      });
+    }
   };
 
   return (

@@ -1,5 +1,4 @@
-import { Edge, ReactFlowInstance } from "@xyflow/react";
-import { AppNode } from "../../../nodes/types";
+import { CommandContext } from "@commands/interfaces/command.event";
 
 /**
  * Los tipos de menus contextuales soportados por la aplicacion
@@ -8,9 +7,7 @@ export type TypeContextMenu = "Node" | "Edge";
 /**
  * El contexto del eventos que se dispara desde el menu contextual, al seleccionar una accion
  */
-export interface MenuActionEvent<T = any> {
-  type: TypeContextMenu;
-  state: ReactFlowInstance<AppNode, Edge>;
+export interface MenuActionEvent<T = any> extends CommandContext<T> {
   object: T;
 }
 
@@ -19,6 +16,7 @@ export interface MenuActionEvent<T = any> {
  */
 export interface ContextMenuAction {
   title: string;
+  commandId?: string; // ID del comando a ejecutar (si no se desee, se puede utilizar la propiedad action directamente)
   show?: () => boolean;
-  action: (context: MenuActionEvent) => void;
+  action?: (context: MenuActionEvent<any>) => void;
 }

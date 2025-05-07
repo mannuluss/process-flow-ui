@@ -1,9 +1,11 @@
 import { Connection, Edge } from "@xyflow/react";
 import { AppNode } from "../../nodes/types";
+import { ConfigStateReduxApp } from "../../store/configSlice";
 
 export enum EventFlowTypes {
   CONFIG_APP = "CONFIG_APP",
   LOAD_DATA = "LOAD_DATA",
+  ACTION_ADD_NODE = "ACTION_ADD_NODE",
   ADD_NODE = "ADD_NODE",
   DELETE_NODE = "DELETE_NODE",
   ADD_EDGE = "ADD_EDGE",
@@ -19,7 +21,7 @@ export enum EventFlowTypes {
 //export type TypeEventCrossApp = keyof typeof EventFlowTypes;
 
 // --- Inicio: Definiciones de Payload para cada type de mensaje ---
-type AppConfig = { /* ... estructura de configuración ... */ };
+type AppConfig = ConfigStateReduxApp;
 type GraphData = { nodes: any[]; edges: any[] /* ... estructura de datos del grafo ... */ };
 type NewNodePayload = AppNode;
 type DeleteNodePayload = any;//TODO definir
