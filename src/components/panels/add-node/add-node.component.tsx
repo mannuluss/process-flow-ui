@@ -16,9 +16,9 @@ import { useCallback, useEffect, useState } from "react";
 import { AppNode } from "../../../nodes/types";
 import axios from "axios";
 import { useAppSelector } from "src/store/store";
-import { sendMessage } from "src/core/services/message.service";
+import { subscribeMenssage } from "src/core/services/message.service";
 import { EventFlowTypes } from "src/core/types/message";
-import { generateDefaultNode } from "@commands/commands/add.node.command";
+import commandManager from "@commands/manager/command.manager";
 
 // Simulate an API call to fetch options
 const fetchOptions = () => {
@@ -30,7 +30,7 @@ export default function AddNodeButton() {
   const [open, setOpen] = useState(false);
   const [optionState, setOptionState] = useState("");
   const [options, setOptions] = useState([]);
-  const { setNodes } = useReactFlow();
+  const reacFlowContext = useReactFlow();
   const store = useAppSelector((state) => state);
 
   //evento que cierra el modal
@@ -54,23 +54,38 @@ export default function AddNodeButton() {
       position: { x: Math.random() * 100, y: Math.random() * 100 },
       data: { label: opt.nombre || `Node ${nodes.length + 1}` },
     };
-    setNodes((current) => [...current, newNode]);
+    reacFlowContext.setNodes((current) => [...current, newNode]);
   };
 
   const handleChange = (event: SelectChangeEvent<any>) => {
     setOptionState(event.target.value);
   };
 
+  //dar click al boton de agregar estado
   const handleclick = () => {
-    if(store.config.customNodeCreate) {
-      sendMessage({ type: EventFlowTypes.ADD_NODE, payload: generateDefaultNode() });
-    } else {
-      setOpen(true);
-    }
+    setOpen(
+      commandManager.executeCommand("createNode", {
+        appStore: store,
+        object: null,
+      })
+    );
   };
 
   useEffect(() => {
     fetchOptions().then((resp) => setOptions(resp.data));
+    console.info("[GRAPH] AddNodeButton", nodes);
+    const subscription = subscribeMenssage(EventFlowTypes.ADD_NODE, (msj) => {
+      //se manda a crear el nodo
+      commandManager.executeCommand("addNode", {
+        appStore: store,
+        state: reacFlowContext,
+        object: msj.payload,
+      });
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   return (

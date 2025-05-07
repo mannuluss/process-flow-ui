@@ -8,6 +8,17 @@ import {
 
 export const ActionsMenuEdge: ContextMenuAction[] = [
   {
+    title: "Editar conexión",
+    show: () => true,
+    action: (context) => {
+      //se le informa al padre que se va a editar un nodo.
+      sendMessage({
+        type: EventFlowTypes.UPDATE_EDGE,
+        payload: context.object,
+      });
+    },
+  },
+  {
     title: "Eliminar conexión",
     show: () => true,
     action: removeEdgeCommand,
@@ -35,7 +46,7 @@ export const ActionsMenuNode: ContextMenuAction[] = [
 export const ActionsMenuWindow: ContextMenuAction[] = [
   {
     title: "Agregar nodo",
-    commandId: "addNode",
+    commandId: "createNode",
   },
 ];
 

@@ -4,6 +4,7 @@ import { CommandContext } from "../interfaces/command.event";
 import { AppNode } from "../../../nodes/types";
 import { sendMessage } from "src/core/services/message.service";
 import { EventFlowTypes } from "src/core/types/message";
+import { addEdge, Edge } from "@xyflow/react";
 
 export const generateDefaultNode = (id?: string): AppNode => {
   return {
@@ -14,15 +15,32 @@ export const generateDefaultNode = (id?: string): AppNode => {
   };
 };
 
+/**
+ * Indica que se desea crear un nodo desde el flujo de eventos
+ * o si no se usa el por defecto (el que se implemento en react)
+ */
+export const createNodeCommand: CommandHandler = (context) => {
+  if (context.appStore.config.customNodeCreate) {
+    sendMessage({
+      type: EventFlowTypes.CREATE_NODE,
+      payload: generateDefaultNode(),
+    });
+    return false;
+  } else {
+    return true;
+  }
+};
+
 export const AddNodeCommand: CommandHandler = (
-  context: CommandContext<Node>
+  context: CommandContext<AppNode>
 ) => {
   console.info("[GRAPH] AddNodeCommand", context);
-  const newNode = generateDefaultNode();
-  console.log("agregando un nodo", newNode, context);
-  if (context.appStore?.config?.customNodeCreate) {
-    sendMessage({ type: EventFlowTypes.ADD_NODE, payload: newNode });
-  } else {
-    context.state.setNodes((current) => [...current, newNode]);
-  }
+  context.state.setNodes((current) => [...current, context.object]);
+};
+
+export const addEdgeCommand: CommandHandler = (
+  context: CommandContext<Edge>
+) => {
+  console.debug("[GRAPH] AddEdgeCommand", context);
+  context.state.setEdges((edges) => addEdge(context.object, edges));
 };

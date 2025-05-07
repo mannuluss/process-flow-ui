@@ -1,4 +1,4 @@
-import { AddNodeCommand } from "./commands/add.node.command.ts";
+import { addEdgeCommand, AddNodeCommand, createNodeCommand } from "./commands/add.node.command.ts";
 import { RemoveNodeCommand } from "./commands/remove.command.ts";
 import SaveCommand from "./commands/save.command.ts";
 import commandManager from "./manager/command.manager.ts";
@@ -9,9 +9,11 @@ import commandManager from "./manager/command.manager.ts";
 export function registerCommands(): void {
 
   // Registrar los comandos con IDs únicos;
+  commandManager.registerCommand("createNode", createNodeCommand);
   commandManager.registerCommand("addNode", AddNodeCommand);
-  commandManager.registerCommand("removeNode", RemoveNodeCommand);
-  commandManager.registerCommand("createNode", AddNodeCommand);
+  commandManager.registerCommand("removeNode", RemoveNodeCommand);//todo probar
+  
+  commandManager.registerCommand("addEdge", addEdgeCommand);
   commandManager.registerCommand("saveGraph", SaveCommand);
 
   console.debug(
