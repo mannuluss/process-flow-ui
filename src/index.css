@@ -33,6 +33,9 @@
   --controls-border: #444;
   --controls-button-bg: #333;
   --xy-minimap-node-background-color-props: #3a3a3a;
+
+  /* edges */
+  --xy-edge-stroke-selected: #218040;
 }
 
 html,
