@@ -85,6 +85,7 @@ const ContextMenu = forwardRef((_props, ref) => {
         type: contextMenu?.type,
         object: contextMenu.object,
         state: reacFlowContext,
+        appStore: store,
       });
     }
   };

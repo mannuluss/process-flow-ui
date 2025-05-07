@@ -1,6 +1,6 @@
 import axios from "axios";
 import { AppNode } from "../nodes/types";
-import { Edge } from "reactflow";
+import { Edge } from "@xyflow/react";
 
 export interface GraphProcess {
   nodes: AppNode[];

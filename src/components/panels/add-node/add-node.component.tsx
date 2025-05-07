@@ -15,6 +15,10 @@ import { useReactFlow, useStore } from "@xyflow/react";
 import { useCallback, useEffect, useState } from "react";
 import { AppNode } from "../../../nodes/types";
 import axios from "axios";
+import { useAppSelector } from "src/store/store";
+import { sendMessage } from "src/core/services/message.service";
+import { EventFlowTypes } from "src/core/types/message";
+import { generateDefaultNode } from "@commands/commands/add.node.command";
 
 // Simulate an API call to fetch options
 const fetchOptions = () => {
@@ -27,6 +31,7 @@ export default function AddNodeButton() {
   const [optionState, setOptionState] = useState("");
   const [options, setOptions] = useState([]);
   const { setNodes } = useReactFlow();
+  const store = useAppSelector((state) => state);
 
   //evento que cierra el modal
   const handleClose = useCallback(() => {
@@ -49,12 +54,19 @@ export default function AddNodeButton() {
       position: { x: Math.random() * 100, y: Math.random() * 100 },
       data: { label: opt.nombre || `Node ${nodes.length + 1}` },
     };
-    console.log("agregando un nodo", newNode);
     setNodes((current) => [...current, newNode]);
   };
 
   const handleChange = (event: SelectChangeEvent<any>) => {
-    setOptionState(Number(event.target.value) || null);
+    setOptionState(event.target.value);
+  };
+
+  const handleclick = () => {
+    if(store.config.customNodeCreate) {
+      sendMessage({ type: EventFlowTypes.ADD_NODE, payload: generateDefaultNode() });
+    } else {
+      setOpen(true);
+    }
   };
 
   useEffect(() => {
@@ -63,7 +75,7 @@ export default function AddNodeButton() {
 
   return (
     <>
-      <Button variant="outlined" onClick={() => setOpen(true)}>
+      <Button variant="outlined" onClick={handleclick}>
         Agregar estado
       </Button>
       <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>

@@ -12,10 +12,7 @@ import {
   Controls,
 } from "@xyflow/react";
 import React, { useCallback, useEffect } from "react";
-import {
-  sendMessage,
-  subscribeMenssage,
-} from "../../core/services/message.service";
+import { subscribeMenssage } from "../../core/services/message.service";
 import { EventFlowTypes } from "../../core/types/message";
 import { edgeTypes } from "../../edges";
 import OnConnectEdge from "../../edges/on-connect-event";
@@ -67,7 +64,6 @@ export default function Canvas() {
   }, []);
 
   const onConnect: OnConnect = useCallback((connection) => {
-    sendMessage(EventFlowTypes.ADD_EDGE, connection);
     connectEdges.current?.onConnect(connection);
   }, []);
 
