@@ -12,8 +12,6 @@ type SubscriptionRegistry = Map<string, Set<MessageCallback>>;
 let isInitialized = false;
 const subscriptions: SubscriptionRegistry = new Map();
 
-// --- Funciones Principales ---
-
 // Listener único para todos los mensajes entrantes
 const handleIncomingMessage = (event: MessageEvent): void => {
   //Ignorar mismo origin en desarrollo
@@ -106,7 +104,7 @@ export const sendMessage = (message: CrossAppMessage): void => {
 export const subscribeMenssage = (
   type: EventFlowTypes,
   callback: MessageCallback
-): (() => void) => {
+) => {
   initialize(); // Asegura que el listener esté activo
   if (!subscriptions.has(type)) {
     subscriptions.set(type, new Set());
@@ -117,8 +115,8 @@ export const subscribeMenssage = (
   console.debug(`[MessagingService] Suscripción añadida para tipo: ${type}`);
 
   // Devuelve una función de desuscripción para limpieza
-  return () => {
-    unsubscribeMessage(type, callback);
+  return {
+    unsubscribe: () => unsubscribeMessage(type, callback),
   };
 };
 
