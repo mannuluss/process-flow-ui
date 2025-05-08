@@ -41,6 +41,11 @@ export const AddNodeCommand: CommandHandler = (
 export const addEdgeCommand: CommandHandler = (
   context: CommandContext<Edge>
 ) => {
-  console.debug("[GRAPH] AddEdgeCommand", context);
-  context.state.setEdges((edges) => addEdge(context.object, edges));
+  console.info("[GRAPH] AddEdgeCommand", context);
+  context.state.setEdges((edges) => {
+    if (edges.some((ed) => ed.id === context.object.id)) {
+      return [...edges, context.object];
+    }
+    return addEdge(context.object, edges);
+  });
 };
