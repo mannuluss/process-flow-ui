@@ -24,6 +24,8 @@ import ButtonSave from "../custom/button-save";
 import GradientCircularProgress from "../custom/circular-gradiant";
 import ContextMenu, { ContextMenuRef } from "../menuContext/context-menu";
 import PanelFlowState from "../panels/panel-flow-state";
+import { useDispatch } from 'react-redux';
+import { setSelectedNode, setSelectedEdge, clearSelection } from '../../store/selectionSlice';
 
 export default function Canvas() {
   const [nodes, setNodes, onNodesChange] = useNodesState([] as AppNode[]); //useNodesState(initialNodes);
@@ -32,6 +34,7 @@ export default function Canvas() {
   const [loading, setLoading] = React.useState(true);
   const menu = React.useRef<ContextMenuRef>(null);
   const connectEdges = React.useRef<{ onConnect: OnConnect }>(null);
+  const dispatch = useDispatch();
 
   const loadData = useCallback(
     (msj) => {
@@ -67,6 +70,24 @@ export default function Canvas() {
     connectEdges.current?.onConnect(connection);
   }, []);
 
+  const onNodeSelect: NodeMouseHandler<AppNode> = useCallback(
+    (_, node) => {
+      dispatch(setSelectedNode(node));
+    },
+    [dispatch]
+  );
+
+  const onEdgeSelect: EdgeMouseHandler = useCallback(
+    (_, edge) => {
+      dispatch(setSelectedEdge(edge));
+    },
+    [dispatch]
+  );
+
+  const onPaneClick = useCallback(() => {
+    dispatch(clearSelection());
+  }, [dispatch]);
+
   return (
     <>
       <ReactFlow
@@ -80,6 +101,9 @@ export default function Canvas() {
         onConnect={onConnect}
         onNodeContextMenu={onContextMenuNode}
         onEdgeContextMenu={onContextMenuEdge}
+        onNodeClick={onNodeSelect}
+        onEdgeClick={onEdgeSelect}
+        onPaneClick={onPaneClick}
         fitView
         defaultEdgeOptions={{ type: "step" } as Edge}
       >

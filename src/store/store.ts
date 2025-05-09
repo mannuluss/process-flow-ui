@@ -1,11 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
 import configReducer from './configSlice';
+import selectionReducer from './selectionSlice'; // Import the new reducer
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
 export const store = configureStore({
     reducer: {
         config: configReducer,
-        // Add other reducers here if needed
+        selection: selectionReducer, // Add the new reducer to the store
     },
 });
 
