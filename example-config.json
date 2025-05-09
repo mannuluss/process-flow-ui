@@ -1,0 +1,118 @@
+{
+  "nodes": [
+    {
+      "id": "2",
+      "type": "default",
+      "position": {
+        "x": -180.8748001094887,
+        "y": -28.842339154844865
+      },
+      "data": {
+        "label": "NOTIFICADOS"
+      },
+      "measured": {
+        "width": 150,
+        "height": 40
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "3",
+      "type": "default",
+      "position": {
+        "x": -13.837076172915573,
+        "y": 53.8241919113719
+      },
+      "data": {
+        "label": "REVISION POR SUPERVISOR"
+      },
+      "measured": {
+        "width": 150,
+        "height": 58
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "5",
+      "type": "default",
+      "position": {
+        "x": 22.204784452319814,
+        "y": 288.88719643542447
+      },
+      "data": {
+        "label": "FACTURA GENERADOS"
+      },
+      "measured": {
+        "width": 150,
+        "height": 40
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "4",
+      "type": "default",
+      "position": {
+        "x": -35.956998452060134,
+        "y": 164.52895901091782
+      },
+      "data": {
+        "label": "PENDIENTE AUTORIZACION UNIDAD GESTORIA"
+      },
+      "measured": {
+        "width": 150,
+        "height": 76
+      },
+      "selected": false,
+      "dragging": false
+    }
+  ],
+  "conections": [
+    {
+      "id": "b->d",
+      "source": "b",
+      "target": "d",
+      "type": "step"
+    },
+    {
+      "id": "c->d",
+      "source": "start",
+      "target": "end",
+      "type": "step"
+    },
+    {
+      "source": "2",
+      "target": "3",
+      "data": {
+        "id": 2,
+        "nombre": "Validar"
+      },
+      "label": "Validar",
+      "type": "step",
+      "id": "xy-edge__2-3"
+    },
+    {
+      "source": "3",
+      "target": "4",
+      "data": {
+        "id": 2,
+        "nombre": "Validar"
+      },
+      "label": "Validar",
+      "type": "step",
+      "id": "xy-edge__3-4"
+    },
+    {
+      "source": "4",
+      "target": "5",
+      "data": {
+        "id": 2,
+        "nombre": "Validar"
+      },
+      "label": "Validar",
+      "id": "xy-edge__4-5"
+    }
+  ]
+}
