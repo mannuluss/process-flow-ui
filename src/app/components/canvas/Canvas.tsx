@@ -12,20 +12,20 @@ import {
   Controls,
 } from "@xyflow/react";
 import React, { useCallback, useEffect } from "react";
-import { subscribeMenssage } from "../../core/services/message.service";
-import { EventFlowTypes } from "../../core/types/message";
-import { edgeTypes } from "../../edges";
-import OnConnectEdge from "../../edges/on-connect-event";
-import environments from "../../environments/environments";
-import { nodeTypes } from "../../nodes";
-import { AppNode } from "../../nodes/types";
-import { getDataGraph } from "../../services/data.graph.service";
+import { subscribeMenssage } from "@core/services/message.service";
+import { EventFlowTypes } from "@core/types/message";
+import { edgeTypes } from "../../../edges";
+import OnConnectEdge from "../../../edges/on-connect-event";
+import environments from "../../../environments/environments";
+import { nodeTypes } from "../../../nodes";
+import { AppNode } from "../../../nodes/types";
+import { getDataGraph } from "../../../services/data.graph.service";
 import ButtonSave from "../custom/button-save";
 import GradientCircularProgress from "../custom/circular-gradiant";
 import ContextMenu, { ContextMenuRef } from "../menuContext/context-menu";
 import PanelFlowState from "../panels/panel-flow-state";
 import { useDispatch } from 'react-redux';
-import { setSelectedNode, setSelectedEdge, clearSelection } from '../../store/selectionSlice';
+import { setSelectedNode, setSelectedEdge, clearSelection } from '../../../store/selectionSlice';
 
 export default function Canvas() {
   const [nodes, setNodes, onNodesChange] = useNodesState([] as AppNode[]); //useNodesState(initialNodes);

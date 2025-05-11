@@ -1,8 +1,8 @@
 import { Button } from "@mui/material";
 import { useSelector } from 'react-redux';
-import { RootState } from '../../../store/store';
-import { sendMessage } from '../../../core/services/message.service'; // Add this
-import { EventFlowTypes } from '../../../core/types/message'; // Add this
+import { RootState } from '../../../../store/store';
+import { sendMessage } from '@core/services/message.service'; // Add this
+import { EventFlowTypes } from '@core/types/message'; // Add this
 
 export default function EditNode() {
     const selectedNode = useSelector((state: RootState) => state.selection.selectedNode);

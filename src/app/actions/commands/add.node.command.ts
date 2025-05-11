@@ -2,8 +2,8 @@ import { CommandHandler } from "../interfaces/command.interfaces";
 import { v4 as uuidv4 } from "uuid";
 import { CommandContext } from "../interfaces/command.event";
 import { AppNode } from "../../../nodes/types";
-import { sendMessage } from "src/core/services/message.service";
-import { EventFlowTypes } from "src/core/types/message";
+import { sendMessage } from "@core/services/message.service";
+import { EventFlowTypes } from "@core/types/message";
 import { addEdge, Edge } from "@xyflow/react";
 
 export const generateDefaultNode = (id?: string): AppNode => {

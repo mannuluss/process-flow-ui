@@ -18,8 +18,8 @@ import { Formik } from "formik";
 import {
   sendMessage,
   subscribeMenssage,
-} from "../core/services/message.service";
-import { EventFlowTypes } from "../core/types/message";
+} from "@core/services/message.service";
+import { EventFlowTypes } from "@core/types/message";
 import { useAppSelector } from "../store/store";
 import commandManager from "@commands/manager/command.manager";
 

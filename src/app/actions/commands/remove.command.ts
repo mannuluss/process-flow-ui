@@ -1,10 +1,10 @@
 import { Edge } from "@xyflow/react";
-import { sendMessage } from "src/core/services/message.service";
-import { EventFlowTypes } from "src/core/types/message";
+import { sendMessage } from "@core/services/message.service";
+import { EventFlowTypes } from "@core/types/message";
 import { AppNode } from "src/nodes/types";
-import { MenuActionEvent } from "src/components/menuContext/interface/contextActionEvent";
+import { MenuActionEventContext } from "src/app/components/menuContext/interface/contextActionEvent";
 
-export function removeEdgeCommand(context: MenuActionEvent<Edge>) {
+export function removeEdgeCommand(context: MenuActionEventContext<Edge>) {
   console.info("[GRAPH] removeEdgeCommand", context);
   const newedges = context.state
     .getEdges()
@@ -13,7 +13,7 @@ export function removeEdgeCommand(context: MenuActionEvent<Edge>) {
   sendMessage({ type: EventFlowTypes.DELETE_EDGE, payload: context.object });
 }
 
-export function RemoveNodeCommand(context: MenuActionEvent<AppNode>) {
+export function RemoveNodeCommand(context: MenuActionEventContext<AppNode>) {
   console.info("[GRAPH] removeNodeCommand", context);
   const newnodes = context.state
     .getNodes()

@@ -1,4 +1,4 @@
-import environments from "../../environments/environments";
+import environments from "../../../environments/environments";
 // Asegúrate de que EventPayloadMap esté exportado desde message.ts
 import { CrossAppMessage, EventFlowTypes } from "../types/message"; // EventPayloadMap puede que ya no sea necesaria aquí directamente, pero la dejamos por si acaso en el futuro
 

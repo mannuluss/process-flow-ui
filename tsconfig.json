@@ -23,6 +23,7 @@
     "baseUrl": "./",
     "paths": {
       "@commands/*": ["src/app/actions/*"],
+      "@core/*": ["src/app/core/*"],
     }
   },
   "include": ["src", "src/environments", "src/commands/.register.manager.ts"],

@@ -5,7 +5,7 @@ import {
   ContextMenuAction,
   TypeContextMenu,
 } from "./interface/contextActionEvent";
-import { AppNode } from "../../nodes/types";
+import { AppNode } from "src/nodes/types";
 import { ContextMenuActionByType } from "./constant/menu.const";
 import commandManager from "@commands/manager/command.manager";
 import { useAppSelector } from "src/store/store";

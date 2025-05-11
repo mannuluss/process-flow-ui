@@ -13,11 +13,11 @@ import {
 } from "@mui/material";
 import { useReactFlow, useStore } from "@xyflow/react";
 import { useCallback, useEffect, useState } from "react";
-import { AppNode } from "../../../nodes/types";
+import { AppNode } from "../../../../nodes/types";
 import axios from "axios";
 import { useAppSelector } from "src/store/store";
-import { subscribeMenssage } from "src/core/services/message.service";
-import { EventFlowTypes } from "src/core/types/message";
+import { subscribeMenssage } from "@core/services/message.service";
+import { EventFlowTypes } from "@core/types/message";
 import commandManager from "@commands/manager/command.manager";
 
 // Simulate an API call to fetch options

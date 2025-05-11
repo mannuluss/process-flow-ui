@@ -1,6 +1,6 @@
 import { removeEdgeCommand } from "@commands/commands/remove.command";
-import { sendMessage } from "../../../core/services/message.service";
-import { EventFlowTypes } from "../../../core/types/message";
+import { sendMessage } from "@core/services/message.service";
+import { EventFlowTypes } from "@core/types/message";
 import {
   ContextMenuAction,
   TypeContextMenu,
