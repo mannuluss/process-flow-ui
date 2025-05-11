@@ -1,6 +1,7 @@
 import { addEdgeCommand, AddNodeCommand, createNodeCommand } from "./commands/add.node.command.ts";
 import { RemoveNodeCommand } from "./commands/remove.command.ts";
 import SaveCommand from "./commands/save.command.ts";
+import { setInitialNodeCommand, unSetInitialNodeCommand } from "./commands/set-initial.command.ts";
 import commandManager from "./manager/command.manager.ts";
 
 /**
@@ -15,6 +16,8 @@ export function registerCommands(): void {
   
   commandManager.registerCommand("addEdge", addEdgeCommand);
   commandManager.registerCommand("saveGraph", SaveCommand);
+  commandManager.registerCommand("setInitialNode", setInitialNodeCommand);
+  commandManager.registerCommand("unSetInitialNode", unSetInitialNodeCommand);
 
   console.debug(
     "Commands registered:",

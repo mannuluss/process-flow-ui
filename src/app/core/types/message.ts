@@ -12,6 +12,8 @@ export enum EventFlowTypes {
   SAVE_GRAPH = "SAVE_GRAPH",
   
   LOAD_DATA = "LOAD_DATA",
+  //========================= nodes =========================
+  ALL_NODES = "ALL_NODES",
   /**Evento emitido cuando se da click en la accion de crear nodo (aqui no se ha agregado el nodo a la interfaz) */
   CREATE_NODE = "CREATE_NODE",
   /**
@@ -72,6 +74,7 @@ type LoadActionsPayload = {
 interface EventPayloadMap {
   [EventFlowTypes.CONFIG_APP]: AppConfig;
   [EventFlowTypes.LOAD_DATA]: GraphData;
+  [EventFlowTypes.ALL_NODES]: AppNode[];
   [EventFlowTypes.CREATE_NODE]: NewNodePayload;
   [EventFlowTypes.ADD_NODE]: NewNodePayload;
   [EventFlowTypes.DELETE_NODE]: DeleteNodePayload;

@@ -1,8 +1,9 @@
-import { Menu, MenuItem } from "@mui/material";
+import { ListItemIcon, Menu, MenuItem } from "@mui/material";
 import { Edge, useReactFlow } from "@xyflow/react";
 import React, { forwardRef, useImperativeHandle } from "react";
 import {
   ContextMenuAction,
+  MenuActionEventContext,
   TypeContextMenu,
 } from "./interface/contextActionEvent";
 import { AppNode } from "src/nodes/types";
@@ -27,16 +28,16 @@ const ContextMenu = forwardRef((_props, ref) => {
     object: any;
   } | null>(null);
   const reacFlowContext = useReactFlow<AppNode>();
-  const store = useAppSelector(state => state);
+  const store = useAppSelector((state) => state);
 
   // Expone métodos al padre
   useImperativeHandle(
     ref,
     () =>
       ({
-        handleContextMenu: (evt, edge, type) => {
+        handleContextMenu: (evt, objeto, type) => {
           evt.preventDefault();
-          showMenu(evt, edge, type);
+          showMenu(evt, objeto, type);
           // aquí podrías cambiar estado, hacer fetch, etc.
         },
       } as ContextMenuRef)
@@ -70,7 +71,7 @@ const ContextMenu = forwardRef((_props, ref) => {
 
   const handleClose = (act: ContextMenuAction) => {
     setContextMenu(null);
-    if(!act) return;
+    if (!act) return;
 
     if (act.commandId) {
       commandManager.executeCommand(act.commandId, {
@@ -80,7 +81,7 @@ const ContextMenu = forwardRef((_props, ref) => {
         appStore: store,
       });
     }
-    if(act.action) {
+    if (act.action) {
       act?.action({
         type: contextMenu?.type,
         object: contextMenu.object,
@@ -88,6 +89,13 @@ const ContextMenu = forwardRef((_props, ref) => {
         appStore: store,
       });
     }
+  };
+
+  const contextApp: MenuActionEventContext = {
+    type: contextMenu?.type,
+    object: contextMenu?.object,
+    state: reacFlowContext,
+    appStore: store,
   };
 
   return (
@@ -104,9 +112,12 @@ const ContextMenu = forwardRef((_props, ref) => {
       }
     >
       {contextMenu?.actions
-        .filter((a) => (a.show ? a.show() : true))
+        .filter((a) => (a.show ? a.show(contextApp) : true))
         .map((act, i) => (
           <MenuItem key={i} onClick={() => handleClose(act)}>
+            <ListItemIcon>
+            {act.icon}
+          </ListItemIcon>
             {act.title}
           </MenuItem>
         ))}

@@ -3,12 +3,18 @@ import { sendMessage } from "@core/services/message.service";
 import { EventFlowTypes } from "@core/types/message";
 import {
   ContextMenuAction,
+  MenuActionEventContext,
   TypeContextMenu,
 } from "../interface/contextActionEvent";
+import { CustomNodeStart } from "src/nodes/types";
+import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export const ActionsMenuEdge: ContextMenuAction[] = [
   {
     title: "Editar conexión",
+    icon: <EditIcon fontSize="small" />,
     show: () => true,
     action: (context) => {
       //se le informa al padre que se va a editar un nodo.
@@ -20,14 +26,30 @@ export const ActionsMenuEdge: ContextMenuAction[] = [
   },
   {
     title: "Eliminar conexión",
+    icon: <DeleteIcon fontSize="small" />,
     show: () => true,
     action: removeEdgeCommand,
   },
 ];
 export const ActionsMenuNode: ContextMenuAction[] = [
   {
+    icon: <PlayCircleOutlineIcon fontSize="small" />,
+    title: "Marcar como inicial",
+    show: (context: MenuActionEventContext<CustomNodeStart>) => {
+      return !context.object?.data?.initial;
+    },
+    commandId: "setInitialNode",
+  },
+  {
+    title: "Desmarcar como inicial",
+    show: (context: MenuActionEventContext<CustomNodeStart>) => {
+      return context.object?.data?.initial;
+    },
+    commandId: "unSetInitialNode",
+  },
+  {
     title: "Editar nodo",
-    show: () => true,
+    icon: <EditIcon fontSize="small" />,
     action: (context) => {
       //se le informa al padre que se va a editar un nodo.
       sendMessage({
@@ -38,7 +60,7 @@ export const ActionsMenuNode: ContextMenuAction[] = [
   },
   {
     title: "Eliminar nodo",
-    show: () => true,
+    icon: <DeleteIcon fontSize="small" />,
     commandId: "removeNode",
   },
 ];

@@ -15,6 +15,8 @@ export function StartNode({
       className="react-flow__node-default"
       style={{ backgroundColor: "#4fcf4f" }}
     >
+      <Handle type="target" position={Position.Top} />
+
       {data.label && <div>{data.label}</div>}
 
       <Handle type="source" position={Position.Bottom} />
