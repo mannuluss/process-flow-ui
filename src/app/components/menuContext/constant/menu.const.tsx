@@ -8,8 +8,8 @@ import {
 } from "../interface/contextActionEvent";
 import { CustomNodeStart } from "src/nodes/types";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export const ActionsMenuEdge: ContextMenuAction[] = [
   {
@@ -65,10 +65,53 @@ export const ActionsMenuNode: ContextMenuAction[] = [
   },
 ];
 
+/**
+ * Configuracion del menu del panel de acciones.
+ */
 export const ActionsMenuWindow: ContextMenuAction[] = [
   {
     title: "Agregar nodo",
     commandId: "createNode",
+  },
+  {
+    title: "Editar nodo",
+    icon: <EditIcon fontSize="small" />,
+    commandId: "editNode",
+    show: (context) =>
+      context.appStore.selection?.selectedNode ? true : false,
+    action: (context) => {
+      sendMessage({
+        type: EventFlowTypes.UPDATE_NODE,
+        payload: context.appStore.selection?.selectedNode,
+      });
+    },
+  },
+  {
+    title: "Eliminar nodo",
+    icon: <DeleteIcon fontSize="small" />,
+    commandId: "removeNode",
+    show: (context) =>
+      context.appStore.selection?.selectedNode ? true : false,
+  },
+  {
+    title: "Editar conexión",
+    icon: <EditIcon fontSize="small" />,
+    commandId: "editEdge",
+    show: (context) =>
+      context.appStore.selection?.selectedEdge ? true : false,
+    action: (context) => {
+      sendMessage({
+        type: EventFlowTypes.UPDATE_EDGE,
+        payload: context.appStore.selection?.selectedEdge,
+      });
+    },
+  },
+  {
+    title: "Eliminar conexión",
+    icon: <DeleteIcon fontSize="small" />,
+    commandId: "removeEdge",
+    show: (context) =>
+      context.appStore.selection?.selectedEdge ? true : false,
   },
 ];
 

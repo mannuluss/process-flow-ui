@@ -1,8 +1,7 @@
 .panel-container {
   display: flex;
-  flex-direction: row;
-  max-width: 500px;
-  border: 1px solid gray;
+  flex-direction: column;
   border-radius: 16px;
   padding: 16px;
+  gap: 8px;
 }
