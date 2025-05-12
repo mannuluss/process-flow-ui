@@ -13,10 +13,8 @@ export function StartNode({
     // We add this class to use the same styles as React Flow's default nodes.
     <div
       className="react-flow__node-default"
-      style={{ backgroundColor: "#4fcf4f" }}
+      style={{ backgroundColor: "#C3C8BB" }}
     >
-      <Handle type="target" position={Position.Top} />
-
       {data.label && <div>{data.label}</div>}
 
       <Handle type="source" position={Position.Bottom} />

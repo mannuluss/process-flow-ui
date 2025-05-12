@@ -1,15 +1,16 @@
 import { Panel, useReactFlow } from "@xyflow/react";
 
 import "./panel-flow-state.scss";
-import { Button, Paper } from "@mui/material";
+import { Button, Paper, Select, MenuItem, FormControl, InputLabel, SelectChangeEvent } from "@mui/material";
 import { ActionsMenuWindow } from "../menuContext/constant/menu.const";
 import {
   ContextMenuAction,
   MenuActionEventContext,
 } from "../menuContext/interface/contextActionEvent";
 import { AppNode } from "src/nodes/types";
-import { useAppSelector } from "src/store/store";
+import { useAppSelector, useAppDispatch } from "src/store/store";
 import commandManager from "@commands/manager/command.manager";
+import { setColorMode } from "src/store/configSlice";
 
 export default function PanelFlowState() {
   //const [open, setOpen] = React.useState(false);
@@ -17,8 +18,10 @@ export default function PanelFlowState() {
   const { selectedEdge, selectedNode } = useAppSelector(
     (state) => state.selection
   );
+  const { colorMode } = useAppSelector((state) => state.config);
   const reacFlowContext = useReactFlow<AppNode>();
   const store = useAppSelector((state) => state);
+  const dispatch = useAppDispatch(); // Initialize dispatch
 
   const contextApp: MenuActionEventContext = {
     type: selectedEdge ? "Edge" : "Node",
@@ -36,10 +39,30 @@ export default function PanelFlowState() {
     }
   };
 
+  const handleColorModeChange = (event: SelectChangeEvent<typeof colorMode>) => {
+    const newMode = event.target.value as typeof colorMode;
+    dispatch(setColorMode(newMode));
+  };
+
   return (
     <Panel position="top-right">
       <Paper elevation={3}>
         <div className="panel-container">
+          <FormControl fullWidth sx={{ mb: 1 }}>
+            <InputLabel id="color-mode-select-label">Theme</InputLabel>
+            <Select
+              labelId="color-mode-select-label"
+              id="color-mode-select"
+              value={colorMode}
+              label="Theme"
+              onChange={handleColorModeChange}
+              size="small"
+            >
+              <MenuItem value="light">Light</MenuItem>
+              <MenuItem value="dark">Dark</MenuItem>
+              <MenuItem value="system">System</MenuItem>
+            </Select>
+          </FormControl>
           {ActionsMenuWindow.filter((action) =>
             action.show ? action.show(contextApp) : true
           ).map((action, i) => (

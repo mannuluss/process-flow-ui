@@ -24,8 +24,9 @@ import ButtonSave from "../custom/button-save";
 import GradientCircularProgress from "../custom/circular-gradiant";
 import ContextMenu, { ContextMenuRef } from "../menuContext/context-menu";
 import PanelFlowState from "../panels/panel-flow-state";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setSelectedNode, setSelectedEdge, clearSelection } from '../../../store/selectionSlice';
+import { RootState } from "../../../store/store";
 
 export default function Canvas() {
   const [nodes, setNodes, onNodesChange] = useNodesState([] as AppNode[]); //useNodesState(initialNodes);
@@ -35,6 +36,7 @@ export default function Canvas() {
   const menu = React.useRef<ContextMenuRef>(null);
   const connectEdges = React.useRef<{ onConnect: OnConnect }>(null);
   const dispatch = useDispatch();
+  const colorMode = useSelector((state: RootState) => state.config.colorMode);
 
   const loadData = useCallback(
     (msj) => {
@@ -91,7 +93,7 @@ export default function Canvas() {
   return (
     <>
       <ReactFlow
-        colorMode="system"
+        colorMode={colorMode}
         nodes={nodes}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
