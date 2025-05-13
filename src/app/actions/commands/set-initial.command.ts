@@ -13,34 +13,37 @@ import { CustomNodeStart } from "src/nodes/types";
 //   });
 // };
 
-export const setInitialNodeCommand: CommandHandler<
-  MenuActionEventContext<CustomNodeStart>
-> = (evt) => {
-  //esto para evitar el error de que no se puede modificar el objeto porque es de solo lectura (freeze)
-  const node = JSON.parse(JSON.stringify(evt.object)) as CustomNodeStart;
-  node.type = "start";
-  node.data.initial = true;
+const updateInitialNodeAndEdges = (
+  evt: MenuActionEventContext<CustomNodeStart>,
+  newType: string,
+  isInitial: boolean
+) => {
+  const node = JSON.parse(JSON.stringify(evt.object)) as any; // Use any for flexibility or a more specific type if possible
+  node.type = newType;
+  node.data.initial = isInitial;
 
   evt.state.updateNode(evt.object.id, node);
-  //evt.state.setNodes((nds) => strategyInitialNodeOnlyOne(nds, evt));
+
+  evt.state.setEdges((eds) => eds.filter((e) => e.target !== evt.object.id));
+
   sendMessage({
     type: EventFlowTypes.ALL_NODES,
     payload: evt.state.getNodes(),
   });
+  sendMessage({
+    type: EventFlowTypes.ALL_EDGES,
+    payload: evt.state.getEdges(),
+  });
+};
+
+export const setInitialNodeCommand: CommandHandler<
+  MenuActionEventContext<CustomNodeStart>
+> = (evt) => {
+  updateInitialNodeAndEdges(evt, "start", true);
 };
 
 export const unSetInitialNodeCommand: CommandHandler<
   MenuActionEventContext<CustomNodeStart>
 > = (evt) => {
-  //esto para evitar el error de que no se puede modificar el objeto porque es de solo lectura (freeze)
-  const node = JSON.parse(JSON.stringify(evt.object)) as any;
-  node.type = "default";
-  node.data.initial = false;
-
-  evt.state.updateNode(evt.object.id, node);
-  //evt.state.setNodes((nds) => strategyInitialNodeOnlyOne(nds, evt));
-  sendMessage({
-    type: EventFlowTypes.ALL_NODES,
-    payload: evt.state.getNodes(),
-  });
+  updateInitialNodeAndEdges(evt, "default", false);
 };
