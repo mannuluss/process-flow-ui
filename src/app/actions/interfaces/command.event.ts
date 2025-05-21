@@ -5,10 +5,10 @@ import { RootState } from "src/store/store";
 /**
  * Los tipos de menus contextuales soportados por la aplicacion
  */
-export type TypeContextMenu = "Node" | "Edge" | "Graph";
+export type TypeContextApp = "Node" | "Edge" | "Graph";
 
 export interface CommandContext<T = any> {
-  type: TypeContextMenu;
+  type: TypeContextApp;
   state: ReactFlowInstance<AppNode, Edge>;
   object: T;
   appStore: RootState;
