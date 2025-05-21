@@ -1,5 +1,5 @@
 import { ListItemIcon, Menu, MenuItem } from "@mui/material";
-import { Edge, useReactFlow } from "@xyflow/react";
+import { Edge } from "@xyflow/react";
 import React, { forwardRef, useImperativeHandle } from "react";
 import {
   ContextMenuAction,
@@ -8,8 +8,7 @@ import {
 } from "./interface/contextActionEvent";
 import { AppNode } from "src/nodes/types";
 import { ContextMenuActionByType } from "./constant/menu.const";
-import commandManager from "@commands/manager/command.manager";
-import { useAppSelector } from "src/store/store";
+import { useCommand } from "../../actions/manager/CommandContext.tsx";
 
 export interface ContextMenuRef {
   handleContextMenu: (
@@ -27,8 +26,7 @@ const ContextMenu = forwardRef((_props, ref) => {
     type: TypeContextMenu;
     object: any;
   } | null>(null);
-  const reacFlowContext = useReactFlow<AppNode>();
-  const store = useAppSelector((state) => state);
+  const { commandManager, generateContextApp } = useCommand();
 
   // Expone métodos al padre
   useImperativeHandle(
@@ -73,34 +71,19 @@ const ContextMenu = forwardRef((_props, ref) => {
     setContextMenu(null);
     if (!act) return;
 
+    const contextArgs = generateContextApp(contextMenu?.type, contextMenu?.object);
+
     if (act.commandId) {
-      commandManager.executeCommand(act.commandId, {
-        type: contextMenu?.type,
-        object: contextMenu.object,
-        state: reacFlowContext,
-        appStore: store,
-      });
+      commandManager.executeCommand(act.commandId, contextArgs);
     }
     if (act.action) {
-      act?.action({
-        type: contextMenu?.type,
-        object: contextMenu.object,
-        state: reacFlowContext,
-        appStore: store,
-      });
+      act?.action(contextArgs);
     }
   };
 
-  const contextApp: MenuActionEventContext = {
-    type: contextMenu?.type,
-    object: contextMenu?.object,
-    state: reacFlowContext,
-    appStore: store,
-  };
+  const contextApp: MenuActionEventContext = generateContextApp(contextMenu?.type, contextMenu?.object);
 
   return (
-    // <div onContextMenu={handleContextMenu} style={{ cursor: "context-menu" }}>
-    //   {props.children}
     <Menu
       open={contextMenu !== null}
       onClose={() => handleClose(null)}
@@ -122,7 +105,6 @@ const ContextMenu = forwardRef((_props, ref) => {
           </MenuItem>
         ))}
     </Menu>
-    // </div>
   );
 });
 

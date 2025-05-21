@@ -31,6 +31,18 @@ export const createNodeCommand: CommandHandler = (context) => {
   }
 };
 
+export const updateNodeCommand: CommandHandler = (
+  context: CommandContext<AppNode>
+) => {
+  sendMessage({
+    type: EventFlowTypes.UPDATE_NODE,
+    payload: context.appStore.selection?.selectedNode ?? context.object,
+  });
+};
+
+/**
+ * Es llamado cuando se desea crear un nodo en el grafo.
+ */
 export const AddNodeCommand: CommandHandler = (
   context: CommandContext<AppNode>
 ) => {
@@ -47,5 +59,14 @@ export const addEdgeCommand: CommandHandler = (
       return [...edges, context.object];
     }
     return addEdge(context.object, edges);
+  });
+};
+
+export const updateEdgeCommand: CommandHandler = (
+  context: CommandContext<Edge>
+) => {
+  sendMessage({
+    type: EventFlowTypes.UPDATE_EDGE,
+    payload: context.appStore.selection?.selectedEdge ?? context.object,
   });
 };

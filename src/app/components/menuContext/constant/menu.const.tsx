@@ -79,12 +79,6 @@ export const ActionsMenuWindow: ContextMenuAction[] = [
     commandId: "editNode",
     show: (context) =>
       context.appStore.selection?.selectedNode ? true : false,
-    action: (context) => {
-      sendMessage({
-        type: EventFlowTypes.UPDATE_NODE,
-        payload: context.appStore.selection?.selectedNode,
-      });
-    },
   },
   {
     title: "Eliminar nodo",
@@ -99,12 +93,6 @@ export const ActionsMenuWindow: ContextMenuAction[] = [
     commandId: "editEdge",
     show: (context) =>
       context.appStore.selection?.selectedEdge ? true : false,
-    action: (context) => {
-      sendMessage({
-        type: EventFlowTypes.UPDATE_EDGE,
-        payload: context.appStore.selection?.selectedEdge,
-      });
-    },
   },
   {
     title: "Eliminar conexión",
