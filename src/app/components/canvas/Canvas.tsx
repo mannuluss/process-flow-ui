@@ -13,49 +13,72 @@ import {
 } from "@xyflow/react";
 import React, { useCallback, useEffect } from "react";
 import { subscribeMenssage } from "@core/services/message.service";
-import { EventFlowTypes } from "@core/types/message";
+import { CrossAppMessage, EventFlowTypes } from "@core/types/message";
 import { edgeTypes } from "../../../edges";
 import OnConnectEdge from "../../../edges/on-connect-event";
-import environments from "../../../environments/environments";
 import { nodeTypes } from "../../../nodes";
 import { AppNode } from "../../../nodes/types";
-import { getDataGraph } from "../../../services/data.graph.service";
-import ButtonSave from "../custom/button-save";
 import GradientCircularProgress from "../custom/circular-gradiant";
 import ContextMenu, { ContextMenuRef } from "../menuContext/context-menu";
 import PanelFlowState from "../panels/panel-flow-state";
-import { useDispatch, useSelector } from 'react-redux';
-import { setSelectedNode, setSelectedEdge, clearSelection } from '../../../store/selectionSlice';
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setSelectedNode,
+  setSelectedEdge,
+  clearSelection,
+} from "../../../store/selectionSlice";
 import { RootState } from "../../../store/store";
+import { useCommand } from "@commands/manager/CommandContext";
 
 export default function Canvas() {
   const [nodes, setNodes, onNodesChange] = useNodesState([] as AppNode[]); //useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([] as Edge[]); //useEdgesState(initialEdges);
 
-  const [loading, setLoading] = React.useState(true);
+  const [loading, setLoading] = React.useState(false);
   const menu = React.useRef<ContextMenuRef>(null);
   const connectEdges = React.useRef<{ onConnect: OnConnect }>(null);
   const dispatch = useDispatch();
   const colorMode = useSelector((state: RootState) => state.config.colorMode);
+  const { commandManager, generateContextApp } = useCommand();
 
   const loadData = useCallback(
-    (msj) => {
+    (msj: CrossAppMessage) => {
       console.info("[GRAPH] load data");
-      setNodes(msj.data.nodes);
-      setEdges(msj.data.conections);
-      setLoading(msj.data.nodes?.length === 0 ? true : false);
+      setNodes(msj.payload.nodes);
+      setEdges(msj.payload.conections);
+      setLoading(msj.payload.nodes?.length === 0 ? true : false);
     },
     [setEdges, setNodes]
   );
   //se cargan los nodos y conexiones desde el servicio
   useEffect(() => {
-    console.info("[GRAPH] init", environments);
-    setLoading(true);
-    // window.top.postMessage({ type: EventFlowTypes.LOAD_DATA });
-    subscribeMenssage(EventFlowTypes.LOAD_DATA, loadData);
+    const sub = subscribeMenssage(EventFlowTypes.LOAD_DATA, loadData);
     // data por defecto
-    getDataGraph().then(loadData);
-  }, [loadData]); // Array vacío = solo en el primer render (como ngOnInit)
+    //getDataGraph().then(loadData);
+
+    return () => {
+      sub.unsubscribe();
+    };
+  }, [loadData]);
+
+  useEffect(() => {
+    const sub = subscribeMenssage(EventFlowTypes.ADD_EDGE, (msj) => {
+      commandManager.executeCommand(
+        "addEdge",
+        generateContextApp("Edge", msj.payload)
+      );
+    });
+    const sub2 = subscribeMenssage(EventFlowTypes.ADD_NODE, (msj) => {
+      commandManager.executeCommand(
+        "addNode",
+        generateContextApp("Node", msj.payload)
+      );
+    });
+    return () => {
+      sub.unsubscribe();
+      sub2.unsubscribe();
+    };
+  }, [commandManager, generateContextApp]);
 
   const onContextMenuNode: NodeMouseHandler<AppNode> = useCallback(
     (evt, node) => {
@@ -86,9 +109,30 @@ export default function Canvas() {
     [dispatch]
   );
 
+  //se limpia la seleccion de nodos, conexiones, etc...
   const onPaneClick = useCallback(() => {
     dispatch(clearSelection());
   }, [dispatch]);
+
+  const onDoubleClickNode = useCallback(
+    (_evt: React.MouseEvent, node: AppNode) => {
+      commandManager.executeCommand(
+        "editNode",
+        generateContextApp("Node", node)
+      );
+    },
+    [commandManager, generateContextApp]
+  );
+
+  const onDoubleClickEdge = useCallback(
+    (_evt: React.MouseEvent, edge: Edge) => {
+      commandManager.executeCommand(
+        "editEdge",
+        generateContextApp("Edge", edge)
+      );
+    },
+    [commandManager, generateContextApp]
+  );
 
   return (
     <>
@@ -106,6 +150,8 @@ export default function Canvas() {
         onNodeClick={onNodeSelect}
         onEdgeClick={onEdgeSelect}
         onPaneClick={onPaneClick}
+        onNodeDoubleClick={onDoubleClickNode}
+        onEdgeDoubleClick={onDoubleClickEdge}
         fitView
         defaultEdgeOptions={{ type: "step" } as Edge}
       >
@@ -113,8 +159,6 @@ export default function Canvas() {
         <MiniMap />
         <Controls />
         <PanelFlowState />
-        {/*Button de guardar */}
-        <ButtonSave />
         <ContextMenu ref={menu} />
         <OnConnectEdge ref={connectEdges} />
       </ReactFlow>
