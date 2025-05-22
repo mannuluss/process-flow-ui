@@ -21,13 +21,13 @@ import { AppNode } from "../../../nodes/types";
 import GradientCircularProgress from "../custom/circular-gradiant";
 import ContextMenu, { ContextMenuRef } from "../menuContext/context-menu";
 import PanelFlowState from "../panels/panel-flow-state";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   setSelectedNode,
   setSelectedEdge,
   clearSelection,
 } from "../../../store/selectionSlice";
-import { RootState } from "../../../store/store";
+import { useAppSelector } from "../../../store/store";
 import { useCommand } from "@commands/manager/CommandContext";
 import ButtonExport from "../custom/button-export";
 
@@ -39,12 +39,13 @@ export default function Canvas() {
   const menu = React.useRef<ContextMenuRef>(null);
   const connectEdges = React.useRef<{ onConnect: OnConnect }>(null);
   const dispatch = useDispatch();
-  const colorMode = useSelector((state: RootState) => state.config.colorMode);
+  const { colorMode, showPanelMinimap } = useAppSelector(
+    (state) => state.config
+  );
   const { commandManager, generateContextApp } = useCommand();
 
   const loadData = useCallback(
     (msj: CrossAppMessage) => {
-      console.info("[GRAPH] load data");
       setNodes(msj.payload.nodes);
       setEdges(msj.payload.conections);
       setLoading(msj.payload.nodes?.length === 0 ? true : false);
@@ -154,7 +155,7 @@ export default function Canvas() {
         defaultEdgeOptions={{ type: "step" } as Edge}
       >
         <Background />
-        <MiniMap />
+        {showPanelMinimap && <MiniMap />}
         <Controls />
         <PanelFlowState />
         <ContextMenu ref={menu} />

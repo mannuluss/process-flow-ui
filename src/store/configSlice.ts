@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 export interface ConfigStateReduxApp {
     customEdgeConnection: boolean;
     customNodeCreate: boolean;
+    showPanelMinimap: boolean;
     colorMode: 'light' | 'dark' | 'system';
 }
 
@@ -22,6 +23,7 @@ const getInitialColorMode = (): 'light' | 'dark' | 'system' => {
 const initialState: ConfigStateReduxApp = {
     customEdgeConnection: false, // Default value
     customNodeCreate: false,     // Default value
+    showPanelMinimap: true, // Default value
     colorMode: getInitialColorMode(), // Load from localStorage or default
 };
 
