@@ -29,6 +29,7 @@ import {
 } from "../../../store/selectionSlice";
 import { RootState } from "../../../store/store";
 import { useCommand } from "@commands/manager/CommandContext";
+import ButtonExport from "../custom/button-export";
 
 export default function Canvas() {
   const [nodes, setNodes, onNodesChange] = useNodesState([] as AppNode[]); //useNodesState(initialNodes);
@@ -50,12 +51,9 @@ export default function Canvas() {
     },
     [setEdges, setNodes]
   );
-  //se cargan los nodos y conexiones desde el servicio
+  //se cargan los nodos y conexiones
   useEffect(() => {
     const sub = subscribeMenssage(EventFlowTypes.LOAD_DATA, loadData);
-    // data por defecto
-    //getDataGraph().then(loadData);
-
     return () => {
       sub.unsubscribe();
     };
@@ -161,6 +159,7 @@ export default function Canvas() {
         <PanelFlowState />
         <ContextMenu ref={menu} />
         <OnConnectEdge ref={connectEdges} />
+        <ButtonExport />
       </ReactFlow>
 
       <Backdrop
