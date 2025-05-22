@@ -1,6 +1,6 @@
 import { Button } from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
-import { Panel, useStore } from "@xyflow/react";
+import { useStore } from "@xyflow/react";
 import commandManager from "@commands/manager/command.manager";
 import { useEffect } from "react";
 import { sendMessage } from "@core/services/message.service";
@@ -30,15 +30,13 @@ export default function ButtonExport() {
   }, [nodes, edges]);
 
   return (
-    <Panel position="top-right">
-      <Button
-        variant="contained"
-        loadingPosition="end"
-        startIcon={<SaveIcon />}
-        onClick={() => saveAction(nodes, edges)}
-      >
-        Exportar
-      </Button>
-    </Panel>
+    <Button
+      variant="contained"
+      loadingPosition="end"
+      startIcon={<SaveIcon />}
+      onClick={() => saveAction(nodes, edges)}
+    >
+      Exportar
+    </Button>
   );
 }

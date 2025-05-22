@@ -1,7 +1,15 @@
 import { Panel, useReactFlow } from "@xyflow/react";
 
 import "./panel-flow-state.scss";
-import { Button, Paper, Select, MenuItem, FormControl, InputLabel, SelectChangeEvent } from "@mui/material";
+import {
+  Button,
+  Paper,
+  FormControl,
+  ToggleButtonGroup,
+  ToggleButton,
+  Tooltip,
+  IconButton,
+} from "@mui/material";
 import { ActionsMenuWindow } from "../menuContext/constant/menu.const";
 import {
   ContextMenuAction,
@@ -11,9 +19,17 @@ import { AppNode } from "src/nodes/types";
 import { useAppSelector, useAppDispatch } from "src/store/store";
 import commandManager from "@commands/manager/command.manager";
 import { setColorMode } from "src/store/configSlice";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import LightModeIcon from "@mui/icons-material/LightMode";
+import AutoModeIcon from "@mui/icons-material/AutoMode";
+import ButtonAddNode from "./components/button-add";
+import OpenInFullIcon from "@mui/icons-material/OpenInFull";
+import CloseFullscreenIcon from "@mui/icons-material/CloseFullscreen";
+import { useState } from "react";
+import ButtonExport from "../custom/button-export";
 
 export default function PanelFlowState() {
-  //const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(true);
 
   const { selectedEdge, selectedNode } = useAppSelector(
     (state) => state.selection
@@ -38,54 +54,80 @@ export default function PanelFlowState() {
       return acton.action(contextApp);
     }
   };
-
-  const handleColorModeChange = (event: SelectChangeEvent<typeof colorMode>) => {
-    const newMode = event.target.value as typeof colorMode;
-    dispatch(setColorMode(newMode));
+  const handleColorModeChange = (
+    _event: React.MouseEvent<HTMLElement>,
+    newMode: "light" | "dark" | "system"
+  ) => {
+    if (newMode) {
+      dispatch(setColorMode(newMode));
+    }
   };
 
   return (
-    <Panel position="top-right">
-      <Paper elevation={3}>
-        <div className="panel-container">
-          <FormControl fullWidth sx={{ mb: 1 }}>
-            <InputLabel id="color-mode-select-label">Theme</InputLabel>
-            <Select
-              labelId="color-mode-select-label"
-              id="color-mode-select"
-              value={colorMode}
-              label="Theme"
-              onChange={handleColorModeChange}
-              size="small"
-            >
-              <MenuItem value="light">Light</MenuItem>
-              <MenuItem value="dark">Dark</MenuItem>
-              <MenuItem value="system">System</MenuItem>
-            </Select>
-          </FormControl>
-          {ActionsMenuWindow.filter((action) =>
-            action.show ? action.show(contextApp) : true
-          ).map((action, i) => (
-            <Button
-              key={i}
-              variant="contained"
-              onClick={() => {
-                handleclick(action);
-              }}
-            >
-              {action.title}
-            </Button>
-          ))}
-        </div>
-      </Paper>
-      {/* <SwipeableDrawer
+    <>
+      <ButtonAddNode />
+      <Panel position="top-right">
+        <Paper elevation={3} className="container-panel-actions">
+          <IconButton onClick={() => setOpen(!open)}>
+            {(open && <OpenInFullIcon />) || <CloseFullscreenIcon />}
+          </IconButton>
+          <div
+            className={open ? "panel-container" : "panel-container panel-close"}
+          >
+            <FormControl fullWidth sx={{ mb: 1 }}>
+              <ToggleButtonGroup
+                value={colorMode}
+                exclusive
+                onChange={handleColorModeChange}
+                aria-label="theme selection"
+                size="small"
+                sx={{ width: "100%", justifyContent: "center" }}
+              >
+                <Tooltip title="Modo claro" placement="bottom">
+                  <ToggleButton value="light" aria-label="light mode">
+                    <LightModeIcon fontSize="small" />
+                  </ToggleButton>
+                </Tooltip>
+                <Tooltip title="Modo oscuro" placement="bottom">
+                  <ToggleButton value="dark" aria-label="dark mode">
+                    <DarkModeIcon fontSize="small" />
+                  </ToggleButton>
+                </Tooltip>
+                <Tooltip title="Sistema" placement="bottom">
+                  <ToggleButton value="system" aria-label="system mode">
+                    <AutoModeIcon fontSize="small" />
+                  </ToggleButton>
+                </Tooltip>
+              </ToggleButtonGroup>
+            </FormControl>
+
+            {ActionsMenuWindow.filter((action) =>
+              action.show ? action.show(contextApp) : true
+            ).map((action, i) => (
+              <Button
+                key={i}
+                variant="contained"
+                onClick={() => {
+                  handleclick(action);
+                }}
+              >
+                {action.title}
+              </Button>
+            ))}
+
+            <ButtonExport />
+          </div>
+        </Paper>
+
+        {/* <SwipeableDrawer
         anchor={"bottom"}
         open={open}
         onClose={() => setOpen(false)}
         onOpen={() => setOpen(true)}
-      >
+        >
         {list(anchor)}
-      </SwipeableDrawer> */}
-    </Panel>
+        </SwipeableDrawer> */}
+      </Panel>
+    </>
   );
 }
