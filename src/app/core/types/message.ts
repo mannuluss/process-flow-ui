@@ -45,25 +45,23 @@ export enum EventFlowTypes {
   SELECT_EDGE = "SELECT_EDGE",
   /*@deprecated*/
   LOAD_ACTIONS = "LOAD_ACTIONS",
+  ALL_EDGES = "ALL_EDGES",
+  ALL_DATA = "ALL_DATA",
 }
 
 //export type TypeEventCrossApp = keyof typeof EventFlowTypes;
 
 // --- Inicio: Definiciones de Payload para cada type de mensaje ---
 type AppConfig = ConfigStateReduxApp;
-type GraphData = {
-  nodes: any[];
-  edges: any[] /* ... estructura de datos del grafo ... */;
-};
 type NewNodePayload = AppNode;
 type DeleteNodePayload = any; //TODO definir
 type NewEdgePayload = Connection;
 type DeleteEdgePayload = Edge;
 type UpdateNodePayload = { data: any /* ... datos parciales del nodo ... */ };
 type UpdateEdgePayload = Edge;
-type SelectNodePayload = AppNode;
-type SelectEdgePayload = Edge;
-type SaveGraphPayload = { nodes: AppNode[]; conections: Edge[] };
+// type SelectNodePayload = AppNode;
+// type SelectEdgePayload = Edge;
+type GraphData = { nodes: AppNode[]; conections: Edge[] };
 type LoadActionsPayload = {
   actions: any[] /* ... estructura de acciones ... */;
 };
@@ -78,15 +76,17 @@ interface EventPayloadMap {
   [EventFlowTypes.CREATE_NODE]: NewNodePayload;
   [EventFlowTypes.ADD_NODE]: NewNodePayload;
   [EventFlowTypes.DELETE_NODE]: DeleteNodePayload;
+  [EventFlowTypes.ALL_EDGES]: Edge[];
   [EventFlowTypes.CREATE_EDGE]: NewEdgePayload;
   [EventFlowTypes.ADD_EDGE]: NewEdgePayload;
   [EventFlowTypes.DELETE_EDGE]: DeleteEdgePayload;
   [EventFlowTypes.UPDATE_NODE]: UpdateNodePayload;
   [EventFlowTypes.UPDATE_EDGE]: UpdateEdgePayload;
-  [EventFlowTypes.SELECT_NODE]: SelectNodePayload;
-  [EventFlowTypes.SELECT_EDGE]: SelectEdgePayload;
-  [EventFlowTypes.SAVE_GRAPH]: SaveGraphPayload;
+  // [EventFlowTypes.SELECT_NODE]: SelectNodePayload;
+  // [EventFlowTypes.SELECT_EDGE]: SelectEdgePayload;
+  [EventFlowTypes.SAVE_GRAPH]: GraphData;
   [EventFlowTypes.LOAD_ACTIONS]: LoadActionsPayload;
+  [EventFlowTypes.ALL_DATA]: GraphData;
 }
 
 // 2. Tipos Auxiliares para separar eventos con y sin payload
