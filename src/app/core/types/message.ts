@@ -61,7 +61,7 @@ type UpdateNodePayload = { data: any /* ... datos parciales del nodo ... */ };
 type UpdateEdgePayload = Edge;
 // type SelectNodePayload = AppNode;
 // type SelectEdgePayload = Edge;
-type GraphData = { nodes: AppNode[]; conections: Edge[] };
+export type GraphData = { nodes: AppNode[]; connections: Edge[] };
 type LoadActionsPayload = {
   actions: any[] /* ... estructura de acciones ... */;
 };

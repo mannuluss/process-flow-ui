@@ -9,7 +9,7 @@ export default function SaveCommand(context) {
   // setLoading(true);
   const data = {
     nodes: context.object.nodes,
-    conections: context.object.edges,
+    connections: context.object.edges,
   };
   console.info("[GRAPH] SaveCommand", data);
   sendMessage({ type: EventFlowTypes.SAVE_GRAPH, payload: data });

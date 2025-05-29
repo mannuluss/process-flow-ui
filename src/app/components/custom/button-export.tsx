@@ -24,7 +24,7 @@ export default function ButtonExport() {
       type: EventFlowTypes.ALL_DATA,
       payload: {
         nodes,
-        conections: edges,
+        connections: edges,
       },
     });
   }, [nodes, edges]);

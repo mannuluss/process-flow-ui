@@ -69,7 +69,7 @@
       "dragging": false
     }
   ],
-  "conections": [
+  "connections": [
     {
       "id": "b->d",
       "source": "b",

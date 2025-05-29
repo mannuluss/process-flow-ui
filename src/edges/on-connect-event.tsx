@@ -66,13 +66,13 @@ export const OnConnectEdge = forwardRef((_props, ref) => {
   }, [setOptionsAccion]);
 
   useImperativeHandle(ref, () => ({
-    onConnect: (conections) => {
-      console.info("[GRAPH] createConnect", conections);
-      sendMessage({ type: EventFlowTypes.CREATE_EDGE, payload: conections });
+    onConnect: (connections) => {
+      console.info("[GRAPH] createConnect", connections);
+      sendMessage({ type: EventFlowTypes.CREATE_EDGE, payload: connections });
 
       if (!customEdgeConnection) {
         setOpen(true);
-        setConnection(conections);
+        setConnection(connections);
       }
     },
   }));
