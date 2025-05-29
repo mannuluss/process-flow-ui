@@ -8,13 +8,14 @@ import { useReactFlow } from "@xyflow/react";
 import { useAppSelector } from "src/store/store";
 import { AppNode } from "src/nodes/types";
 import { Edge } from "@xyflow/react";
+import { GraphData } from "src/exported-types";
 
 // Define the shape of the context data
 interface CommandContextType {
   commandManager: CommandManager;
   generateContextApp: (
     type?: TypeContextApp,
-    object?: AppNode | Edge<any>
+    object?: AppNode | Edge<any> | GraphData
   ) => CommandContextArgs;
 }
 
@@ -43,7 +44,7 @@ export const CommandProvider: React.FC<CommandProviderProps> = ({
 
   const generateContextApp = (
     type?: TypeContextApp,
-    object?: AppNode | Edge<any>
+    object?: AppNode | Edge<any> | GraphData
   ): CommandContextArgs => {
     return {
       type: type,

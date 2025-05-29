@@ -45,11 +45,12 @@ export default function Canvas() {
 
   const loadData = useCallback(
     (msj: CrossAppMessage) => {
-      setNodes(msj.payload.nodes);
-      setEdges(msj.payload.conections);
-      setLoading(msj.payload.nodes?.length === 0 ? true : false);
+      commandManager.executeCommand(
+        "loadData",
+        generateContextApp("Graph", msj.payload)
+      );
     },
-    [setEdges, setNodes]
+    [commandManager, generateContextApp]
   );
   //se cargan los nodos y conexiones
   useEffect(() => {

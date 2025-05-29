@@ -18,18 +18,19 @@ import {
 import { AppNode } from "src/nodes/types";
 import { useAppSelector, useAppDispatch } from "src/store/store";
 import commandManager from "@commands/manager/command.manager";
-import { setColorMode } from "src/store/configSlice";
+import { setCollapsePanel, setColorMode } from "src/store/configSlice";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import AutoModeIcon from "@mui/icons-material/AutoMode";
 import ButtonAddNode from "./components/button-add";
 import OpenInFullIcon from "@mui/icons-material/OpenInFull";
 import CloseFullscreenIcon from "@mui/icons-material/CloseFullscreen";
-import { useState } from "react";
 import ButtonExport from "../custom/button-export";
+import ButtonImport from "../custom/button-import";
 
 export default function PanelFlowState() {
-  const [open, setOpen] = useState(true);
+  //const [open, setOpen] = useState(true);
+  const open = useAppSelector((state) => state.config.collapsePanel);
 
   const { selectedEdge, selectedNode } = useAppSelector(
     (state) => state.selection
@@ -37,7 +38,7 @@ export default function PanelFlowState() {
   const { colorMode } = useAppSelector((state) => state.config);
   const reacFlowContext = useReactFlow<AppNode>();
   const store = useAppSelector((state) => state);
-  const dispatch = useAppDispatch(); // Initialize dispatch
+  const dispatch = useAppDispatch();
 
   const contextApp: MenuActionEventContext = {
     type: selectedEdge ? "Edge" : "Node",
@@ -68,7 +69,7 @@ export default function PanelFlowState() {
       <ButtonAddNode />
       <Panel position="top-right">
         <Paper elevation={3} className="container-panel-actions">
-          <IconButton onClick={() => setOpen(!open)}>
+          <IconButton onClick={() => dispatch(setCollapsePanel(!open))}>
             {(open && <OpenInFullIcon />) || <CloseFullscreenIcon />}
           </IconButton>
           <div
@@ -116,6 +117,7 @@ export default function PanelFlowState() {
             ))}
 
             <ButtonExport />
+            <ButtonImport />
           </div>
         </Paper>
 

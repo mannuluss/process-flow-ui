@@ -5,6 +5,7 @@ import {
   updateEdgeCommand,
   updateNodeCommand,
 } from "./commands/add.node.command.ts";
+import { loadDataCommand } from "./commands/load.config.command.ts";
 import {
   removeEdgeCommand,
   RemoveNodeCommand,
@@ -21,6 +22,8 @@ import commandManager from "./manager/command.manager.ts";
  */
 export function registerCommands(): void {
   // Registrar los comandos con IDs únicos;
+  commandManager.registerCommand("loadData", loadDataCommand);
+
   commandManager.registerCommand("createNode", createNodeCommand);
   commandManager.registerCommand("addNode", AddNodeCommand);
   commandManager.registerCommand("editNode", updateNodeCommand);
