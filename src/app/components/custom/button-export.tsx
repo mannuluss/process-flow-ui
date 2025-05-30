@@ -27,7 +27,7 @@ export default function ButtonExport() {
         connections: edges,
       },
     });
-  }, [nodes, edges]);
+  }, [nodes, edges]);//TODO: cambiar de lugar, este boton no deberia ser responsable de esto, sino el canvas o el store
 
   return (
     <Button

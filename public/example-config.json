@@ -2,7 +2,7 @@
   "nodes": [
     {
       "id": "2",
-      "type": "default",
+      "type": "proceso",
       "position": {
         "x": -180.8748001094887,
         "y": -28.842339154844865

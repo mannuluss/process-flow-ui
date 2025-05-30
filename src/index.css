@@ -1,15 +1,24 @@
 :root {
   /* Default Light Theme */
   --background-color: #ffffff;
+  --xy-node-background-color: #ffffff;
   --text-color: #213547;
-  --node-background: #f0f0f0;
-  --node-border: #ccc;
+  --node-background: #FFFFFF;
+  --node-border: #c3c8bb;
   --edge-color: #b1b1b7;
   --minimap-background: #f8f8f8;
   --minimap-mask: rgba(240, 240, 240, 0.6);
   --controls-background: #f8f8f8;
   --controls-border: #ddd;
   --controls-button-bg: #fff;
+
+  /* HOVER */
+  --xy-node-boxshadow-hover: 0 1px 4px 1px #c3c8bb;
+
+  /* SELECTED */
+  --xy-node-boxshadow-selected: 0 1px 4px 1px #c3c8bb;
+  --xy-node-border-color-selected: #C3C8BB;
+
 
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -23,6 +32,7 @@
 /* Dark Theme */
 .dark {
   --background-color: #242424;
+  --xy-node-background-color: #242424;
   --text-color: rgba(255, 255, 255, 0.87);
   --node-background: #3a3a3a;
   --node-border: #555;
@@ -57,28 +67,28 @@ body,
 }
 
 .react-flow__minimap {
-    background-color: var(--minimap-background);
+  background-color: var(--minimap-background);
 }
 
 .react-flow__minimap-mask {
-    fill: var(--minimap-mask);
+  fill: var(--minimap-mask);
 }
 
 .react-flow__controls {
-    background-color: var(--controls-background);
-    border: 1px solid var(--controls-border);
+  background-color: var(--controls-background);
+  border: 1px solid var(--controls-border);
 }
 
 .react-flow__controls-button {
-    background-color: var(--controls-button-bg);
-    border-bottom: 1px solid var(--controls-border);
-    fill: var(--text-color);
+  background-color: var(--controls-button-bg);
+  border-bottom: 1px solid var(--controls-border);
+  fill: var(--text-color);
 }
 
 .react-flow__controls-button:hover {
-    background-color: var(--node-background);
+  background-color: var(--node-background);
 }
 
 .react-flow__background {
-    background-color: var(--background-color);
+  background-color: var(--background-color);
 }

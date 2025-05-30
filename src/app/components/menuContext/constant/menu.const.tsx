@@ -1,15 +1,16 @@
 import { removeEdgeCommand } from "@commands/commands/remove.command";
 import { sendMessage } from "@core/services/message.service";
-import { EventFlowTypes } from "@core/types/message";
+import { EventFlowTypes, GraphData } from "@core/types/message";
 import {
   ContextMenuAction,
   MenuActionEventContext,
   TypeContextMenu,
 } from "../interface/contextActionEvent";
-import { CustomNodeStart } from "src/nodes/types";
+import { CustomNodeApp } from "src/nodes/types";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 
 export const ActionsMenuEdge: ContextMenuAction[] = [
   {
@@ -35,14 +36,14 @@ export const ActionsMenuNode: ContextMenuAction[] = [
   {
     icon: <PlayCircleOutlineIcon fontSize="small" />,
     title: "Marcar como inicial",
-    show: (context: MenuActionEventContext<CustomNodeStart>) => {
+    show: (context: MenuActionEventContext<CustomNodeApp>) => {
       return !context.object?.data?.initial;
     },
     commandId: "setInitialNode",
   },
   {
     title: "Desmarcar como inicial",
-    show: (context: MenuActionEventContext<CustomNodeStart>) => {
+    show: (context: MenuActionEventContext<CustomNodeApp>) => {
       return context.object?.data?.initial;
     },
     commandId: "unSetInitialNode",
@@ -100,6 +101,16 @@ export const ActionsMenuWindow: ContextMenuAction[] = [
     commandId: "removeEdge",
     show: (context) =>
       context.appStore.selection?.selectedEdge ? true : false,
+  },
+  {
+    title: "Cargar ejemplo",
+    icon: <InsertDriveFileIcon fontSize="small" />,
+    action: async (context) => {
+      const example: GraphData = await (await fetch('public/example-config.json')).json();
+      //se le informa al padre que se va a editar un nodo.
+      context.state.setNodes(example.nodes);
+      context.state.setEdges(example.connections);
+    },
   },
 ];
 
