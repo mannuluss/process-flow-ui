@@ -20,7 +20,11 @@ const handleIncomingMessage = (event: MessageEvent): void => {
   }
   // 1. Validar Origen (¡CRUCIAL!)
   // Corregido: permitir mensajes DESDE los hosts configurados
-  if (!environments.targetHost.some((host) => event.origin.includes(host))) {
+  if (
+    !environments.targetHost.some(
+      (host) => event.origin.includes(host) || host === "*"
+    )
+  ) {
     console.warn(`Mensaje ignorado de origen no confiable: ${event.origin}`);
     return;
   }
@@ -78,10 +82,10 @@ const initialize = (): void => {
 // Función para enviar mensajes a Angular (Simplificada)
 export const sendMessage = (message: CrossAppMessage): void => {
   if (!window.parent || window.parent === window) {
-    console.error(
+    console.warn(
       "[MessagingService] No se puede enviar mensaje: No se detecta un contenedor padre (iframe)."
     );
-    return;
+    //return;
   }
 
   console.debug(

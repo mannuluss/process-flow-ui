@@ -13,7 +13,7 @@ export enum EventFlowTypes {
   
   LOAD_DATA = "LOAD_DATA",
   //========================= nodes =========================
-  ALL_NODES = "ALL_NODES",
+  //ALL_NODES = "ALL_NODES",
   /**Evento emitido cuando se da click en la accion de crear nodo (aqui no se ha agregado el nodo a la interfaz) */
   CREATE_NODE = "CREATE_NODE",
   /**
@@ -45,7 +45,7 @@ export enum EventFlowTypes {
   SELECT_EDGE = "SELECT_EDGE",
   /*@deprecated*/
   LOAD_ACTIONS = "LOAD_ACTIONS",
-  ALL_EDGES = "ALL_EDGES",
+  //ALL_EDGES = "ALL_EDGES",
   ALL_DATA = "ALL_DATA",
 }
 
@@ -72,11 +72,11 @@ type LoadActionsPayload = {
 interface EventPayloadMap {
   [EventFlowTypes.CONFIG_APP]: AppConfig;
   [EventFlowTypes.LOAD_DATA]: GraphData;
-  [EventFlowTypes.ALL_NODES]: AppNode[];
+  //[EventFlowTypes.ALL_NODES]: AppNode[];
   [EventFlowTypes.CREATE_NODE]: NewNodePayload;
   [EventFlowTypes.ADD_NODE]: NewNodePayload;
   [EventFlowTypes.DELETE_NODE]: DeleteNodePayload;
-  [EventFlowTypes.ALL_EDGES]: Edge[];
+  //[EventFlowTypes.ALL_EDGES]: Edge[];
   [EventFlowTypes.CREATE_EDGE]: NewEdgePayload;
   [EventFlowTypes.ADD_EDGE]: NewEdgePayload;
   [EventFlowTypes.DELETE_EDGE]: DeleteEdgePayload;
