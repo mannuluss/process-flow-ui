@@ -13,10 +13,10 @@ import {
 import React, { useCallback, useEffect } from "react";
 import { subscribeMenssage } from "@core/services/message.service";
 import { CrossAppMessage, EventFlowTypes } from "@core/types/message";
-import { edgeTypes } from "../../../edges";
+import { edgeTypes } from "../../customs/edges";
 import OnConnectEdge from "../../../edges/on-connect-event";
-import { nodeTypes } from "../../../nodes";
-import { AppNode } from "../../../nodes/types";
+import { nodeTypes } from "../../customs/nodes";
+import { AppNode } from "../../customs/nodes/types";
 import ContextMenu, { ContextMenuRef } from "../menuContext/context-menu";
 import PanelFlowState from "../panels/panel-flow-state";
 import { useDispatch } from "react-redux";

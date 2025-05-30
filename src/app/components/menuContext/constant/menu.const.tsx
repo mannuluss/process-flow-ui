@@ -6,7 +6,7 @@ import {
   MenuActionEventContext,
   TypeContextMenu,
 } from "../interface/contextActionEvent";
-import { CustomNodeApp } from "src/nodes/types";
+import { CustomNodeApp } from "src/app/customs/nodes/types";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";

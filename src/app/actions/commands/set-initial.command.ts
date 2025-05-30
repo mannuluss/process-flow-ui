@@ -2,7 +2,7 @@ import { CommandHandler } from '@commands/interfaces/command.interfaces';
 import { sendMessage } from '@core/services/message.service';
 import { EventFlowTypes } from '@core/types/message';
 import { MenuActionEventContext } from 'src/app/components/menuContext/interface/contextActionEvent';
-import { CustomNodeApp } from 'src/nodes/types';
+import { CustomNodeApp } from 'src/app/customs/nodes/types';
 
 // const strategyInitialNodeOnlyOne = (nodes, evt) => {
 //   return nodes.map((n) => {

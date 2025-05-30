@@ -1,5 +1,5 @@
 import { Connection, Edge } from "@xyflow/react";
-import { AppNode } from "../../../nodes/types";
+import { AppNode } from "../../customs/nodes/types";
 import { ConfigStateReduxApp } from "../../../store/configSlice";
 
 export enum EventFlowTypes {

@@ -15,7 +15,7 @@ import {
   ContextMenuAction,
   MenuActionEventContext,
 } from "../menuContext/interface/contextActionEvent";
-import { AppNode } from "src/nodes/types";
+import { AppNode } from "src/app/customs/nodes/types";
 import { useAppSelector, useAppDispatch } from "src/store/store";
 import commandManager from "@commands/manager/command.manager";
 import { setCollapsePanel, setColorMode } from "src/store/configSlice";

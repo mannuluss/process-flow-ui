@@ -6,7 +6,7 @@ import {
   MenuActionEventContext,
   TypeContextMenu,
 } from "./interface/contextActionEvent";
-import { AppNode } from "src/nodes/types";
+import { AppNode } from "src/app/customs/nodes/types.ts";
 import { ContextMenuActionByType } from "./constant/menu.const";
 import { useCommand } from "../../actions/manager/CommandContext.tsx";
 

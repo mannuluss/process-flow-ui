@@ -1,5 +1,5 @@
 import { Edge, ReactFlowInstance } from "@xyflow/react";
-import { AppNode } from "../../../nodes/types";
+import { AppNode } from "../../customs/nodes/types";
 import { RootState } from "src/store/store";
 
 /**

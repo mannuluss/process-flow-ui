@@ -6,7 +6,7 @@ import {
 } from "@commands/interfaces/command.event";
 import { useReactFlow } from "@xyflow/react";
 import { useAppSelector } from "src/store/store";
-import { AppNode } from "src/nodes/types";
+import { AppNode } from "src/app/customs/nodes/types";
 import { Edge } from "@xyflow/react";
 import { GraphData } from "src/exported-types";
 

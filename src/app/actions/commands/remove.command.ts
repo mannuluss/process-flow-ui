@@ -1,7 +1,7 @@
 import { Edge } from "@xyflow/react";
 import { sendMessage } from "@core/services/message.service";
 import { EventFlowTypes } from "@core/types/message";
-import { AppNode } from "src/nodes/types";
+import { AppNode } from "src/app/customs/nodes/types";
 import { MenuActionEventContext } from "src/app/components/menuContext/interface/contextActionEvent";
 
 export function removeEdgeCommand(context: MenuActionEventContext<Edge>) {
