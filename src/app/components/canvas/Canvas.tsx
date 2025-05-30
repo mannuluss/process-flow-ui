@@ -1,4 +1,3 @@
-import { Backdrop } from "@mui/material";
 import {
   useNodesState,
   useEdgesState,
@@ -18,7 +17,6 @@ import { edgeTypes } from "../../../edges";
 import OnConnectEdge from "../../../edges/on-connect-event";
 import { nodeTypes } from "../../../nodes";
 import { AppNode } from "../../../nodes/types";
-import GradientCircularProgress from "../custom/circular-gradiant";
 import ContextMenu, { ContextMenuRef } from "../menuContext/context-menu";
 import PanelFlowState from "../panels/panel-flow-state";
 import { useDispatch } from "react-redux";
@@ -29,12 +27,14 @@ import {
 } from "../../../store/selectionSlice";
 import { useAppSelector } from "../../../store/store";
 import { useCommand } from "@commands/manager/CommandContext";
+import LoadingBackdrop from "../custom/loading-backdrop";
 
 export default function Canvas() {
-  const [nodes, setNodes, onNodesChange] = useNodesState([] as AppNode[]); //useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([] as Edge[]); //useEdgesState(initialEdges);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [nodes, _setNodes, onNodesChange] = useNodesState([] as AppNode[]); //useNodesState(initialNodes);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [edges, _setEdges, onEdgesChange] = useEdgesState([] as Edge[]); //useEdgesState(initialEdges);
 
-  const [loading, setLoading] = React.useState(false);
   const menu = React.useRef<ContextMenuRef>(null);
   const connectEdges = React.useRef<{ onConnect: OnConnect }>(null);
   const dispatch = useDispatch();
@@ -162,12 +162,7 @@ export default function Canvas() {
         <OnConnectEdge ref={connectEdges} />
       </ReactFlow>
 
-      <Backdrop
-        sx={(theme) => ({ color: "#fff", zIndex: theme.zIndex.drawer + 1 })}
-        open={loading}
-      >
-        <GradientCircularProgress color="primary" />
-      </Backdrop>
+      <LoadingBackdrop />
     </>
   );
 }

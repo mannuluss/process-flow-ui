@@ -1,12 +1,15 @@
 // filepath: c:\Users\pipe_\Documents\Personal\process-flow-ui\src\app\components\custom\button-import.tsx
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import Button from "@mui/material/Button";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useCommand } from "@commands/manager/CommandContext";
+import { useAppDispatch, useAppSelector } from "src/store/store";
+import { setLoading } from "src/store/configSlice";
 
 const ButtonImport = () => {
-  const [loading, setLoading] = useState(false);
+  const { open } = useAppSelector((state) => state.config.loading);
+  const dispatch = useAppDispatch();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { commandManager, generateContextApp } = useCommand();
 
@@ -36,19 +39,19 @@ const ButtonImport = () => {
   ) => {
     const file = event.target.files?.[0];
     if (file) {
-      setLoading(true);
+      dispatch(setLoading({ open: true, message: "Cargando archivo..." }));
       // Simulate file processing
       await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulate delay
 
       const reader = new FileReader();
       reader.onload = (e) => {
         onFileLoad(e.target?.result || null);
-        setLoading(false);
+        dispatch(setLoading({ open: false }));
       };
       reader.onerror = () => {
         console.error("Error reading file");
         onFileLoad(null); // Notify of error or handle appropriately
-        setLoading(false);
+        dispatch(setLoading({ open: false }));
       };
       reader.readAsText(file); // Or readAsArrayBuffer, readAsDataURL
     }
@@ -71,16 +74,16 @@ const ButtonImport = () => {
         variant="contained"
         color="primary"
         startIcon={
-          loading ? (
+          open ? (
             <CircularProgress size={20} color="inherit" />
           ) : (
             <FileUploadIcon />
           )
         }
         onClick={handleButtonClick}
-        disabled={loading}
+        disabled={open}
       >
-        {loading ? "Cargando..." : "Importar"}
+        {open ? "Cargando..." : "Importar"}
       </Button>
     </>
   );
