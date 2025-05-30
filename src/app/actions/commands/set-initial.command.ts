@@ -1,8 +1,8 @@
-import { CommandHandler } from "@commands/interfaces/command.interfaces";
-import { sendMessage } from "@core/services/message.service";
-import { EventFlowTypes } from "@core/types/message";
-import { MenuActionEventContext } from "src/app/components/menuContext/interface/contextActionEvent";
-import { CustomNodeStart } from "src/nodes/types";
+import { CommandHandler } from '@commands/interfaces/command.interfaces';
+import { sendMessage } from '@core/services/message.service';
+import { EventFlowTypes } from '@core/types/message';
+import { MenuActionEventContext } from 'src/app/components/menuContext/interface/contextActionEvent';
+import { CustomNodeApp } from 'src/nodes/types';
 
 // const strategyInitialNodeOnlyOne = (nodes, evt) => {
 //   return nodes.map((n) => {
@@ -14,36 +14,34 @@ import { CustomNodeStart } from "src/nodes/types";
 // };
 
 const updateInitialNodeAndEdges = (
-  evt: MenuActionEventContext<CustomNodeStart>,
-  newType: string,
+  evt: MenuActionEventContext<CustomNodeApp>,
   isInitial: boolean
 ) => {
   const node = JSON.parse(JSON.stringify(evt.object)) as any; // Use any for flexibility or a more specific type if possible
-  node.type = newType;
+  //node.type = newType;
   node.data.initial = isInitial;
 
   evt.state.updateNode(evt.object.id, node);
 
-  evt.state.setEdges((eds) => eds.filter((e) => e.target !== evt.object.id));
+  //evt.state.setEdges((eds) => eds.filter((e) => e.target !== evt.object.id));
 
   sendMessage({
-    type: EventFlowTypes.ALL_NODES,
-    payload: evt.state.getNodes(),
-  });
-  sendMessage({
-    type: EventFlowTypes.ALL_EDGES,
-    payload: evt.state.getEdges(),
+    type: EventFlowTypes.ALL_DATA,
+    payload: {
+      nodes: evt.state.getNodes(),
+      connections: evt.state.getEdges(),
+    },
   });
 };
 
 export const setInitialNodeCommand: CommandHandler<
-  MenuActionEventContext<CustomNodeStart>
+  MenuActionEventContext<CustomNodeApp>
 > = (evt) => {
-  updateInitialNodeAndEdges(evt, "start", true);
+  updateInitialNodeAndEdges(evt, true);
 };
 
 export const unSetInitialNodeCommand: CommandHandler<
-  MenuActionEventContext<CustomNodeStart>
+  MenuActionEventContext<CustomNodeApp>
 > = (evt) => {
-  updateInitialNodeAndEdges(evt, "default", false);
+  updateInitialNodeAndEdges(evt, false);
 };
