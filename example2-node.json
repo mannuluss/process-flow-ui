@@ -1,0 +1,118 @@
+{
+    "nodes": [
+        {
+            "id": "c4a4db4e-3035-4f65-ada4-eb1b00c13294",
+            "type": "default",
+            "position": {
+                "x": -89.17409792339359,
+                "y": 23.906819501944554
+            },
+            "data": {
+                "label": "Tipo Nodo 1",
+                "metadata": {
+                    "id": null,
+                    "idEstadoDocumento": 1,
+                    "estadoDocumento": {
+                        "id": 1,
+                        "nombre": "Tipo Nodo 1"
+                    },
+                    "idRoles": [
+                        {
+                            "id": 1,
+                            "nombre": "Rol 1"
+                        }
+                    ],
+                    "roles": [
+                        {
+                            "id": 1,
+                            "nombre": "Rol 1"
+                        }
+                    ]
+                }
+            },
+            "measured": {
+                "width": 150,
+                "height": 40
+            },
+            "selected": true,
+            "dragging": false
+        },
+        {
+            "id": "f95da988-e151-47f4-8223-9fe3b016325e",
+            "type": "default",
+            "position": {
+                "x": 44.22414679841364,
+                "y": 166.32380433487106
+            },
+            "data": {
+                "label": "Tipo Nodo 3",
+                "metadata": {
+                    "id": null,
+                    "idEstadoDocumento": 3,
+                    "estadoDocumento": {
+                        "id": 3,
+                        "nombre": "Tipo Nodo 3"
+                    },
+                    "idRoles": [
+                        {
+                            "id": 2,
+                            "nombre": "Rol 2"
+                        },
+                        {
+                            "id": 1,
+                            "nombre": "Rol 1"
+                        }
+                    ],
+                    "roles": [
+                        {
+                            "id": 2,
+                            "nombre": "Rol 2"
+                        },
+                        {
+                            "id": 1,
+                            "nombre": "Rol 1"
+                        }
+                    ]
+                }
+            },
+            "measured": {
+                "width": 150,
+                "height": 40
+            },
+            "selected": false,
+            "dragging": false
+        }
+    ],
+    "connections": [
+        {
+            "id": "b->d",
+            "source": "b",
+            "target": "d",
+            "type": "step"
+        },
+        {
+            "id": "c->d",
+            "source": "start",
+            "target": "end",
+            "type": "step"
+        },
+        {
+            "type": "step",
+            "source": "c4a4db4e-3035-4f65-ada4-eb1b00c13294",
+            "target": "f95da988-e151-47f4-8223-9fe3b016325e",
+            "data": {
+                "label": "Accion 1",
+                "metadata": {
+                    "id": null,
+                    "idAccion": 1,
+                    "accion": {
+                        "id": 1,
+                        "nombre": "Accion 1"
+                    },
+                    "transicion": null
+                }
+            },
+            "id": "xy-edge__c4a4db4e-3035-4f65-ada4-eb1b00c13294-f95da988-e151-47f4-8223-9fe3b016325e"
+        }
+    ]
+}
