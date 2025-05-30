@@ -1,17 +1,23 @@
-import { CommandHandler } from "../interfaces/command.interfaces";
-import { v4 as uuidv4 } from "uuid";
-import { CommandContext } from "../interfaces/command.event";
-import { AppNode } from "../../../nodes/types";
-import { sendMessage } from "@core/services/message.service";
-import { EventFlowTypes } from "@core/types/message";
-import { addEdge, Edge } from "@xyflow/react";
+import { CommandHandler } from '../interfaces/command.interfaces';
+import { v4 as uuidv4 } from 'uuid';
+import { CommandContext } from '../interfaces/command.event';
+import { AppNode } from '../../customs/nodes/types';
+import { sendMessage } from '@core/services/message.service';
+import { EventFlowTypes } from '@core/types/message';
+import { addEdge, Edge, ReactFlowInstance } from '@xyflow/react';
 
-export const generateDefaultNode = (id?: string): AppNode => {
+export const generateDefaultNode = (
+  type: any = 'default',
+  state: ReactFlowInstance<AppNode, Edge>
+): AppNode => {
   return {
-    id: id || uuidv4(),
-    type: "default",
-    position: { x: Math.random() * 100, y: Math.random() * 100 },
-    data: { label: `Node ${id}` },
+    id: uuidv4(),
+    type: type,
+    position: state.screenToFlowPosition({
+      x: document.getElementById('root').clientWidth / 2,
+      y: document.getElementById('root').clientHeight / 2,
+    }),
+    data: { label: `Node new` },
   };
 };
 
@@ -23,7 +29,10 @@ export const createNodeCommand: CommandHandler = (context) => {
   if (context.appStore.config.customNodeCreate) {
     sendMessage({
       type: EventFlowTypes.CREATE_NODE,
-      payload: generateDefaultNode(),
+      payload: generateDefaultNode(
+        context.appStore.config.defaultTypeNode,
+        context.state
+      ),
     });
     return false;
   } else {
@@ -46,14 +55,12 @@ export const updateNodeCommand: CommandHandler = (
 export const AddNodeCommand: CommandHandler = (
   context: CommandContext<AppNode>
 ) => {
-  console.info("[GRAPH] AddNodeCommand", context);
   context.state.setNodes((current) => [...current, context.object]);
 };
 
 export const addEdgeCommand: CommandHandler = (
   context: CommandContext<Edge>
 ) => {
-  console.info("[GRAPH] AddEdgeCommand", context);
   context.state.setEdges((edges) => {
     if (edges.some((ed) => ed.id === context.object.id)) {
       return [...edges, context.object];
