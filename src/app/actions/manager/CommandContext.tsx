@@ -8,7 +8,7 @@ import { useReactFlow } from "@xyflow/react";
 import { useAppSelector } from "src/store/store";
 import { AppNode } from "src/app/customs/nodes/types";
 import { Edge } from "@xyflow/react";
-import { GraphData } from "src/exported-types";
+import { GraphData } from "@core/types/message";
 
 // Define the shape of the context data
 interface CommandContextType {
