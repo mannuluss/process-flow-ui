@@ -1,5 +1,5 @@
 import "@xyflow/react/dist/style.css";
-import Canvas from "./app/components/canvas/Canvas";
+import Canvas from "./app/canvas/Canvas";
 import { useAppDispatch } from "./store/store";
 import { useEffect } from "react";
 import { subscribeMenssage } from "./app/core/services/message.service";

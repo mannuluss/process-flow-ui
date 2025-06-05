@@ -2,9 +2,6 @@ import { Button } from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
 import { useStore } from "@xyflow/react";
 import commandManager from "@commands/manager/command.manager";
-import { useEffect } from "react";
-import { sendMessage } from "@core/services/message.service";
-import { EventFlowTypes } from "@core/types/message";
 
 function saveAction(nodes: any[], edges: any[]) {
   commandManager.executeCommand("saveGraph", {
@@ -18,16 +15,6 @@ function saveAction(nodes: any[], edges: any[]) {
 export default function ButtonExport() {
   const nodes = useStore<any[]>((s) => s.nodes);
   const edges = useStore((s) => s.edges);
-
-  useEffect(() => {
-    sendMessage({
-      type: EventFlowTypes.ALL_DATA,
-      payload: {
-        nodes,
-        connections: edges,
-      },
-    });
-  }, [nodes, edges]);//TODO: cambiar de lugar, este boton no deberia ser responsable de esto, sino el canvas o el store
 
   return (
     <Button

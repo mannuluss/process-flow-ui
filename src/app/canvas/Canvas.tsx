@@ -1,3 +1,5 @@
+import { useCommand } from "@commands/manager/CommandContext";
+import { subscribeMenssage } from "@core/services/message.service";
 import {
   useNodesState,
   useEdgesState,
@@ -11,23 +13,23 @@ import {
   Controls,
 } from "@xyflow/react";
 import React, { useCallback, useEffect } from "react";
-import { subscribeMenssage } from "@core/services/message.service";
-import { CrossAppMessage, EventFlowTypes } from "@core/types/message";
-import { edgeTypes } from "../../customs/edges";
-import OnConnectEdge from "../../../edges/on-connect-event";
-import { nodeTypes } from "../../customs/nodes";
-import { AppNode } from "../../customs/nodes/types";
-import ContextMenu, { ContextMenuRef } from "../menuContext/context-menu";
-import PanelFlowState from "../panels/panel-flow-state";
 import { useDispatch } from "react-redux";
+import OnConnectEdge from "src/edges/on-connect-event";
+import { AppNode, CrossAppMessage, EventFlowTypes } from "src/exported-types";
 import {
   setSelectedNode,
   setSelectedEdge,
   clearSelection,
-} from "../../../store/selectionSlice";
-import { useAppSelector } from "../../../store/store";
-import { useCommand } from "@commands/manager/CommandContext";
-import LoadingBackdrop from "../custom/loading-backdrop";
+} from "src/store/selectionSlice";
+import { useAppSelector } from "src/store/store";
+import LoadingBackdrop from "../components/custom/loading-backdrop";
+import ContextMenu, {
+  ContextMenuRef,
+} from "../components/menuContext/context-menu";
+import PanelFlowState from "../components/panels/panel-flow-state";
+import { edgeTypes } from "../customs/edges";
+import { nodeTypes } from "../customs/nodes";
+import { EventManager } from "./events/EventManager";
 
 export default function Canvas() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -163,6 +165,8 @@ export default function Canvas() {
       </ReactFlow>
 
       <LoadingBackdrop />
+      {/* <EventManager /> */}
+      <EventManager />
     </>
   );
 }
