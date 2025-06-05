@@ -34,7 +34,7 @@ export function EventManager() {
       },
     });
     dispatch(setLoading({ open: false, message: "" }));
-  }, [nodes, edges]); //TODO: cambiar de lugar, este boton no deberia ser responsable de esto, sino el canvas o el store
+  }, [nodes, edges, dispatch]); //TODO: cambiar de lugar, este boton no deberia ser responsable de esto, sino el canvas o el store
 
   // This function is a placeholder for the EventManager logic.
   // It can be expanded to handle various events and manage the event flow in the application.
