@@ -15,7 +15,6 @@ import {
 import React, { useCallback, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import OnConnectEdge from "src/edges/on-connect-event";
-import { AppNode, CrossAppMessage, EventFlowTypes } from "src/exported-types";
 import {
   setSelectedNode,
   setSelectedEdge,
@@ -30,6 +29,8 @@ import PanelFlowState from "../components/panels/panel-flow-state";
 import { edgeTypes } from "../customs/edges";
 import { nodeTypes } from "../customs/nodes";
 import { EventManager } from "./events/EventManager";
+import { CrossAppMessage, EventFlowTypes } from "@core/types/message";
+import { AppNode } from "../customs/nodes/types";
 
 export default function Canvas() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

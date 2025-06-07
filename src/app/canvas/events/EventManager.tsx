@@ -1,7 +1,7 @@
 import { sendMessage, subscribeMenssage } from "@core/services/message.service";
 import { useStore } from "@xyflow/react";
 import { useEffect } from "react";
-import { EventFlowTypes } from "src/exported-types";
+import { EventFlowTypes } from "@core/types/message";
 import { setLoading } from "src/store/configSlice";
 import { useAppDispatch } from "src/store/store";
 
