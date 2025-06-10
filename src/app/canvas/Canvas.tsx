@@ -99,14 +99,18 @@ export default function Canvas() {
 
   const onNodeSelect: NodeMouseHandler<AppNode> = useCallback(
     (_, node) => {
-      dispatch(setSelectedNode(node));
+      // Enviar una copia profunda (serializando y deserializando) al store, para evitar un freeze del objeto que genera errores en React Flow
+      const nodeCopy = JSON.parse(JSON.stringify(node));
+      dispatch(setSelectedNode(nodeCopy));
     },
     [dispatch]
   );
 
   const onEdgeSelect: EdgeMouseHandler = useCallback(
     (_, edge) => {
-      dispatch(setSelectedEdge(edge));
+      // Enviar una copia profunda al store, para evitar un freeze del objeto que genera errores en React Flow
+      const edgeCopy = JSON.parse(JSON.stringify(edge));
+      dispatch(setSelectedEdge(edgeCopy));
     },
     [dispatch]
   );
