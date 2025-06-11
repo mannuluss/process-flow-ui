@@ -31,6 +31,7 @@ import { nodeTypes } from "../customs/nodes";
 import { EventManager } from "./events/EventManager";
 import { CrossAppMessage, EventFlowTypes } from "@core/types/message";
 import { AppNode } from "../customs/nodes/types";
+import { setLoading } from "src/store/configSlice";
 
 export default function Canvas() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -52,8 +53,10 @@ export default function Canvas() {
         "loadData",
         generateContextApp("Graph", msj.payload)
       );
+      dispatch(clearSelection());
+      dispatch(setLoading({ open: false, message: "" }));
     },
-    [commandManager, generateContextApp]
+    [commandManager, dispatch, generateContextApp]
   );
   //se cargan los nodos y conexiones
   useEffect(() => {

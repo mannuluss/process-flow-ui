@@ -25,6 +25,8 @@ export function EventManager() {
     };
   }, [dispatch]);
 
+  // This effect sends the current nodes and edges to the message service
+  // whenever they change, allowing other parts of the application to react to these changes.
   useEffect(() => {
     sendMessage({
       type: EventFlowTypes.ALL_DATA,
@@ -33,8 +35,7 @@ export function EventManager() {
         connections: edges,
       },
     });
-    dispatch(setLoading({ open: false, message: "" }));
-  }, [nodes, edges, dispatch]); //TODO: cambiar de lugar, este boton no deberia ser responsable de esto, sino el canvas o el store
+  }, [nodes, edges]);
 
   // This function is a placeholder for the EventManager logic.
   // It can be expanded to handle various events and manage the event flow in the application.
