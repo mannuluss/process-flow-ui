@@ -1,0 +1,27 @@
+{
+  "extends": ["stylelint-config-standard-scss"],
+  "rules": {
+    "selector-class-pattern": [
+      "^[a-z][a-z0-9-]*(_[a-z0-9-]+)*$|^[a-z][a-z0-9-]*(__[a-z0-9-]+)*$",
+      {
+        "message": "Expected class selector to be in kebab-case, snake_case, or BEM format (selector-class-pattern)"
+      }
+    ],
+    "scss/at-rule-no-unknown": [
+      true,
+      {
+        "ignoreAtRules": ["use", "forward", "apply", "layer"]
+      }
+    ],
+    "scss/double-slash-comment-whitespace-inside": null,
+    "declaration-empty-line-before": null,
+    "rule-empty-line-before": null,
+    "custom-property-empty-line-before": null,
+    "property-no-vendor-prefix": null,
+    "value-no-vendor-prefix": null,
+    "color-hex-length": "short",
+    "color-function-notation": "legacy",
+    "alpha-value-notation": "number"
+  },
+  "ignoreFiles": ["dist/**/*", "node_modules/**/*"]
+}
