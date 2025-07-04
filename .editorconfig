@@ -1,0 +1,5 @@
+# Editor configuration, see https://editorconfig.org
+
+[*.ts]
+end_of_line = lf
+quote_type = single
