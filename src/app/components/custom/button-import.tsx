@@ -1,14 +1,14 @@
 // filepath: c:\Users\pipe_\Documents\Personal\process-flow-ui\src\app\components\custom\button-import.tsx
-import React, { useRef } from "react";
-import Button from "@mui/material/Button";
-import FileUploadIcon from "@mui/icons-material/FileUpload";
-import CircularProgress from "@mui/material/CircularProgress";
-import { useCommand } from "@commands/manager/CommandContext";
-import { useAppDispatch, useAppSelector } from "src/store/store";
-import { setLoading } from "src/store/configSlice";
+import { useCommand } from '@commands/manager/CommandContext';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
+import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
+import React, { useRef } from 'react';
+import { setLoading } from 'src/store/configSlice';
+import { useAppDispatch, useAppSelector } from 'src/store/store';
 
 const ButtonImport = () => {
-  const { open } = useAppSelector((state) => state.config.loading);
+  const { open } = useAppSelector(state => state.config.loading);
   const dispatch = useAppDispatch();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { commandManager, generateContextApp } = useCommand();
@@ -25,11 +25,11 @@ const ButtonImport = () => {
     try {
       const data = JSON.parse(fileContent as string);
       commandManager.executeCommand(
-        "loadData",
-        generateContextApp("Graph", data)
+        'loadData',
+        generateContextApp('Graph', data)
       );
     } catch (error) {
-      console.error("Error parsing file content:", error);
+      console.error('Error parsing file content:', error);
       return;
     }
   };
@@ -39,17 +39,17 @@ const ButtonImport = () => {
   ) => {
     const file = event.target.files?.[0];
     if (file) {
-      dispatch(setLoading({ open: true, message: "Cargando archivo..." }));
+      dispatch(setLoading({ open: true, message: 'Cargando archivo...' }));
       // Simulate file processing
-      await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulate delay
+      await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate delay
 
       const reader = new FileReader();
-      reader.onload = (e) => {
+      reader.onload = e => {
         onFileLoad(e.target?.result || null);
         dispatch(setLoading({ open: false }));
       };
       reader.onerror = () => {
-        console.error("Error reading file");
+        console.error('Error reading file');
         onFileLoad(null); // Notify of error or handle appropriately
         dispatch(setLoading({ open: false }));
       };
@@ -57,7 +57,7 @@ const ButtonImport = () => {
     }
     // Reset the input value to allow selecting the same file again
     if (event.target) {
-      event.target.value = "";
+      event.target.value = '';
     }
   };
 
@@ -66,7 +66,7 @@ const ButtonImport = () => {
       <input
         type="file"
         ref={fileInputRef}
-        style={{ display: "none" }}
+        style={{ display: 'none' }}
         onChange={handleFileChange}
         accept=".json,.txt"
       />
@@ -83,7 +83,7 @@ const ButtonImport = () => {
         onClick={handleButtonClick}
         disabled={open}
       >
-        {open ? "Cargando..." : "Importar"}
+        {open ? 'Cargando...' : 'Importar'}
       </Button>
     </>
   );

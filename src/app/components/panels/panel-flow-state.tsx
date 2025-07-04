@@ -1,47 +1,48 @@
-import { Panel, useReactFlow } from "@xyflow/react";
+import './panel-flow-state.scss';
 
-import "./panel-flow-state.scss";
+import commandManager from '@commands/manager/command.manager';
+import AutoModeIcon from '@mui/icons-material/AutoMode';
+import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
+import LightModeIcon from '@mui/icons-material/LightMode';
+import OpenInFullIcon from '@mui/icons-material/OpenInFull';
 import {
   Button,
-  Paper,
   FormControl,
-  ToggleButtonGroup,
-  ToggleButton,
-  Tooltip,
   IconButton,
-} from "@mui/material";
-import { ActionsMenuWindow } from "../menuContext/constant/menu.const";
+  Paper,
+  ToggleButton,
+  ToggleButtonGroup,
+  Tooltip,
+} from '@mui/material';
+import { Panel, useReactFlow } from '@xyflow/react';
+import { AppNode } from 'src/app/customs/nodes/types';
+import { setCollapsePanel, setColorMode } from 'src/store/configSlice';
+import { useAppDispatch, useAppSelector } from 'src/store/store';
+
+import ButtonExport from '../custom/button-export';
+import ButtonImport from '../custom/button-import';
+import { ActionsMenuWindow } from '../menuContext/constant/menu.const';
 import {
   ContextMenuAction,
   MenuActionEventContext,
-} from "../menuContext/interface/contextActionEvent";
-import { AppNode } from "src/app/customs/nodes/types";
-import { useAppSelector, useAppDispatch } from "src/store/store";
-import commandManager from "@commands/manager/command.manager";
-import { setCollapsePanel, setColorMode } from "src/store/configSlice";
-import DarkModeIcon from "@mui/icons-material/DarkMode";
-import LightModeIcon from "@mui/icons-material/LightMode";
-import AutoModeIcon from "@mui/icons-material/AutoMode";
-import ButtonAddNode from "./components/button-add";
-import OpenInFullIcon from "@mui/icons-material/OpenInFull";
-import CloseFullscreenIcon from "@mui/icons-material/CloseFullscreen";
-import ButtonExport from "../custom/button-export";
-import ButtonImport from "../custom/button-import";
+} from '../menuContext/interface/contextActionEvent';
+import ButtonAddNode from './components/button-add';
 
 export default function PanelFlowState() {
   //const [open, setOpen] = useState(true);
-  const open = useAppSelector((state) => state.config.collapsePanel);
+  const open = useAppSelector(state => state.config.collapsePanel);
 
   const { selectedEdge, selectedNode } = useAppSelector(
-    (state) => state.selection
+    state => state.selection
   );
-  const { colorMode } = useAppSelector((state) => state.config);
+  const { colorMode } = useAppSelector(state => state.config);
   const reacFlowContext = useReactFlow<AppNode>();
-  const store = useAppSelector((state) => state);
+  const store = useAppSelector(state => state);
   const dispatch = useAppDispatch();
 
   const contextApp: MenuActionEventContext = {
-    type: selectedEdge ? "Edge" : "Node",
+    type: selectedEdge ? 'Edge' : 'Node',
     object: selectedEdge || selectedNode,
     state: reacFlowContext,
     appStore: store,
@@ -57,7 +58,7 @@ export default function PanelFlowState() {
   };
   const handleColorModeChange = (
     _event: React.MouseEvent<HTMLElement>,
-    newMode: "light" | "dark" | "system"
+    newMode: 'light' | 'dark' | 'system'
   ) => {
     if (newMode) {
       dispatch(setColorMode(newMode));
@@ -73,7 +74,7 @@ export default function PanelFlowState() {
             {(open && <OpenInFullIcon />) || <CloseFullscreenIcon />}
           </IconButton>
           <div
-            className={open ? "panel-container" : "panel-container panel-close"}
+            className={open ? 'panel-container' : 'panel-container panel-close'}
           >
             <FormControl fullWidth sx={{ mb: 1 }}>
               <ToggleButtonGroup
@@ -82,7 +83,7 @@ export default function PanelFlowState() {
                 onChange={handleColorModeChange}
                 aria-label="theme selection"
                 size="small"
-                sx={{ width: "100%", justifyContent: "center" }}
+                sx={{ width: '100%', justifyContent: 'center' }}
               >
                 <Tooltip title="Modo claro" placement="bottom">
                   <ToggleButton value="light" aria-label="light mode">
@@ -102,7 +103,7 @@ export default function PanelFlowState() {
               </ToggleButtonGroup>
             </FormControl>
 
-            {ActionsMenuWindow.filter((action) =>
+            {ActionsMenuWindow.filter(action =>
               action.show ? action.show(contextApp) : true
             ).map((action, i) => (
               <Button

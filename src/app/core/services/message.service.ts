@@ -1,6 +1,6 @@
-import environments from "../../../environments/environments";
+import environments from '../../../environments/environments';
 // Asegúrate de que EventPayloadMap esté exportado desde message.ts
-import { CrossAppMessage, EventFlowTypes } from "../types/message"; // EventPayloadMap puede que ya no sea necesaria aquí directamente, pero la dejamos por si acaso en el futuro
+import { CrossAppMessage, EventFlowTypes } from '../types/message'; // EventPayloadMap puede que ya no sea necesaria aquí directamente, pero la dejamos por si acaso en el futuro
 
 // Callback ahora recibe el mensaje completo
 export type MessageCallback = (message: CrossAppMessage) => void;
@@ -22,7 +22,7 @@ const handleIncomingMessage = (event: MessageEvent): void => {
   // Corregido: permitir mensajes DESDE los hosts configurados
   if (
     !environments.targetHost.some(
-      (host) => event.origin.includes(host) || host === "*"
+      host => event.origin.includes(host) || host === '*'
     )
   ) {
     console.warn(`Mensaje ignorado de origen no confiable: ${event.origin}`);
@@ -32,13 +32,13 @@ const handleIncomingMessage = (event: MessageEvent): void => {
   // 2. Validar estructura básica del mensaje
   const message = event.data as CrossAppMessage;
   if (
-    typeof message !== "object" ||
+    typeof message !== 'object' ||
     message === null ||
-    typeof message.type !== "string" ||
+    typeof message.type !== 'string' ||
     !Object.values(EventFlowTypes).includes(message.type as EventFlowTypes) // Validar que type sea un EventFlowTypes conocido
   ) {
     console.warn(
-      "Mensaje ignorado: formato inválido o tipo desconocido.",
+      'Mensaje ignorado: formato inválido o tipo desconocido.',
       message
     );
     return;
@@ -52,7 +52,7 @@ const handleIncomingMessage = (event: MessageEvent): void => {
   // 3. Notificar a los suscriptores, pasando el mensaje completo
   const callbacks = subscriptions.get(message.type);
   if (callbacks) {
-    callbacks.forEach((callback) => {
+    callbacks.forEach(callback => {
       try {
         // Pasamos el objeto 'message' completo al callback
         callback(message);
@@ -72,7 +72,7 @@ const initialize = (): void => {
     console.log(
       `[MessagingService] Inicializando listener para origen: ${environments.targetHost}`
     );
-    window.addEventListener("message", handleIncomingMessage);
+    window.addEventListener('message', handleIncomingMessage);
     isInitialized = true;
     // Opcional: Informar a Angular que React está listo
     // sendMessage({ type: EventFlowTypes.REACT_APP_READY }); // Ejemplo de cómo enviar sin payload
@@ -83,7 +83,7 @@ const initialize = (): void => {
 export const sendMessage = (message: CrossAppMessage): void => {
   if (!window.parent || window.parent === window) {
     console.warn(
-      "[MessagingService] No se puede enviar mensaje: No se detecta un contenedor padre (iframe)."
+      '[MessagingService] No se puede enviar mensaje: No se detecta un contenedor padre (iframe).'
     );
     //return;
   }
@@ -93,7 +93,7 @@ export const sendMessage = (message: CrossAppMessage): void => {
     (message as any).payload
   );
   try {
-    environments.targetHost.forEach((host) => {
+    environments.targetHost.forEach(host => {
       window.top?.postMessage(message, host);
     });
   } catch (error) {

@@ -1,14 +1,14 @@
-import React, { createContext, useContext, ReactNode } from "react";
-import commandManagerInstance, { CommandManager } from "./command.manager";
 import {
   CommandContext as CommandContextArgs,
   TypeContextApp,
-} from "@commands/interfaces/command.event";
-import { useReactFlow } from "@xyflow/react";
-import { useAppSelector } from "src/store/store";
-import { AppNode } from "src/app/customs/nodes/types";
-import { Edge } from "@xyflow/react";
-import { GraphData } from "@core/types/message";
+} from '@commands/interfaces/command.event';
+import { GraphData } from '@core/types/message';
+import { Edge, useReactFlow } from '@xyflow/react';
+import React, { createContext, ReactNode, useContext } from 'react';
+import { AppNode } from 'src/app/customs/nodes/types';
+import { useAppSelector } from 'src/store/store';
+
+import commandManagerInstance, { CommandManager } from './command.manager';
 
 // Define the shape of the context data
 interface CommandContextType {
@@ -26,7 +26,7 @@ const CommandContext = createContext<CommandContextType | undefined>(undefined);
 export const useCommand = (): CommandContextType => {
   const context = useContext(CommandContext);
   if (!context) {
-    throw new Error("useCommand must be used within a CommandProvider");
+    throw new Error('useCommand must be used within a CommandProvider');
   }
   return context;
 };
@@ -40,7 +40,7 @@ export const CommandProvider: React.FC<CommandProviderProps> = ({
   children,
 }) => {
   const reacFlowContext = useReactFlow<AppNode>();
-  const store = useAppSelector((state) => state);
+  const store = useAppSelector(state => state);
 
   const generateContextApp = (
     type?: TypeContextApp,

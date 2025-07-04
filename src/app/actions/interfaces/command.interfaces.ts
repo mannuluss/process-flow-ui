@@ -1,4 +1,4 @@
-import { CommandContext } from "./command.event";
+import { CommandContext } from './command.event';
 
 /**
  * Interfaz base para todos los comandos.
@@ -48,7 +48,9 @@ export interface ICommand<TArgs = any, TResult = void> {
  * @template TArgs - El tipo de los argumentos esperados por la función.
  * @template TResult - El tipo del valor devuelto por la función.
  */
-export type CommandHandler<TArgs = CommandContext, TResult = void> = (args?: TArgs) => TResult;
+export type CommandHandler<TArgs = CommandContext, TResult = void> = (
+  args?: TArgs
+) => TResult;
 
 /**
  * (Opcional) Interfaz para un registro o gestor centralizado de comandos.
@@ -60,14 +62,19 @@ export interface ICommandRegistry {
    * @param commandId - El identificador único del comando.
    * @param command - La instancia del comando a registrar.
    */
-  registerCommand(commandId: string, command: ICommand<any, any> | CommandHandler<any, any>): void;
+  registerCommand(
+    commandId: string,
+    command: ICommand<any, any> | CommandHandler<any, any>
+  ): void;
 
   /**
    * Obtiene un comando registrado por su ID.
    * @param commandId - El identificador único del comando.
    * @returns La instancia del comando o `undefined` si no se encuentra.
    */
-  getCommand(commandId: string): ICommand<any, any> | CommandHandler<any, any> | undefined;
+  getCommand(
+    commandId: string
+  ): ICommand<any, any> | CommandHandler<any, any> | undefined;
 
   /**
    * Ejecuta un comando registrado por su ID.
@@ -75,7 +82,10 @@ export interface ICommandRegistry {
    * @param args - Los argumentos para la ejecución del comando.
    * @returns El resultado de la ejecución del comando o `undefined` si el comando no existe.
    */
-  executeCommand<TArgs = any, TResult = void>(commandId: string, args?: TArgs): TResult | undefined;
+  executeCommand<TArgs = any, TResult = void>(
+    commandId: string,
+    args?: TArgs
+  ): TResult | undefined;
 
   /**
    * Comprueba si un comando registrado puede ejecutarse.

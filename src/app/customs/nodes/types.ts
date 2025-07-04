@@ -1,4 +1,4 @@
-import type { Node, BuiltInNode } from "@xyflow/react";
+import type { BuiltInNode, Node } from '@xyflow/react';
 
 export type CustomNodeApp = Node<{
   label: string; //nombre del nodo que se muestra en la interfaz
@@ -10,7 +10,7 @@ export type ProcesoCustomNode = Node<
   {
     metadata?: any; // informacion adicional del nodo que le da sus caracteristicas
   },
-  "proceso"
+  'proceso'
 > &
   CustomNodeApp;
 

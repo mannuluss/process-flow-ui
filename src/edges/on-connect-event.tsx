@@ -1,3 +1,6 @@
+import commandManager from '@commands/manager/command.manager';
+import { sendMessage, subscribeMenssage } from '@core/services/message.service';
+import { EventFlowTypes } from '@core/types/message';
 import {
   Button,
   Dialog,
@@ -11,48 +14,34 @@ import {
   Select,
   SelectChangeEvent,
   Snackbar,
-} from "@mui/material";
-import { addEdge, Connection, useReactFlow } from "@xyflow/react";
-import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
-import { Formik } from "formik";
-import {
-  sendMessage,
-  subscribeMenssage,
-} from "@core/services/message.service";
-import { EventFlowTypes } from "@core/types/message";
-import { useAppSelector } from "../store/store";
-import commandManager from "@commands/manager/command.manager";
+} from '@mui/material';
+import { addEdge, Connection, useReactFlow } from '@xyflow/react';
+import { Formik } from 'formik';
+import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
+
+import { useAppSelector } from '../store/store';
 
 const defaultOptions = [
   {
     id: 1,
-    nombre: "Por validar",
+    nombre: 'Por validar',
   },
   {
     id: 2,
-    nombre: "Validar",
+    nombre: 'Validar',
   },
   {
     id: 3,
-    nombre: "Rechazar",
+    nombre: 'Rechazar',
   },
 ];
-
-/**
- * Proceso que valida que una conexion sea unica entre cada nodo
- */
-// const validateUniqueConection = (connection: Connection, edge: Edge[]) => {
-//   return edge.some(
-//     (ed) => ed.source === connection.source && ed.target === connection.target
-//   );
-// };
 
 export const OnConnectEdge = forwardRef((_props, ref) => {
   const [open, setOpen] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [action, setAction] = useState(null);
   const [optionsAccion, setOptionsAccion] = useState(defaultOptions);
-  const { customEdgeConnection } = useAppSelector((state) => state.config);
+  const { customEdgeConnection } = useAppSelector(state => state.config);
   //const [optionsRol, setOptionsRol] = useState(defaultOptions);
 
   const [connection, setConnection] = useState<Connection>(null);
@@ -60,14 +49,13 @@ export const OnConnectEdge = forwardRef((_props, ref) => {
 
   useEffect(() => {
     subscribeMenssage(EventFlowTypes.LOAD_ACTIONS, (msj: any) => {
-      console.info("[GRAPH] postMessage load actions", msj);
+      console.info('[GRAPH] postMessage load actions', msj);
       setOptionsAccion(msj.data.actions);
     });
   }, [setOptionsAccion]);
 
   useImperativeHandle(ref, () => ({
-    onConnect: (connections) => {
-      console.info("[GRAPH] createConnect", connections);
+    onConnect: connections => {
       sendMessage({ type: EventFlowTypes.CREATE_EDGE, payload: connections });
 
       if (!customEdgeConnection) {
@@ -84,19 +72,19 @@ export const OnConnectEdge = forwardRef((_props, ref) => {
   };
 
   const handleChange = (event: SelectChangeEvent<any>) => {
-    setAction(optionsAccion.find((el) => el.id === Number(event.target.value)));
+    setAction(optionsAccion.find(el => el.id === Number(event.target.value)));
   };
 
   const createConnect = () => {
-    flow.setEdges((edges) =>
+    flow.setEdges(edges =>
       addEdge({ ...connection, data: action, label: action.nombre }, edges)
     );
     handleClose();
   };
 
   useEffect(() => {
-    const suscription = subscribeMenssage(EventFlowTypes.ADD_EDGE, (event) => {
-      commandManager.executeCommand("addEdge", {
+    const suscription = subscribeMenssage(EventFlowTypes.ADD_EDGE, event => {
+      commandManager.executeCommand('addEdge', {
         state: flow,
         object: event.payload,
       });
@@ -117,11 +105,11 @@ export const OnConnectEdge = forwardRef((_props, ref) => {
       {!customEdgeConnection && (
         <Dialog open={open}>
           <DialogTitle>
-            Accion {connection?.source} {"->"} {connection?.target}{" "}
+            Accion {connection?.source} {'->'} {connection?.target}{' '}
           </DialogTitle>
           <DialogContentText
             sx={{
-              padding: "16px",
+              padding: '16px',
             }}
           >
             Seleccione un accion que permite cambiar de estado.
@@ -138,7 +126,7 @@ export const OnConnectEdge = forwardRef((_props, ref) => {
                 input={<OutlinedInput label="Estado" id="idEstado" />}
               >
                 <option aria-label="None" value="" />
-                {optionsAccion.map((opt) => (
+                {optionsAccion.map(opt => (
                   <option key={opt.id} value={opt.id}>
                     {opt.nombre}
                   </option>
@@ -149,8 +137,8 @@ export const OnConnectEdge = forwardRef((_props, ref) => {
               initialValues={{
                 idEstado: action?.id,
               }}
-              onSubmit={(values) => {
-                console.log("values", values);
+              onSubmit={values => {
+                console.log('values', values);
               }}
             ></Formik>
           </DialogContent>

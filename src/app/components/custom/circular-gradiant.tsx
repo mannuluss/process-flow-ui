@@ -1,8 +1,10 @@
-import { CircularProgress } from "@mui/material";
-import React from "react";
+import { CircularProgress } from '@mui/material';
+import React from 'react';
 
 // From https://github.com/mui/material-ui/issues/9496#issuecomment-959408221
-export default function GradientCircularProgress(props: { color: "primary" | "secondary" | "inherit" }) {
+export default function GradientCircularProgress(props: {
+  color: 'primary' | 'secondary' | 'inherit';
+}) {
   return (
     <React.Fragment>
       <svg width={0} height={0}>
@@ -14,7 +16,7 @@ export default function GradientCircularProgress(props: { color: "primary" | "se
         </defs>
       </svg>
       <CircularProgress
-        sx={{ "svg circle": { stroke: "url(#my_gradient)" } }}
+        sx={{ 'svg circle': { stroke: 'url(#my_gradient)' } }}
         color={props.color}
       />
     </React.Fragment>

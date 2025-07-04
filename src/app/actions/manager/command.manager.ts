@@ -1,12 +1,20 @@
 import { CommandContext } from '@commands/interfaces/command.event';
-import { ICommand, ICommandRegistry, CommandHandler } from '../interfaces/command.interfaces';
+
+import {
+  CommandHandler,
+  ICommand,
+  ICommandRegistry,
+} from '../interfaces/command.interfaces';
 
 /**
  * Gestor centralizado para registrar y ejecutar comandos.
  * Implementa la interfaz ICommandRegistry.
  */
 export class CommandManager implements ICommandRegistry {
-  private commands = new Map<string, ICommand<any, any> | CommandHandler<any, any>>();
+  private commands = new Map<
+    string,
+    ICommand<any, any> | CommandHandler<any, any>
+  >();
 
   /**
    * Registra un comando en el gestor.
@@ -14,13 +22,18 @@ export class CommandManager implements ICommandRegistry {
    * @param commandId - El identificador único del comando. Debe ser proporcionado.
    * @param command - La instancia del comando a registrar.
    */
-  registerCommand(commandId: string, command: ICommand<any, any> | CommandHandler<any, any>): void {
+  registerCommand(
+    commandId: string,
+    command: ICommand<any, any> | CommandHandler<any, any>
+  ): void {
     if (!commandId) {
       console.error('Command registration failed: commandId is required.');
       return;
     }
     if (this.commands.has(commandId)) {
-      console.warn(`CommandManager: Command with ID "${commandId}" already registered. Overwriting.`);
+      console.warn(
+        `CommandManager: Command with ID "${commandId}" already registered. Overwriting.`
+      );
     }
     this.commands.set(commandId, command);
     console.log(`Command registered: ${commandId}`);
@@ -31,7 +44,9 @@ export class CommandManager implements ICommandRegistry {
    * @param commandId - El identificador único del comando.
    * @returns La instancia del comando o `undefined` si no se encuentra.
    */
-  getCommand(commandId: string): ICommand<any, any> | CommandHandler<any, any> | undefined {
+  getCommand(
+    commandId: string
+  ): ICommand<any, any> | CommandHandler<any, any> | undefined {
     return this.commands.get(commandId);
   }
 
@@ -42,10 +57,15 @@ export class CommandManager implements ICommandRegistry {
    * @param args - Los argumentos para la ejecución del comando.
    * @returns El resultado de la ejecución del comando o `undefined` si el comando no existe o no puede ejecutarse.
    */
-  executeCommand<TArgs = CommandContext, TResult = void>(commandId: string, args?: TArgs): TResult | undefined {
+  executeCommand<TArgs = CommandContext, TResult = void>(
+    commandId: string,
+    args?: TArgs
+  ): TResult | undefined {
     const command = this.getCommand(commandId);
     if (!command) {
-      console.error(`CommandManager: Command with ID "${commandId}" not found.`);
+      console.error(
+        `CommandManager: Command with ID "${commandId}" not found.`
+      );
       return undefined;
     }
 
@@ -59,11 +79,16 @@ export class CommandManager implements ICommandRegistry {
           console.log(`Executing command: ${commandId}`, args);
           return command.execute(args) as TResult;
         } catch (error) {
-          console.error(`CommandManager: Error executing command "${commandId}".`, error);
+          console.error(
+            `CommandManager: Error executing command "${commandId}".`,
+            error
+          );
           return undefined;
         }
       } else {
-        console.warn(`CommandManager: Command "${commandId}" cannot be executed in the current state.`);
+        console.warn(
+          `CommandManager: Command "${commandId}" cannot be executed in the current state.`
+        );
         return undefined;
       }
     }

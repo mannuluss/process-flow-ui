@@ -1,10 +1,12 @@
-import "@xyflow/react/dist/style.css";
-import Canvas from "./app/canvas/Canvas";
-import { useAppDispatch } from "./store/store";
-import { useEffect } from "react";
-import { subscribeMenssage } from "./app/core/services/message.service";
-import { setConfig } from "./store/configSlice";
-import { EventFlowTypes } from "./app/core/types/message";
+import '@xyflow/react/dist/style.css';
+
+import { useEffect } from 'react';
+
+import Canvas from './app/canvas/Canvas';
+import { subscribeMenssage } from './app/core/services/message.service';
+import { EventFlowTypes } from './app/core/types/message';
+import { setConfig } from './store/configSlice';
+import { useAppDispatch } from './store/store';
 
 export default function App() {
   const dispatch = useAppDispatch();

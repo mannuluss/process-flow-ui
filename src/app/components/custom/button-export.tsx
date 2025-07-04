@@ -1,10 +1,10 @@
-import { Button } from "@mui/material";
-import SaveIcon from "@mui/icons-material/Save";
-import { useStore } from "@xyflow/react";
-import commandManager from "@commands/manager/command.manager";
+import commandManager from '@commands/manager/command.manager';
+import SaveIcon from '@mui/icons-material/Save';
+import { Button } from '@mui/material';
+import { useStore } from '@xyflow/react';
 
 function saveAction(nodes: any[], edges: any[]) {
-  commandManager.executeCommand("saveGraph", {
+  commandManager.executeCommand('saveGraph', {
     object: {
       nodes,
       edges,
@@ -13,8 +13,8 @@ function saveAction(nodes: any[], edges: any[]) {
 }
 
 export default function ButtonExport() {
-  const nodes = useStore<any[]>((s) => s.nodes);
-  const edges = useStore((s) => s.edges);
+  const nodes = useStore<any[]>(s => s.nodes);
+  const edges = useStore(s => s.edges);
 
   return (
     <Button

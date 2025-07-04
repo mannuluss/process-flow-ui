@@ -1,13 +1,13 @@
-import { CommandContext } from "@commands/interfaces/command.event";
+import { CommandContext } from '@commands/interfaces/command.event';
 
 /**
  * Los tipos de menus contextuales soportados por la aplicacion
  */
-export type TypeContextMenu = "Node" | "Edge";
+export type TypeContextMenu = 'Node' | 'Edge';
 /**
  * El contexto del eventos que se dispara desde el menu contextual, al seleccionar una accion
  */
-export interface MenuActionEventContext<T = any> extends CommandContext<T> {}
+export type MenuActionEventContext<T = any> = CommandContext<T>;
 
 /**
  * El contexto del menu contextual, que se muestra al hacer click derecho sobre un nodo o arista

@@ -1,10 +1,11 @@
-import { CommandHandler } from '../interfaces/command.interfaces';
-import { v4 as uuidv4 } from 'uuid';
-import { CommandContext } from '../interfaces/command.event';
-import { AppNode } from '../../customs/nodes/types';
 import { sendMessage } from '@core/services/message.service';
 import { EventFlowTypes } from '@core/types/message';
 import { addEdge, Edge, ReactFlowInstance } from '@xyflow/react';
+import { v4 as uuidv4 } from 'uuid';
+
+import { AppNode } from '../../customs/nodes/types';
+import { CommandContext } from '../interfaces/command.event';
+import { CommandHandler } from '../interfaces/command.interfaces';
 
 export const generateDefaultNode = (
   type: any = 'default',
@@ -25,7 +26,7 @@ export const generateDefaultNode = (
  * Indica que se desea crear un nodo desde el flujo de eventos
  * o si no se usa el por defecto (el que se implemento en react)
  */
-export const createNodeCommand: CommandHandler = (context) => {
+export const createNodeCommand: CommandHandler = context => {
   if (context.appStore.config.customNodeCreate) {
     sendMessage({
       type: EventFlowTypes.CREATE_NODE,
@@ -55,14 +56,14 @@ export const updateNodeCommand: CommandHandler = (
 export const AddNodeCommand: CommandHandler = (
   context: CommandContext<AppNode>
 ) => {
-  context.state.setNodes((current) => [...current, context.object]);
+  context.state.setNodes(current => [...current, context.object]);
 };
 
 export const addEdgeCommand: CommandHandler = (
   context: CommandContext<Edge>
 ) => {
-  context.state.setEdges((edges) => {
-    if (edges.some((ed) => ed.id === context.object.id)) {
+  context.state.setEdges(edges => {
+    if (edges.some(ed => ed.id === context.object.id)) {
       return [...edges, context.object];
     }
     return addEdge(context.object, edges);

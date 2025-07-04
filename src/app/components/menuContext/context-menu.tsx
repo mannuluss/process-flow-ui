@@ -1,14 +1,15 @@
-import { ListItemIcon, Menu, MenuItem } from "@mui/material";
-import { Edge } from "@xyflow/react";
-import React, { forwardRef, useImperativeHandle } from "react";
+import { ListItemIcon, Menu, MenuItem } from '@mui/material';
+import { Edge } from '@xyflow/react';
+import React, { forwardRef, useImperativeHandle } from 'react';
+import { AppNode } from 'src/app/customs/nodes/types.ts';
+
+import { useCommand } from '../../actions/manager/CommandContext.tsx';
+import { ContextMenuActionByType } from './constant/menu.const';
 import {
   ContextMenuAction,
   MenuActionEventContext,
   TypeContextMenu,
-} from "./interface/contextActionEvent";
-import { AppNode } from "src/app/customs/nodes/types.ts";
-import { ContextMenuActionByType } from "./constant/menu.const";
-import { useCommand } from "../../actions/manager/CommandContext.tsx";
+} from './interface/contextActionEvent';
 
 export interface ContextMenuRef {
   handleContextMenu: (
@@ -38,7 +39,7 @@ const ContextMenu = forwardRef((_props, ref) => {
           showMenu(evt, objeto, type);
           // aquí podrías cambiar estado, hacer fetch, etc.
         },
-      } as ContextMenuRef)
+      }) as ContextMenuRef
   );
   const showMenu = (evt: React.MouseEvent, object, type: TypeContextMenu) => {
     setContextMenu(
@@ -71,7 +72,10 @@ const ContextMenu = forwardRef((_props, ref) => {
     setContextMenu(null);
     if (!act) return;
 
-    const contextArgs = generateContextApp(contextMenu?.type, contextMenu?.object);
+    const contextArgs = generateContextApp(
+      contextMenu?.type,
+      contextMenu?.object
+    );
 
     if (act.commandId) {
       commandManager.executeCommand(act.commandId, contextArgs);
@@ -81,7 +85,10 @@ const ContextMenu = forwardRef((_props, ref) => {
     }
   };
 
-  const contextApp: MenuActionEventContext = generateContextApp(contextMenu?.type, contextMenu?.object);
+  const contextApp: MenuActionEventContext = generateContextApp(
+    contextMenu?.type,
+    contextMenu?.object
+  );
 
   return (
     <Menu
@@ -95,12 +102,10 @@ const ContextMenu = forwardRef((_props, ref) => {
       }
     >
       {contextMenu?.actions
-        .filter((a) => (a.show ? a.show(contextApp) : true))
+        .filter(a => (a.show ? a.show(contextApp) : true))
         .map((act, i) => (
           <MenuItem key={i} onClick={() => handleClose(act)}>
-            <ListItemIcon>
-            {act.icon}
-          </ListItemIcon>
+            <ListItemIcon>{act.icon}</ListItemIcon>
             {act.title}
           </MenuItem>
         ))}

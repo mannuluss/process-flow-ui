@@ -1,37 +1,38 @@
-import { useCommand } from "@commands/manager/CommandContext";
-import { subscribeMenssage } from "@core/services/message.service";
+import { useCommand } from '@commands/manager/CommandContext';
+import { subscribeMenssage } from '@core/services/message.service';
+import { CrossAppMessage, EventFlowTypes } from '@core/types/message';
 import {
-  useNodesState,
-  useEdgesState,
-  Edge,
-  OnConnect,
-  NodeMouseHandler,
-  EdgeMouseHandler,
-  ReactFlow,
   Background,
-  MiniMap,
   Controls,
-} from "@xyflow/react";
-import React, { useCallback, useEffect } from "react";
-import { useDispatch } from "react-redux";
-import OnConnectEdge from "src/edges/on-connect-event";
+  Edge,
+  EdgeMouseHandler,
+  MiniMap,
+  NodeMouseHandler,
+  OnConnect,
+  ReactFlow,
+  useEdgesState,
+  useNodesState,
+} from '@xyflow/react';
+import React, { useCallback, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import OnConnectEdge from 'src/edges/on-connect-event';
+import { setLoading } from 'src/store/configSlice';
 import {
-  setSelectedNode,
-  setSelectedEdge,
   clearSelection,
-} from "src/store/selectionSlice";
-import { useAppSelector } from "src/store/store";
-import LoadingBackdrop from "../components/custom/loading-backdrop";
+  setSelectedEdge,
+  setSelectedNode,
+} from 'src/store/selectionSlice';
+import { useAppSelector } from 'src/store/store';
+
+import LoadingBackdrop from '../components/custom/loading-backdrop';
 import ContextMenu, {
   ContextMenuRef,
-} from "../components/menuContext/context-menu";
-import PanelFlowState from "../components/panels/panel-flow-state";
-import { edgeTypes } from "../customs/edges";
-import { nodeTypes } from "../customs/nodes";
-import { EventManager } from "./events/EventManager";
-import { CrossAppMessage, EventFlowTypes } from "@core/types/message";
-import { AppNode } from "../customs/nodes/types";
-import { setLoading } from "src/store/configSlice";
+} from '../components/menuContext/context-menu';
+import PanelFlowState from '../components/panels/panel-flow-state';
+import { edgeTypes } from '../customs/edges';
+import { nodeTypes } from '../customs/nodes';
+import { AppNode } from '../customs/nodes/types';
+import { EventManager } from './events/EventManager';
 
 export default function Canvas() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -42,19 +43,17 @@ export default function Canvas() {
   const menu = React.useRef<ContextMenuRef>(null);
   const connectEdges = React.useRef<{ onConnect: OnConnect }>(null);
   const dispatch = useDispatch();
-  const { colorMode, showPanelMinimap } = useAppSelector(
-    (state) => state.config
-  );
+  const { colorMode, showPanelMinimap } = useAppSelector(state => state.config);
   const { commandManager, generateContextApp } = useCommand();
 
   const loadData = useCallback(
     (msj: CrossAppMessage) => {
       commandManager.executeCommand(
-        "loadData",
-        generateContextApp("Graph", msj.payload)
+        'loadData',
+        generateContextApp('Graph', msj.payload)
       );
       dispatch(clearSelection());
-      dispatch(setLoading({ open: false, message: "" }));
+      dispatch(setLoading({ open: false, message: '' }));
     },
     [commandManager, dispatch, generateContextApp]
   );
@@ -67,16 +66,16 @@ export default function Canvas() {
   }, [loadData]);
 
   useEffect(() => {
-    const sub = subscribeMenssage(EventFlowTypes.ADD_EDGE, (msj) => {
+    const sub = subscribeMenssage(EventFlowTypes.ADD_EDGE, msj => {
       commandManager.executeCommand(
-        "addEdge",
-        generateContextApp("Edge", msj.payload)
+        'addEdge',
+        generateContextApp('Edge', msj.payload)
       );
     });
-    const sub2 = subscribeMenssage(EventFlowTypes.ADD_NODE, (msj) => {
+    const sub2 = subscribeMenssage(EventFlowTypes.ADD_NODE, msj => {
       commandManager.executeCommand(
-        "addNode",
-        generateContextApp("Node", msj.payload)
+        'addNode',
+        generateContextApp('Node', msj.payload)
       );
     });
     return () => {
@@ -87,16 +86,16 @@ export default function Canvas() {
 
   const onContextMenuNode: NodeMouseHandler<AppNode> = useCallback(
     (evt, node) => {
-      menu.current?.handleContextMenu(evt, node, "Node");
+      menu.current?.handleContextMenu(evt, node, 'Node');
     },
     []
   );
 
   const onContextMenuEdge: EdgeMouseHandler = useCallback((evt, edge) => {
-    menu.current?.handleContextMenu(evt, edge, "Edge");
+    menu.current?.handleContextMenu(evt, edge, 'Edge');
   }, []);
 
-  const onConnect: OnConnect = useCallback((connection) => {
+  const onConnect: OnConnect = useCallback(connection => {
     connectEdges.current?.onConnect(connection);
   }, []);
 
@@ -126,8 +125,8 @@ export default function Canvas() {
   const onDoubleClickNode = useCallback(
     (_evt: React.MouseEvent, node: AppNode) => {
       commandManager.executeCommand(
-        "editNode",
-        generateContextApp("Node", node)
+        'editNode',
+        generateContextApp('Node', node)
       );
     },
     [commandManager, generateContextApp]
@@ -136,8 +135,8 @@ export default function Canvas() {
   const onDoubleClickEdge = useCallback(
     (_evt: React.MouseEvent, edge: Edge) => {
       commandManager.executeCommand(
-        "editEdge",
-        generateContextApp("Edge", edge)
+        'editEdge',
+        generateContextApp('Edge', edge)
       );
     },
     [commandManager, generateContextApp]
@@ -162,7 +161,7 @@ export default function Canvas() {
         onNodeDoubleClick={onDoubleClickNode}
         onEdgeDoubleClick={onDoubleClickEdge}
         fitView
-        defaultEdgeOptions={{ type: "step" } as Edge}
+        defaultEdgeOptions={{ type: 'step' } as Edge}
       >
         <Background />
         {showPanelMinimap && <MiniMap />}

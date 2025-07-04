@@ -36,12 +36,12 @@ const updateInitialNodeAndEdges = (
 
 export const setInitialNodeCommand: CommandHandler<
   MenuActionEventContext<CustomNodeApp>
-> = (evt) => {
+> = evt => {
   updateInitialNodeAndEdges(evt, true);
 };
 
 export const unSetInitialNodeCommand: CommandHandler<
   MenuActionEventContext<CustomNodeApp>
-> = (evt) => {
+> = evt => {
   updateInitialNodeAndEdges(evt, false);
 };
