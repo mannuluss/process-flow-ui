@@ -92,7 +92,7 @@ export const OnConnectEdge = forwardRef((_props, ref) => {
     return () => {
       suscription.unsubscribe();
     };
-  }, []);
+  }, [flow]);
 
   return (
     <>

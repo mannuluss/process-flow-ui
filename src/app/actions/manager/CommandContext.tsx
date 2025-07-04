@@ -23,6 +23,8 @@ interface CommandContextType {
 const CommandContext = createContext<CommandContextType | undefined>(undefined);
 
 // Create a custom hook to use the command context
+//TODO: revisar este error de eslint de vite
+// eslint-disable-next-line react-refresh/only-export-components
 export const useCommand = (): CommandContextType => {
   const context = useContext(CommandContext);
   if (!context) {

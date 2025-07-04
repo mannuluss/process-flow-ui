@@ -3,7 +3,7 @@
   --background-color: #ffffff;
   --xy-node-background-color: #ffffff;
   --text-color: #213547;
-  --node-background: #FFFFFF;
+  --node-background: #ffffff;
   --node-border: #c3c8bb;
   --edge-color: #b1b1b7;
   --minimap-background: #f8f8f8;
@@ -17,8 +17,7 @@
 
   /* SELECTED */
   --xy-node-boxshadow-selected: 0 1px 4px 1px #c3c8bb;
-  --xy-node-border-color-selected: #C3C8BB;
-
+  --xy-node-border-color-selected: #c3c8bb;
 
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
