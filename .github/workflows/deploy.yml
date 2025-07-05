@@ -26,7 +26,7 @@ jobs:
         run: |
           npm run lint:js          # Verificar código
           npm run format        # verificar formateo del codigo
-          npm run style:lint    # Verificar CSS/SCSS
+          npm run lint:css    # Verificar CSS/SCSS
 
       - name: Build application
         run: npm run build # Comando para compilar tu aplicación, según tu package.json
