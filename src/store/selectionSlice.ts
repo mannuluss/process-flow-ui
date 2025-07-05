@@ -16,10 +16,10 @@ const selectionSlice = createSlice({
   initialState,
   reducers: {
     setSelectedNode(state, action: PayloadAction<Node | null>) {
-      state.selectedNode = action.payload;
       if (action.payload !== null) {
         state.selectedEdge = null; // Clear selected edge if a node is selected
       }
+      return { ...state, selectedNode: action.payload };
     },
     setSelectedEdge(state, action: PayloadAction<Edge | null>) {
       state.selectedEdge = action.payload;
