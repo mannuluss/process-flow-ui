@@ -1,8 +1,9 @@
-import { removeEdgeCommand } from '@commands/commands/remove.command';
 import { sendMessage } from '@core/services/message.service';
 import { EventFlowTypes, GraphData } from '@core/types/message';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import { Add } from '@mui/icons-material';
+import AutorenewIcon from '@mui/icons-material/Autorenew';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import { CustomNodeApp } from 'src/app/customs/nodes/types';
@@ -13,42 +14,66 @@ import {
   TypeContextMenu,
 } from '../interface/contextActionEvent';
 
+const ActionAddNode: ContextMenuAction = {
+  title: 'Agregar nodo',
+  icon: <Add />,
+  commandId: 'createNode',
+};
+
+const ActionEditNode: ContextMenuAction = {
+  title: 'Editar nodo',
+  icon: <EditIcon fontSize="small" />,
+  commandId: 'editNode',
+  show: context => (context.appStore.selection?.selectedNode ? true : false),
+};
+
+const ActionRemoveNode: ContextMenuAction = {
+  title: 'Eliminar nodo',
+  icon: <DeleteIcon fontSize="small" />,
+  commandId: 'removeNode',
+  show: context => (context.appStore.selection?.selectedNode ? true : false),
+};
+
+const ActionEditEdge: ContextMenuAction = {
+  title: 'Editar conexión',
+  icon: <EditIcon fontSize="small" />,
+  commandId: 'editEdge',
+  show: context => (context.appStore.selection?.selectedEdge ? true : false),
+};
+
+const ActionRemoveEdge: ContextMenuAction = {
+  title: 'Eliminar conexión',
+  icon: <DeleteIcon fontSize="small" />,
+  commandId: 'removeEdge',
+  show: context => (context.appStore.selection?.selectedEdge ? true : false),
+};
+
 export const ActionsMenuEdge: ContextMenuAction[] = [
-  {
-    title: 'Editar conexión',
-    icon: <EditIcon fontSize="small" />,
-    show: () => true,
-    action: context => {
-      //se le informa al padre que se va a editar un nodo.
-      sendMessage({
-        type: EventFlowTypes.UPDATE_EDGE,
-        payload: context.object,
-      });
-    },
-  },
-  {
-    title: 'Eliminar conexión',
-    icon: <DeleteIcon fontSize="small" />,
-    show: () => true,
-    action: removeEdgeCommand,
-  },
+  { ...ActionEditEdge, show: () => true },
+  { ...ActionRemoveEdge, show: () => true },
 ];
+
+export const ActionMakeInitialNode: ContextMenuAction = {
+  icon: <PlayCircleOutlineIcon fontSize="small" />,
+  title: 'Marcar como inicial',
+  show: (context: MenuActionEventContext<CustomNodeApp>) => {
+    return context.object ? !context.object?.data?.initial : false;
+  },
+  commandId: 'setInitialNode',
+};
+
+export const ActionResetInitialNode: ContextMenuAction = {
+  title: 'Desmarcar como inicial',
+  icon: <AutorenewIcon fontSize="small" />,
+  show: (context: MenuActionEventContext<CustomNodeApp>) => {
+    return context.object?.data?.initial;
+  },
+  commandId: 'unSetInitialNode',
+};
+
 export const ActionsMenuNode: ContextMenuAction[] = [
-  {
-    icon: <PlayCircleOutlineIcon fontSize="small" />,
-    title: 'Marcar como inicial',
-    show: (context: MenuActionEventContext<CustomNodeApp>) => {
-      return !context.object?.data?.initial;
-    },
-    commandId: 'setInitialNode',
-  },
-  {
-    title: 'Desmarcar como inicial',
-    show: (context: MenuActionEventContext<CustomNodeApp>) => {
-      return context.object?.data?.initial;
-    },
-    commandId: 'unSetInitialNode',
-  },
+  ActionMakeInitialNode,
+  ActionResetInitialNode,
   {
     title: 'Editar nodo',
     icon: <EditIcon fontSize="small" />,
@@ -71,34 +96,11 @@ export const ActionsMenuNode: ContextMenuAction[] = [
  * Configuracion del menu del panel de acciones.
  */
 export const ActionsMenuWindow: ContextMenuAction[] = [
-  {
-    title: 'Agregar nodo',
-    commandId: 'createNode',
-  },
-  {
-    title: 'Editar nodo',
-    icon: <EditIcon fontSize="small" />,
-    commandId: 'editNode',
-    show: context => (context.appStore.selection?.selectedNode ? true : false),
-  },
-  {
-    title: 'Eliminar nodo',
-    icon: <DeleteIcon fontSize="small" />,
-    commandId: 'removeNode',
-    show: context => (context.appStore.selection?.selectedNode ? true : false),
-  },
-  {
-    title: 'Editar conexión',
-    icon: <EditIcon fontSize="small" />,
-    commandId: 'editEdge',
-    show: context => (context.appStore.selection?.selectedEdge ? true : false),
-  },
-  {
-    title: 'Eliminar conexión',
-    icon: <DeleteIcon fontSize="small" />,
-    commandId: 'removeEdge',
-    show: context => (context.appStore.selection?.selectedEdge ? true : false),
-  },
+  ActionAddNode,
+  ActionEditNode,
+  ActionRemoveNode,
+  ActionEditEdge,
+  ActionRemoveEdge,
   {
     title: 'Cargar ejemplo',
     icon: <InsertDriveFileIcon fontSize="small" />,
@@ -111,6 +113,15 @@ export const ActionsMenuWindow: ContextMenuAction[] = [
       context.state.setEdges(example.connections);
     },
   },
+];
+
+export const ActionsToolbar: ContextMenuAction[] = [
+  ActionEditNode,
+  ActionEditEdge,
+  ActionRemoveNode,
+  ActionRemoveEdge,
+  ActionMakeInitialNode,
+  ActionResetInitialNode,
 ];
 
 /**
