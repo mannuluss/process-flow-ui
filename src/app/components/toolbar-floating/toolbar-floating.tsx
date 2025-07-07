@@ -1,8 +1,8 @@
 import { Button, ButtonGroup, Tooltip } from '@mui/material';
-import { ActionsToolbar } from '../../menuContext/constant/menu.const';
+import { ActionsToolbar } from '../menuContext/constant/menu.const';
 import { useCommand } from '@commands/manager/CommandContext';
 import { useAppSelector } from 'src/store/store';
-import './pane-description.scss';
+import './toolbar-floating.style.scss';
 
 const actions = ActionsToolbar;
 

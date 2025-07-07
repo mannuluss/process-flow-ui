@@ -30,7 +30,7 @@ import LoadingBackdrop from '../components/custom/loading-backdrop';
 import ContextMenu, {
   ContextMenuRef,
 } from '../components/menuContext/context-menu';
-import ToolbarFloating from '../components/panels/pane-description/toolbar-floating';
+import ToolbarFloating from '../components/toolbar-floating/toolbar-floating';
 import PanelFlowState from '../components/panels/panel-flow-state';
 import { edgeTypes } from '../customs/edges';
 import { nodeTypes } from '../customs/nodes';
