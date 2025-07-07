@@ -118,7 +118,7 @@ export default [
       'prettier': prettier,
       'import': importPlugin,
       'unused-imports': unusedImports,
-      'simple-import-sort': simpleImportSort,
+      //'simple-import-sort': simpleImportSort,
     },
     rules: {
       ...typescript.configs.recommended.rules,
