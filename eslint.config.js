@@ -6,7 +6,7 @@ import reactRefresh from 'eslint-plugin-react-refresh';
 import prettier from 'eslint-plugin-prettier';
 import importPlugin from 'eslint-plugin-import';
 import unusedImports from 'eslint-plugin-unused-imports';
-import simpleImportSort from 'eslint-plugin-simple-import-sort';
+//import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import prettierConfig from 'eslint-config-prettier';
 
 export default [
@@ -45,7 +45,7 @@ export default [
       'prettier': prettier,
       'import': importPlugin,
       'unused-imports': unusedImports,
-      'simple-import-sort': simpleImportSort,
+      //'simple-import-sort': simpleImportSort,
     },
     rules: {
       // Reglas de TypeScript ESLint
