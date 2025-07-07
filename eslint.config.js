@@ -65,8 +65,8 @@ export default [
       'prettier/prettier': 'error',
 
       // Reglas de organización de imports/exports
-      'simple-import-sort/imports': 'error',
-      'simple-import-sort/exports': 'error',
+      //'simple-import-sort/imports': 'error',
+      //'simple-import-sort/exports': 'error',
       'unused-imports/no-unused-imports': 'error',
       'unused-imports/no-unused-vars': [
         'warn',
@@ -124,8 +124,8 @@ export default [
       ...typescript.configs.recommended.rules,
       '@typescript-eslint/no-explicit-any': 'off',
       'prettier/prettier': 'error',
-      'simple-import-sort/imports': 'error',
-      'simple-import-sort/exports': 'error',
+      //'simple-import-sort/imports': 'error',
+      //'simple-import-sort/exports': 'error',
       'unused-imports/no-unused-imports': 'error',
     },
   },
