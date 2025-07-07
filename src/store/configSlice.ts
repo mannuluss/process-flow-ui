@@ -10,6 +10,16 @@ export interface ConfigStateReduxApp {
   customEdgeConnection: boolean;
   customNodeCreate: boolean;
   showPanelMinimap: boolean;
+  /**
+   * muestra el toolbar flotante de la aplicacion, para las acciones sobre los nodos o conexiones.
+   * @default true
+   */
+  showToolbar: boolean;
+  /**
+   * muestra el panel de acciones.
+   * @default true
+   */
+  showPaneDescription: boolean;
   colorMode: 'light' | 'dark' | 'system';
   defaultTypeNode: string;
   collapsePanel: boolean;
@@ -53,6 +63,8 @@ const initialState: ConfigStateReduxApp = {
   customEdgeConnection: false, // Default value
   customNodeCreate: false, // Default value
   showPanelMinimap: true, // Default value
+  showToolbar: true,
+  showPaneDescription: true,
   colorMode: getInitialColorMode(), // Load from localStorage or default
   defaultTypeNode: 'default', // Default value
   collapsePanel: getCollapsePanelState(),

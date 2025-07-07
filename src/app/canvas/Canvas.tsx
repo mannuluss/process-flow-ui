@@ -5,8 +5,10 @@ import {
   Background,
   Controls,
   Edge,
+  EdgeChange,
   EdgeMouseHandler,
   MiniMap,
+  NodeChange,
   NodeMouseHandler,
   OnConnect,
   ReactFlow,
@@ -28,6 +30,7 @@ import LoadingBackdrop from '../components/custom/loading-backdrop';
 import ContextMenu, {
   ContextMenuRef,
 } from '../components/menuContext/context-menu';
+import ToolbarFloating from '../components/panels/pane-description/toolbar-floating';
 import PanelFlowState from '../components/panels/panel-flow-state';
 import { edgeTypes } from '../customs/edges';
 import { nodeTypes } from '../customs/nodes';
@@ -43,7 +46,12 @@ export default function Canvas() {
   const menu = React.useRef<ContextMenuRef>(null);
   const connectEdges = React.useRef<{ onConnect: OnConnect }>(null);
   const dispatch = useDispatch();
-  const { colorMode, showPanelMinimap } = useAppSelector(state => state.config);
+  const { colorMode, showPanelMinimap, showToolbar } = useAppSelector(
+    state => state.config
+  );
+  const { selectedNode, selectedEdge } = useAppSelector(
+    state => state.selection
+  );
   const { commandManager, generateContextApp } = useCommand();
 
   const loadData = useCallback(
@@ -101,18 +109,27 @@ export default function Canvas() {
 
   const onNodeSelect: NodeMouseHandler<AppNode> = useCallback(
     (_, node) => {
-      // Enviar una copia profunda (serializando y deserializando) al store, para evitar un freeze del objeto que genera errores en React Flow
-      const nodeCopy = JSON.parse(JSON.stringify(node));
-      dispatch(setSelectedNode(nodeCopy));
+      if (node) {
+        // Enviar una copia profunda (serializando y deserializando) al store, para evitar un freeze del objeto que genera errores en React Flow
+        const nodeCopy = JSON.parse(JSON.stringify(node));
+        dispatch(setSelectedNode(nodeCopy));
+      } else {
+        // Si el nodo es nulo, limpiar la selección
+        dispatch(clearSelection());
+      }
     },
     [dispatch]
   );
 
   const onEdgeSelect: EdgeMouseHandler = useCallback(
     (_, edge) => {
-      // Enviar una copia profunda al store, para evitar un freeze del objeto que genera errores en React Flow
-      const edgeCopy = JSON.parse(JSON.stringify(edge));
-      dispatch(setSelectedEdge(edgeCopy));
+      if (edge) {
+        // Enviar una copia profunda al store, para evitar un freeze del objeto que genera errores en React Flow
+        const edgeCopy = JSON.parse(JSON.stringify(edge));
+        dispatch(setSelectedEdge(edgeCopy));
+      } else {
+        dispatch(clearSelection());
+      }
     },
     [dispatch]
   );
@@ -121,6 +138,61 @@ export default function Canvas() {
   const onPaneClick = useCallback(() => {
     dispatch(clearSelection());
   }, [dispatch]);
+
+  const actionOnChangeNodeOrEdge = useCallback(
+    (
+      type: 'node' | 'edge',
+      changes: NodeChange<AppNode>[] | EdgeChange<Edge>[]
+    ) => {
+      console.debug(`onChangeObject: changes for ${type}`, changes);
+      for (const change of changes) {
+        switch (change.type) {
+          //se cambio el nodo seleccionado
+          case 'select':
+            if (change.selected) {
+              console.debug('onChangeObject: updating selected node');
+              if (type === 'node') {
+                onNodeSelect(undefined, selectedNode);
+              } else if (type === 'edge') {
+                onEdgeSelect(undefined, selectedEdge);
+              }
+            }
+            break;
+          case 'replace':
+            console.debug('onChangeObject: replacing node or edge');
+            if (change.id === selectedNode?.id.toString()) {
+              // El objeto se está actualizando, actualizamos la selección
+              if (type === 'node') {
+                onNodeSelect(undefined, change.item as AppNode);
+              } else if (type === 'edge') {
+                onEdgeSelect(undefined, change.item as Edge);
+              }
+            }
+            break;
+          case 'remove':
+            dispatch(clearSelection());
+            break;
+        }
+      }
+    },
+    [dispatch, onEdgeSelect, onNodeSelect, selectedEdge, selectedNode]
+  );
+
+  const onChangeNodes = useCallback(
+    (changes: NodeChange<AppNode>[]) => {
+      actionOnChangeNodeOrEdge('node', changes);
+      onNodesChange(changes);
+    },
+    [onNodesChange, actionOnChangeNodeOrEdge]
+  );
+
+  const onChangeEdges = useCallback(
+    (changes: EdgeChange<Edge>[]) => {
+      actionOnChangeNodeOrEdge('edge', changes);
+      onEdgesChange(changes);
+    },
+    [onEdgesChange, actionOnChangeNodeOrEdge]
+  );
 
   const onDoubleClickNode = useCallback(
     (_evt: React.MouseEvent, node: AppNode) => {
@@ -150,8 +222,8 @@ export default function Canvas() {
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
         edges={edges}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
+        onNodesChange={onChangeNodes}
+        onEdgesChange={onChangeEdges}
         onConnect={onConnect}
         onNodeContextMenu={onContextMenuNode}
         onEdgeContextMenu={onContextMenuEdge}
@@ -162,6 +234,7 @@ export default function Canvas() {
         onEdgeDoubleClick={onDoubleClickEdge}
         fitView
         defaultEdgeOptions={{ type: 'step' } as Edge}
+        deleteKeyCode={['Delete', 'Backspace']}
       >
         <Background />
         {showPanelMinimap && <MiniMap />}
@@ -169,10 +242,10 @@ export default function Canvas() {
         <PanelFlowState />
         <ContextMenu ref={menu} />
         <OnConnectEdge ref={connectEdges} />
+        {showToolbar && <ToolbarFloating />}
       </ReactFlow>
 
       <LoadingBackdrop />
-      {/* <EventManager /> */}
       <EventManager />
     </>
   );

@@ -1,8 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Edge, Node } from '@xyflow/react';
+import { Edge } from '@xyflow/react';
+import { AppNode } from 'src/app/customs/nodes/types';
 
 export interface SelectionState {
-  selectedNode: Node | null;
+  selectedNode: AppNode | null;
   selectedEdge: Edge | null;
 }
 
@@ -15,7 +16,7 @@ const selectionSlice = createSlice({
   name: 'selection',
   initialState,
   reducers: {
-    setSelectedNode(state, action: PayloadAction<Node | null>) {
+    setSelectedNode(state, action: PayloadAction<AppNode | null>) {
       if (action.payload !== null) {
         state.selectedEdge = null; // Clear selected edge if a node is selected
       }
