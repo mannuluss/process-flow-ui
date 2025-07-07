@@ -1,0 +1,6 @@
+services:
+  process-flow-ui:
+    image: ${APP_DOCKER_IMAGE}
+    container_name: process-flow-ui
+    ports:
+      - ${APP_PORT}:${APP_PORT}
