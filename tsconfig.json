@@ -21,11 +21,12 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "baseUrl": "./",
+    "types": ["vitest/globals"],
     "paths": {
-      "@commands/*": ["src/app/actions/*"],
-      "@core/*": ["src/app/core/*"],
+      "@commands/*": ["./src/app/actions/*"],
+      "@core/*": ["./src/app/core/*"]
     }
   },
-  "include": ["src", "src/environments", "src/commands/.register.manager.ts"],
+  "include": ["src", "vite.config.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

@@ -178,3 +178,75 @@ npm run lint:css:fix
 - [ ] Las dependencias nuevas están justificadas
 - [ ] Los imports están organizados correctamente
 
+
+## 🧪 Pruebas Unitarias
+
+El proyecto utiliza [Vitest](https://vitest.dev/) como framework de pruebas unitarias. Vitest ofrece una experiencia de desarrollo rápida y moderna, perfectamente integrada con el ecosistema Vite.
+
+### Comandos para Pruebas
+
+```bash
+# Ejecutar pruebas unitarias una vez
+npm run test
+
+# Ejecutar pruebas en modo watch (desarrollo)
+npm run test:watch
+
+# Ejecutar pruebas con interfaz gráfica
+npm run test:ui
+
+# Generar informe de cobertura
+npm run test:coverage
+
+# Ejecutar pruebas para CI/CD (genera reportes XML para SonarQube)
+npm run test:ci
+```
+
+### Estructura de Pruebas
+
+- Los archivos de prueba deben tener la extensión `.test.tsx` o `.test.ts`
+- Cada archivo de prueba debe ubicarse junto al componente o módulo que está probando
+- Utiliza React Testing Library para probar componentes de React
+
+### Ejemplo Básico de Test
+
+```tsx
+import { render, screen } from '@testing-library/react';
+import { describe, it, expect } from 'vitest';
+import Button from './Button';
+
+describe('Button', () => {
+  it('should render with correct text', () => {
+    render(<Button>Click me</Button>);
+    expect(screen.getByText('Click me')).toBeInTheDocument();
+  });
+});
+```
+
+### Extensión Recomendada para VS Code
+
+Para una mejor experiencia de desarrollo con Vitest, recomendamos instalar la extensión [Vitest Explorer](https://marketplace.visualstudio.com/items?itemName=vitest.explorer). Esta extensión proporciona:
+
+- Ejecución de pruebas directamente desde la interfaz de VS Code
+- Visualización de resultados de pruebas en tiempo real
+- Depuración integrada de pruebas
+- Integración con el CodeLens para ejecutar tests específicos
+
+![Vitest Explorer Screenshot](https://github.com/vitest-dev/vscode/raw/main/img/screenshot.png)
+
+### Reportes de Cobertura
+
+El comando `npm run test:coverage` genera informes detallados de cobertura de código:
+
+- **HTML**: Un reporte interactivo navegable en `coverage/lcov-report/index.html`
+- **Cobertura XML**: Para integración con SonarQube en `coverage/cobertura-report/cobertura.xml`
+- **JUnit XML**: Para integración con sistemas CI/CD en `coverage/junit-report/junit.xml`
+
+### Buenas Prácticas
+
+- Escribir tests enfocados en el comportamiento, no en la implementación
+- Preferir consultas por rol o texto sobre consultas por ID
+- Utilizar `beforeEach` para configuraciones repetitivas
+- Mock de dependencias complejas con `vi.mock()`
+- Mantener los tests simples, rápidos e independientes entre sí
+
