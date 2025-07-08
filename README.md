@@ -232,7 +232,7 @@ Para una mejor experiencia de desarrollo con Vitest, recomendamos instalar la ex
 - Depuración integrada de pruebas
 - Integración con el CodeLens para ejecutar tests específicos
 
-![Vitest Explorer Screenshot](https://github.com/vitest-dev/vscode/raw/main/img/screenshot.png)
+![Vitest Explorer Screenshot](https://github.com/vitest-dev/vitest/blob/main/docs/public/annotations-html-dark.png?raw=true)
 
 ### Reportes de Cobertura
 
