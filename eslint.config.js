@@ -31,7 +31,7 @@ export default [
         JSX: 'readonly',
       },
       parserOptions: {
-        project: ['./tsconfig.json'],
+        project: ['./tsconfig.eslint.json'],
         tsconfigRootDir: process.cwd(),
         ecmaFeatures: {
           jsx: true,
@@ -69,7 +69,7 @@ export default [
       //'simple-import-sort/exports': 'error',
       'unused-imports/no-unused-imports': 'error',
       'unused-imports/no-unused-vars': [
-        'warn',
+        'error',
         {
           vars: 'all',
           varsIgnorePattern: '^_',
