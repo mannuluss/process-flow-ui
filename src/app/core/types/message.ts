@@ -109,6 +109,7 @@ export type MessageWithPayload = {
   [K in KeysWithPayload<EventPayloadMap>]: {
     type: K;
     payload: EventPayloadMap[K]; // Payload es requerido
+    source?: '@process-flow-ui'; // Indica que el mensaje proviene de la app
   };
 }[KeysWithPayload<EventPayloadMap>];
 
@@ -117,6 +118,7 @@ type MessageWithoutPayload = {
   [K in KeysWithoutPayload<EventPayloadMap>]: {
     type: K;
     payload?: never; // Payload es opcional y 'undefined' o 'never'
+    source?: '@process-flow-ui'; // Indica que el mensaje proviene de la app
   };
 }[KeysWithoutPayload<EventPayloadMap>];
 

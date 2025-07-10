@@ -8,6 +8,6 @@ const environments: EnvironmentApp = {
   targetHost: import.meta.env.VITE_TARGET_HOST.split(','), // Separa los hosts por comas
 };
 
-console.debug(environments);
+console.debug('[Environments] ', environments);
 
 export default environments;

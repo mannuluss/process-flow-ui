@@ -14,10 +14,11 @@ const subscriptions: SubscriptionRegistry = new Map();
 
 // Listener único para todos los mensajes entrantes
 const handleIncomingMessage = (event: MessageEvent): void => {
-  //Ignorar mismo origin en desarrollo
-  if (window.location.origin === event.origin) {
+  //Ignorar los mensaje que no son de la app
+  if (event.data?.source !== '@process-flow-ui') {
     console.debug(
-      `[MessagingService] Ignorando mensaje de mismo origen: ${event}`
+      `[MessagingService] Ignorando mensaje no proviene para flujos procesos:`,
+      event.data
     );
     return;
   }
@@ -84,17 +85,20 @@ const initialize = (): void => {
 
 // Función para enviar mensajes a Angular (Simplificada)
 export const sendMessage = (message: CrossAppMessage): void => {
-  if (!window.parent || window.parent === window) {
+  if (!window.parent || window.parent === window || !window.top) {
     console.warn(
       '[MessagingService] No se puede enviar mensaje: No se detecta un contenedor padre (iframe).'
     );
-    //return;
+    return;
   }
 
   console.debug(
     `[MessagingService] Enviando mensaje: Tipo=${message.type}`,
     (message as any).payload
   );
+  if (!message.source) {
+    message.source = '@process-flow-ui'; // Aseguramos que el mensaje tenga la fuente correcta
+  }
   try {
     environments.targetHost.forEach(host => {
       window.top?.postMessage(message, host);
