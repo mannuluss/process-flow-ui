@@ -16,6 +16,9 @@ const subscriptions: SubscriptionRegistry = new Map();
 const handleIncomingMessage = (event: MessageEvent): void => {
   //Ignorar mismo origin en desarrollo
   if (window.location.origin === event.origin) {
+    console.debug(
+      `[MessagingService] Ignorando mensaje de mismo origen: ${event}`
+    );
     return;
   }
   // 1. Validar Origen (¡CRUCIAL!)
@@ -69,7 +72,7 @@ const handleIncomingMessage = (event: MessageEvent): void => {
 // Inicializa el listener principal (solo una vez)
 const initialize = (): void => {
   if (!isInitialized) {
-    console.log(
+    console.debug(
       `[MessagingService] Inicializando listener para origen: ${environments.targetHost}`
     );
     window.addEventListener('message', handleIncomingMessage);
