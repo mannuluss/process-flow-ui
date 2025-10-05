@@ -1,6 +1,6 @@
 import commandManager from '@commands/manager/command.manager';
 import SaveIcon from '@mui/icons-material/Save';
-import { Button } from '@mui/material';
+import { Button } from 'antd';
 import { useStore } from '@xyflow/react';
 
 function saveAction(nodes: any[], edges: any[]) {
@@ -18,9 +18,8 @@ export default function ButtonExport() {
 
   return (
     <Button
-      variant="contained"
-      loadingPosition="end"
-      startIcon={<SaveIcon />}
+      type="primary"
+      icon={<SaveIcon />}
       onClick={() => saveAction(nodes, edges)}
     >
       Exportar

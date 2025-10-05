@@ -1,4 +1,4 @@
-import { Button, ButtonGroup, Tooltip } from '@mui/material';
+import { Button, Space, Tooltip } from 'antd';
 import { ActionsToolbar } from '../menuContext/constant/menu.const';
 import { useCommand } from '@commands/manager/CommandContext';
 import { useAppSelector } from 'src/store/store';
@@ -17,25 +17,20 @@ export default function ToolbarFloating() {
 
   return (
     <div className="pane-actions">
-      <ButtonGroup
-        variant="contained"
-        aria-label="Buttons for actions on flow"
-        color="inherit"
-      >
+      <Space.Compact>
         {actions
           .filter(act => (act.show ? act.show(context) : true))
           .map(act => (
             <Tooltip title={act.title} key={act.title}>
               <Button
+                icon={act.icon}
                 onClick={() =>
                   commandManager.executeCommand(act.commandId, context)
                 }
-              >
-                {act.icon}
-              </Button>
+              />
             </Tooltip>
           ))}
-      </ButtonGroup>
+      </Space.Compact>
     </div>
   );
 }

@@ -1,4 +1,3 @@
-import Backdrop from '@mui/material/Backdrop';
 import React from 'react';
 import { useAppSelector } from 'src/store/store';
 
@@ -6,20 +5,31 @@ import GradientCircularProgress from './circular-gradiant'; // Assuming Gradient
 
 const LoadingBackdrop: React.FC = () => {
   const loading = useAppSelector(state => state.config.loading);
+
+  if (!loading.open) return null;
+
   return (
-    <Backdrop
-      sx={theme => ({
-        color: '#fff',
-        zIndex: theme.zIndex.drawer + 9999,
+    <div
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        zIndex: 9999,
+        display: 'flex',
         flexDirection: 'column',
-      })}
-      open={loading.open}
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: '#fff',
+      }}
     >
-      <GradientCircularProgress color="primary" />
+      <GradientCircularProgress />
       {loading.message && (
         <div style={{ marginTop: 20, color: '#fff' }}>{loading.message}</div>
       )}
-    </Backdrop>
+    </div>
   );
 };
 

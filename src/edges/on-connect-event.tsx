@@ -1,20 +1,7 @@
 import commandManager from '@commands/manager/command.manager';
 import { sendMessage, subscribeMenssage } from '@core/services/message.service';
 import { EventFlowTypes } from '@core/types/message';
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  FormControl,
-  InputLabel,
-  OutlinedInput,
-  Select,
-  SelectChangeEvent,
-  Snackbar,
-} from '@mui/material';
+import { Button, Form, message, Modal, Select } from 'antd';
 import { addEdge, Connection, useReactFlow } from '@xyflow/react';
 import { Formik } from 'formik';
 import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
@@ -71,8 +58,8 @@ export const OnConnectEdge = forwardRef((_props, ref) => {
     setConnection(null);
   };
 
-  const handleChange = (event: SelectChangeEvent<any>) => {
-    setAction(optionsAccion.find(el => el.id === Number(event.target.value)));
+  const handleChange = (value: number) => {
+    setAction(optionsAccion.find(el => el.id === Number(value)));
   };
 
   const createConnect = () => {
@@ -94,59 +81,58 @@ export const OnConnectEdge = forwardRef((_props, ref) => {
     };
   }, [flow]);
 
+  useEffect(() => {
+    if (openSnackbar) {
+      message.warning('La accion ya existe, conectada a otro nodo.');
+      setOpenSnackbar(false);
+    }
+  }, [openSnackbar]);
+
   return (
     <>
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={5000}
-        onClose={() => setOpenSnackbar(false)}
-        message="La accion ya existe, conectada a otro nodo."
-      />
       {!customEdgeConnection && (
-        <Dialog open={open}>
-          <DialogTitle>
-            Accion {connection?.source} {'->'} {connection?.target}{' '}
-          </DialogTitle>
-          <DialogContentText
-            sx={{
-              padding: '16px',
-            }}
-          >
+        <Modal
+          title={`Accion ${connection?.source} -> ${connection?.target}`}
+          open={open}
+          onCancel={handleClose}
+          footer={[
+            <Button key="cancel" onClick={() => handleClose()}>
+              Cancelar
+            </Button>,
+            <Button key="submit" type="primary" onClick={() => createConnect()}>
+              Aceptar
+            </Button>,
+          ]}
+        >
+          <p>
             Seleccione un accion que permite cambiar de estado.
             <br />
             (Pasar del nodo A al B)
-          </DialogContentText>
-          <DialogContent>
-            <FormControl sx={{ m: 1, minWidth: 120 }}>
-              <InputLabel htmlFor="idEstado">Estado</InputLabel>
+          </p>
+          <Form layout="vertical">
+            <Form.Item label="Estado">
               <Select
-                native
                 value={action?.id}
                 onChange={handleChange}
-                input={<OutlinedInput label="Estado" id="idEstado" />}
+                placeholder="Seleccione un estado"
               >
-                <option aria-label="None" value="" />
                 {optionsAccion.map(opt => (
-                  <option key={opt.id} value={opt.id}>
+                  <Select.Option key={opt.id} value={opt.id}>
                     {opt.nombre}
-                  </option>
+                  </Select.Option>
                 ))}
               </Select>
-            </FormControl>
-            <Formik
-              initialValues={{
-                idEstado: action?.id,
-              }}
-              onSubmit={values => {
-                console.log('values', values);
-              }}
-            ></Formik>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => handleClose()}>Cancelar</Button>
-            <Button onClick={() => createConnect()}>Aceptar</Button>
-          </DialogActions>
-        </Dialog>
+            </Form.Item>
+          </Form>
+          <Formik
+            initialValues={{
+              idEstado: action?.id,
+            }}
+            onSubmit={values => {
+              console.log('values', values);
+            }}
+          ></Formik>
+        </Modal>
       )}
     </>
   );

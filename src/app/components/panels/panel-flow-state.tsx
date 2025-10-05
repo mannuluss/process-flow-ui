@@ -6,15 +6,7 @@ import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import OpenInFullIcon from '@mui/icons-material/OpenInFull';
-import {
-  Button,
-  FormControl,
-  IconButton,
-  Paper,
-  ToggleButton,
-  ToggleButtonGroup,
-  Tooltip,
-} from '@mui/material';
+import { Button, Card, Segmented, Space, Tooltip } from 'antd';
 import { Panel, useReactFlow } from '@xyflow/react';
 import { AppNode } from 'src/app/customs/nodes/types';
 import { setCollapsePanel, setColorMode } from 'src/store/configSlice';
@@ -56,62 +48,69 @@ export default function PanelFlowState() {
       return acton.action(contextApp);
     }
   };
-  const handleColorModeChange = (
-    _event: React.MouseEvent<HTMLElement>,
-    newMode: 'light' | 'dark' | 'system'
-  ) => {
-    if (newMode) {
-      dispatch(setColorMode(newMode));
-    }
+  const handleColorModeChange = (value: string | number) => {
+    dispatch(setColorMode(value as 'light' | 'dark' | 'system'));
   };
 
   return (
     <>
       <ButtonAddNode />
       <Panel position="top-right">
-        <Paper elevation={3} className="container-panel-actions">
-          <IconButton onClick={() => dispatch(setCollapsePanel(!open))}>
-            {(open && <OpenInFullIcon />) || <CloseFullscreenIcon />}
-          </IconButton>
+        <Card className="container-panel-actions">
+          <Button
+            icon={(open && <OpenInFullIcon />) || <CloseFullscreenIcon />}
+            onClick={() => dispatch(setCollapsePanel(!open))}
+          />
           <div
             className={open ? 'panel-container' : 'panel-container panel-close'}
           >
-            <FormControl fullWidth sx={{ mb: 1 }}>
-              <ToggleButtonGroup
+            <Space
+              direction="vertical"
+              style={{ width: '100%', marginBottom: 8 }}
+            >
+              <Segmented
                 value={colorMode}
-                exclusive
                 onChange={handleColorModeChange}
-                aria-label="theme selection"
-                size="small"
-                sx={{ width: '100%', justifyContent: 'center' }}
-              >
-                <Tooltip title="Modo claro" placement="bottom">
-                  <ToggleButton value="light" aria-label="light mode">
-                    <LightModeIcon fontSize="small" />
-                  </ToggleButton>
-                </Tooltip>
-                <Tooltip title="Modo oscuro" placement="bottom">
-                  <ToggleButton value="dark" aria-label="dark mode">
-                    <DarkModeIcon fontSize="small" />
-                  </ToggleButton>
-                </Tooltip>
-                <Tooltip title="Sistema" placement="bottom">
-                  <ToggleButton value="system" aria-label="system mode">
-                    <AutoModeIcon fontSize="small" />
-                  </ToggleButton>
-                </Tooltip>
-              </ToggleButtonGroup>
-            </FormControl>
+                options={[
+                  {
+                    label: (
+                      <Tooltip title="Modo claro" placement="bottom">
+                        <LightModeIcon fontSize="small" />
+                      </Tooltip>
+                    ),
+                    value: 'light',
+                  },
+                  {
+                    label: (
+                      <Tooltip title="Modo oscuro" placement="bottom">
+                        <DarkModeIcon fontSize="small" />
+                      </Tooltip>
+                    ),
+                    value: 'dark',
+                  },
+                  {
+                    label: (
+                      <Tooltip title="Sistema" placement="bottom">
+                        <AutoModeIcon fontSize="small" />
+                      </Tooltip>
+                    ),
+                    value: 'system',
+                  },
+                ]}
+                block
+              />
+            </Space>
 
             {ActionsMenuWindow.filter(action =>
               action.show ? action.show(contextApp) : true
             ).map((action, i) => (
               <Button
                 key={i}
-                variant="contained"
+                type="primary"
                 onClick={() => {
                   handleclick(action);
                 }}
+                style={{ marginBottom: 8 }}
               >
                 {action.title}
               </Button>
@@ -120,7 +119,7 @@ export default function PanelFlowState() {
             <ButtonExport />
             <ButtonImport />
           </div>
-        </Paper>
+        </Card>
 
         {/* <SwipeableDrawer
         anchor={"bottom"}
