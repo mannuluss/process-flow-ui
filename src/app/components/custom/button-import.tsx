@@ -1,8 +1,7 @@
 // filepath: c:\Users\pipe_\Documents\Personal\process-flow-ui\src\app\components\custom\button-import.tsx
 import { useCommand } from '@commands/manager/CommandContext';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
-import Button from '@mui/material/Button';
-import CircularProgress from '@mui/material/CircularProgress';
+import { Button, Spin } from 'antd';
 import React, { useRef } from 'react';
 import { setLoading } from 'src/store/configSlice';
 import { useAppDispatch, useAppSelector } from 'src/store/store';
@@ -71,17 +70,11 @@ const ButtonImport = () => {
         accept=".json,.txt"
       />
       <Button
-        variant="contained"
-        color="primary"
-        startIcon={
-          open ? (
-            <CircularProgress size={20} color="inherit" />
-          ) : (
-            <FileUploadIcon />
-          )
-        }
+        type="primary"
+        icon={open ? <Spin size="small" /> : <FileUploadIcon />}
         onClick={handleButtonClick}
         disabled={open}
+        loading={open}
       >
         {open ? 'Cargando...' : 'Importar'}
       </Button>

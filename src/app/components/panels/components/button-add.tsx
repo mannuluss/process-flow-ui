@@ -1,6 +1,6 @@
 import { useCommand } from '@commands/manager/CommandContext';
 import AddIcon from '@mui/icons-material/Add';
-import { Fab } from '@mui/material';
+import { Button } from 'antd';
 import { Panel } from '@xyflow/react';
 
 export default function ButtonAddNode() {
@@ -12,10 +12,15 @@ export default function ButtonAddNode() {
 
   return (
     <Panel position="bottom-right">
-      <Fab variant="extended" sx={{ m: 2 }} onClick={() => handleAdd()}>
-        <AddIcon sx={{ mr: 1 }} />
+      <Button
+        type="primary"
+        icon={<AddIcon />}
+        size="large"
+        style={{ margin: 16 }}
+        onClick={() => handleAdd()}
+      >
         Agregar nodo
-      </Fab>
+      </Button>
     </Panel>
   );
 }

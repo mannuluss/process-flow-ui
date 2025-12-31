@@ -1,4 +1,4 @@
-import { ListItemIcon, Menu, MenuItem } from '@mui/material';
+import { Dropdown, MenuProps } from 'antd';
 import { Edge } from '@xyflow/react';
 import React, { forwardRef, useImperativeHandle } from 'react';
 import { AppNode } from 'src/app/customs/nodes/types.ts';
@@ -90,26 +90,34 @@ const ContextMenu = forwardRef((_props, ref) => {
     contextMenu?.object
   );
 
+  const menuItems: MenuProps['items'] = contextMenu?.actions
+    .filter(a => (a.show ? a.show(contextApp) : true))
+    .map((act, i) => ({
+      key: i,
+      label: act.title,
+      icon: act.icon,
+      onClick: () => handleClose(act),
+    }));
+
+  if (!contextMenu) return null;
+
   return (
-    <Menu
-      open={contextMenu !== null}
-      onClose={() => handleClose(null)}
-      anchorReference="anchorPosition"
-      anchorPosition={
-        contextMenu !== null
-          ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
-          : undefined
-      }
+    <div
+      style={{
+        position: 'fixed',
+        top: contextMenu.mouseY,
+        left: contextMenu.mouseX,
+        zIndex: 1000,
+      }}
     >
-      {contextMenu?.actions
-        .filter(a => (a.show ? a.show(contextApp) : true))
-        .map((act, i) => (
-          <MenuItem key={i} onClick={() => handleClose(act)}>
-            <ListItemIcon>{act.icon}</ListItemIcon>
-            {act.title}
-          </MenuItem>
-        ))}
-    </Menu>
+      <Dropdown
+        menu={{ items: menuItems }}
+        open={true}
+        onOpenChange={open => !open && handleClose(null)}
+      >
+        <div />
+      </Dropdown>
+    </div>
   );
 });
 
