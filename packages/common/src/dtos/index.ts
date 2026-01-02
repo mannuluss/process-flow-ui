@@ -1,1 +1,2 @@
-// Export DTOs here
+export class PlaceholderDto {}
+
