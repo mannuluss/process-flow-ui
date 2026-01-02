@@ -7,10 +7,12 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { ProcessInstanceService } from './process-instance.service';
 import { CreateProcessInstanceDto } from './dto/create-process-instance.dto';
 import { UpdateProcessInstanceDto } from './dto/update-process-instance.dto';
 
+@ApiTags('Process Instances')
 @Controller('process-instance')
 export class ProcessInstanceController {
   constructor(

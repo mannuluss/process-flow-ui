@@ -7,10 +7,12 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { DataSourceService } from './data-source.service';
 import { CreateDataSourceDto } from './dto/create-data-source.dto';
 import { UpdateDataSourceDto } from './dto/update-data-source.dto';
 
+@ApiTags('Data Sources')
 @Controller('data-source')
 export class DataSourceController {
   constructor(private readonly dataSourceService: DataSourceService) {}
