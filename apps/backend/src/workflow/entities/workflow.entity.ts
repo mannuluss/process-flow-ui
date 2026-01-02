@@ -1,9 +1,25 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { ProcessNodeData, ProcessEdgeData } from '@process-flow/common';
 
 export interface WorkflowDefinition {
-  nodes: { id: string; type: string; data: ProcessNodeData; position: { x: number; y: number } }[];
-  edges: { id: string; source: string; target: string; data: ProcessEdgeData }[];
+  nodes: {
+    id: string;
+    type: string;
+    data: ProcessNodeData;
+    position: { x: number; y: number };
+  }[];
+  edges: {
+    id: string;
+    source: string;
+    target: string;
+    data: ProcessEdgeData;
+  }[];
 }
 
 @Entity('workflows')
