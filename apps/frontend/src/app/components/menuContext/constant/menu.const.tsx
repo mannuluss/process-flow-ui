@@ -2,7 +2,7 @@ import { sendMessage } from '@core/services/message.service';
 import { EventFlowTypes, GraphData } from '@core/types/message';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { Add } from '@mui/icons-material';
+import AddIcon from '@mui/icons-material/Add';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
@@ -16,7 +16,7 @@ import {
 
 const ActionAddNode: ContextMenuAction = {
   title: 'Agregar nodo',
-  icon: <Add />,
+  icon: <AddIcon />,
   commandId: 'createNode',
 };
 
