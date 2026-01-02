@@ -5,6 +5,9 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.enableCors();
+  app.setGlobalPrefix('api');
+
   const config = new DocumentBuilder()
     .setTitle('Process Flow API')
     .setDescription('The Process Flow API description')
@@ -13,8 +16,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger', app, document);
 
-  app.enableCors();
-  app.setGlobalPrefix('api');
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

@@ -48,7 +48,7 @@ export class DataSourceService {
   async testConnection(id: string, params: Record<string, any> = {}) {
     const dataSource = await this.findOne(id);
     if (!dataSource) {
-      throw new BadRequestException('Data source not found');
+      throw new BadRequestException(`Data source with ${id} not found`);
     }
 
     try {

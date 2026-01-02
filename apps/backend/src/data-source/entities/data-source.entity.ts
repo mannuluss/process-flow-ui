@@ -42,7 +42,7 @@ export class DataSource {
   @Column({ name: 'api_url', nullable: true, type: 'text' })
   apiUrl: string;
 
-  @Column({ name: 'api_method', default: 'GET' })
+  @Column({ name: 'api_method', nullable: true })
   apiMethod: string;
 
   @Column('jsonb', { name: 'api_headers', default: {} })

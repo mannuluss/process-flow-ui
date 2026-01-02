@@ -50,7 +50,7 @@ export class DataSourceController {
     @Param('id') id: string,
     @Body() body: { params?: Record<string, any> },
   ) {
-    return this.dataSourceService.testConnection(id, body.params);
+    return this.dataSourceService.testConnection(id, body?.params ?? {});
   }
 
   @Post(':id/execution')
@@ -58,6 +58,6 @@ export class DataSourceController {
     @Param('id') id: string,
     @Body() body: { params?: Record<string, any> },
   ) {
-    return this.dataSourceService.execute(id, body.params);
+    return this.dataSourceService.execute(id, body?.params ?? {});
   }
 }
