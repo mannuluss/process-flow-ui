@@ -62,11 +62,21 @@ export interface ProcessEdgeData {
 export interface DataSource {
   id: string;
   name: string;
-  type: 'SQL' | 'API';
-  query?: string; // For SQL
-  endpoint?: string; // For API
-  mapping: {
+  description?: string;
+  sourceType: 'SQL' | 'API';
+  querySql?: string;
+  apiUrl?: string;
+  apiMethod?: string;
+  apiHeaders?: Record<string, string>;
+  mappingConfig: {
     valueField: string;
     labelField: string;
+    responsePath?: string;
+    tableName?: string;
+    idField?: string;
+    nameField?: string;
   };
+  status: 'PENDING' | 'SUCCESS' | 'ERROR';
+  createdAt?: Date;
+  updatedAt?: Date;
 }
