@@ -48,11 +48,15 @@ export class DataSource {
   @Column('jsonb', { name: 'api_headers', default: {} })
   apiHeaders: Record<string, string>;
 
-  @Column('jsonb', { name: 'mapping_config' })
+  @Column('jsonb', { name: 'mapping_config', nullable: true })
   mappingConfig: {
     valueField: string;
     labelField: string;
     responsePath?: string;
+    tableName?: string;
+    idField?: string;
+    nameField?: string;
+    whereClause?: string;
   };
 
   @Column({

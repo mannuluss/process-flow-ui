@@ -13,5 +13,9 @@ export class CreateDataSourceDto {
     valueField: string;
     labelField: string;
     responsePath?: string;
+    tableName?: string;
+    idField?: string;
+    nameField?: string;
+    whereClause?: string;
   };
 }

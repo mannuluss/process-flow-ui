@@ -21,9 +21,35 @@ export class DataSourceService {
   ) {}
 
   async create(createDataSourceDto: CreateDataSourceDto) {
+    // Initial status is PENDING
+    let status = DataSourceStatus.PENDING;
+
+    // Try to test connection immediately upon creation
+
+    // if (
+    //   createDataSourceDto.sourceType === DataSourceType.SQL &&
+    //   createDataSourceDto.querySql
+    // ) {
+    //   await this.executeSql(createDataSourceDto.querySql, {});
+    //   status = DataSourceStatus.SUCCESS;
+    // } else if (
+    //   createDataSourceDto.sourceType === DataSourceType.API &&
+    //   createDataSourceDto.apiUrl
+    // ) {
+    //   // Create a temp object for execution
+    //   const tempDS = { ...createDataSourceDto } as DataSource;
+    //   await this.executeApi(tempDS, {});
+    // }
+    const exec = await this.testConfig(createDataSourceDto, {});
+    if (exec.status === 'success') {
+      status = DataSourceStatus.SUCCESS;
+    } else {
+      status = DataSourceStatus.ERROR;
+    }
+
     const dataSource = this.dataSourceRepository.create({
       ...createDataSourceDto,
-      status: DataSourceStatus.PENDING,
+      status,
     });
     return this.dataSourceRepository.save(dataSource);
   }
@@ -37,7 +63,20 @@ export class DataSourceService {
   }
 
   async update(id: string, updateDataSourceDto: UpdateDataSourceDto) {
-    await this.dataSourceRepository.update(id, updateDataSourceDto);
+    // If critical config changed, re-test
+    let status: DataSourceStatus | undefined;
+
+    const exec = await this.testConfig(updateDataSourceDto, {});
+    if (exec.status === 'success') {
+      status = DataSourceStatus.SUCCESS;
+    } else {
+      status = DataSourceStatus.ERROR;
+    }
+
+    await this.dataSourceRepository.update(id, {
+      ...updateDataSourceDto,
+      ...(status && { status }),
+    });
     return this.findOne(id);
   }
 
@@ -45,24 +84,38 @@ export class DataSourceService {
     return this.dataSourceRepository.delete(id);
   }
 
-  async testConnection(id: string, params: Record<string, any> = {}) {
-    const dataSource = await this.findOne(id);
-    if (!dataSource) {
-      throw new BadRequestException(`Data source with ${id} not found`);
-    }
-
+  async testConfig(
+    config: Partial<CreateDataSourceDto>,
+    params: Record<string, any> = {},
+  ) {
     try {
       let result: any;
-      if (dataSource.sourceType === DataSourceType.SQL) {
-        result = await this.executeSql(dataSource.querySql, params);
+      if (config.sourceType === DataSourceType.SQL) {
+        // Check if we have a visual builder config
+        if (config.mappingConfig?.tableName) {
+          const { tableName, idField, nameField, whereClause } =
+            config.mappingConfig;
+          if (!tableName || !idField || !nameField) {
+            throw new BadRequestException(
+              'Table Name, ID Field and Name Field are required for Visual Builder',
+            );
+          }
+          const sql = `SELECT ${idField} as id, ${nameField} as name FROM ${tableName} ${whereClause ? `WHERE ${whereClause}` : ''}`;
+          result = await this.executeSql(sql, params);
+        } else {
+          if (!config.querySql)
+            throw new BadRequestException(
+              'SQL Query is required or Visual Builder config is incomplete',
+            );
+          result = await this.executeSql(config.querySql, params);
+        }
       } else {
-        result = await this.executeApi(dataSource, params);
+        if (!config.apiUrl)
+          throw new BadRequestException('API URL is required');
+        // Create a temporary object that looks like a DataSource
+        const tempDataSource = { ...config } as DataSource;
+        result = await this.executeApi(tempDataSource, params);
       }
-
-      // Update status to SUCCESS
-      await this.dataSourceRepository.update(id, {
-        status: DataSourceStatus.SUCCESS,
-      });
 
       return {
         status: 'success',
@@ -70,17 +123,41 @@ export class DataSourceService {
         data: result,
       };
     } catch (error) {
-      // Update status to ERROR
-      await this.dataSourceRepository.update(id, {
-        status: DataSourceStatus.ERROR,
-      });
-
       return {
         status: 'error',
         message: error.message,
         data: null,
       };
     }
+  }
+
+  async getTables() {
+    const query = `
+      SELECT table_schema || '.' || table_name as "fullName", table_name as "tableName", table_schema as "schema"
+      FROM information_schema.tables
+      WHERE table_schema NOT IN ('information_schema', 'pg_catalog')
+      AND table_type = 'BASE TABLE'
+      ORDER BY table_schema, table_name
+    `;
+    return this.typeOrmDataSource.query(query);
+  }
+
+  async getColumns(tableName: string) {
+    // tableName might be "schema.table" or just "table"
+    let schema = 'public';
+    let table = tableName;
+
+    if (tableName.includes('.')) {
+      [schema, table] = tableName.split('.');
+    }
+
+    const query = `
+      SELECT column_name as "columnName", data_type as "dataType"
+      FROM information_schema.columns
+      WHERE table_schema = $1 AND table_name = $2
+      ORDER BY ordinal_position
+    `;
+    return this.typeOrmDataSource.query(query, [schema, table]);
   }
 
   async execute(id: string, params: Record<string, any> = {}) {
@@ -90,6 +167,14 @@ export class DataSourceService {
     }
 
     if (dataSource.sourceType === DataSourceType.SQL) {
+      // Check if we have a visual builder config
+      if (dataSource.mappingConfig?.tableName) {
+        const { tableName, idField, nameField, whereClause } =
+          dataSource.mappingConfig;
+        // We assume validation was done at creation/update
+        const sql = `SELECT ${idField} as id, ${nameField} as name FROM ${tableName} ${whereClause ? `WHERE ${whereClause}` : ''}`;
+        return this.executeSql(sql, params);
+      }
       return this.executeSql(dataSource.querySql, params);
     } else {
       return this.executeApi(dataSource, params);

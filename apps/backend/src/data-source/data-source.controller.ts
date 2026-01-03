@@ -27,6 +27,16 @@ export class DataSourceController {
     return this.dataSourceService.findAll();
   }
 
+  @Get('schema/tables')
+  getTables() {
+    return this.dataSourceService.getTables();
+  }
+
+  @Get('schema/tables/:tableName/columns')
+  getColumns(@Param('tableName') tableName: string) {
+    return this.dataSourceService.getColumns(tableName);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.dataSourceService.findOne(id);
@@ -45,12 +55,15 @@ export class DataSourceController {
     return this.dataSourceService.remove(id);
   }
 
-  @Post(':id/test')
-  testConnection(
-    @Param('id') id: string,
-    @Body() body: { params?: Record<string, any> },
+  @Post('test-config')
+  testConfig(
+    @Body()
+    body: {
+      config: Partial<CreateDataSourceDto>;
+      params?: Record<string, any>;
+    },
   ) {
-    return this.dataSourceService.testConnection(id, body?.params ?? {});
+    return this.dataSourceService.testConfig(body.config, body.params ?? {});
   }
 
   @Post(':id/execution')
