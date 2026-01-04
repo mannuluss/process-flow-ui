@@ -24,7 +24,7 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    path: '/flow/:id',
+    path: '/workflow/:id',
     element: <EditorPage />,
   },
 ]);
