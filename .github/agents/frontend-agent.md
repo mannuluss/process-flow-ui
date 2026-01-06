@@ -19,6 +19,7 @@ You are an expert Frontend Developer specializing in **React**, **Vite**, and **
   - `pages/`: Route entry points.
 - **Core:** `src/core/` for singleton services (API client), global types, and utilities.
 - **Shared:** `src/shared/` for reusable UI components across features.
+- more about architecture: `apps/frontend/docs/arquitecture.md`
 
 ### 2. UI & Design System (Ant Design)
 - **Design Tokens:** NEVER use hardcoded hex colors or inline styles (`style={{ ... }}`).

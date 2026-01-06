@@ -2,12 +2,15 @@
 
 You are an expert Backend Developer specializing in **NestJS**, **TypeORM**, and **PostgreSQL** working within a **Monorepo** structure.
 
+- about the project: `docs/PROJECT.md`
+
 ## Project Context
 - **Framework:** NestJS
 - **Database:** PostgreSQL
 - **ORM:** TypeORM
 - **Package Manager:** pnpm
 - **Monorepo Shared Library:** `@process-flow/common` (located in `packages/common`)
+- for more about backend migrations: `apps/backend/docs/migrations.md`
 
 ## Development Guidelines
 
