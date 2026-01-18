@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useCallback } from 'react';
-import { useReactFlow } from '@xyflow/react';
+import { useReactFlow, useStore } from '@xyflow/react';
 import debounce from 'lodash.debounce';
-import { AppNode } from 'src/app/customs/nodes/types';
+import { AppNode, ProcesoCustomNode } from 'src/app/customs/nodes/types';
 import { NodeHandler } from '@process-flow/common';
 import { Button, Card, Flex, Form, Input, List, theme, Typography } from 'antd';
 import {
@@ -9,16 +9,19 @@ import {
   PlusOutlined,
   ThunderboltFilled,
   RightOutlined,
-  AppstoreAddOutlined,
   DeleteOutlined,
 } from '@ant-design/icons';
 import { RuleTypeIcon } from '../../../../shared/components/RuleTypeIcon';
+import {
+  IconPicker,
+  DEFAULT_ICON,
+} from '../../../../shared/components/IconPicker';
 import { useCommand } from '@commands/manager/CommandContext';
 import type { PanelProps } from './types';
 
 const { Text, Title } = Typography;
 
-export const NodeProperties: React.FC<PanelProps<AppNode>> = ({
+export const NodeProperties: React.FC<PanelProps<ProcesoCustomNode>> = ({
   payload,
   onClose,
 }) => {
@@ -27,14 +30,21 @@ export const NodeProperties: React.FC<PanelProps<AppNode>> = ({
   const [form] = Form.useForm();
   const { commandManager, generateContextApp } = useCommand();
 
-  // Get handlers from node data
-  const handlers: NodeHandler[] = (payload.data as any).handlers || [];
+  // Subscribe to node changes to get reactive updates for handlers
+  const currentNode = useStore(state =>
+    state.nodes.find(n => n.id === payload.id)
+  ) as ProcesoCustomNode | undefined;
+
+  // Get handlers from the current node (reactive) or fallback to payload
+  const handlers: NodeHandler[] =
+    currentNode?.data?.handlers || payload.data.handlers || [];
   const nodes = getNodes();
   const edges = getEdges();
 
   useEffect(() => {
     form.setFieldsValue({
       label: payload.data.label || '',
+      icon: payload.data.icon || DEFAULT_ICON,
     });
   }, [payload, form]);
 
@@ -47,12 +57,13 @@ export const NodeProperties: React.FC<PanelProps<AppNode>> = ({
   // Debounced save function
   const debouncedSave = useMemo(
     () =>
-      debounce((values: { label: string }) => {
+      debounce((values: { label: string; icon?: string }) => {
         const updatedNode: AppNode = {
           ...payloadRef.current,
           data: {
             ...payloadRef.current.data,
             label: values.label,
+            icon: values.icon || DEFAULT_ICON,
           },
         };
         commandManager.executeCommand(
@@ -71,7 +82,7 @@ export const NodeProperties: React.FC<PanelProps<AppNode>> = ({
   }, [debouncedSave]);
 
   const handleValuesChange = useCallback(
-    (_changedValues: unknown, allValues: { label: string }) => {
+    (_changedValues: unknown, allValues: { label: string; icon?: string }) => {
       debouncedSave(allValues);
     },
     [debouncedSave]
@@ -163,24 +174,9 @@ export const NodeProperties: React.FC<PanelProps<AppNode>> = ({
             onValuesChange={handleValuesChange}
           >
             <Flex gap="middle" align="center">
-              <div
-                style={{
-                  width: 40,
-                  height: 40,
-                  borderRadius: token.borderRadius,
-                  backgroundColor: token.colorBgContainer,
-                  border: `1px solid ${token.colorPrimary}`,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flexShrink: 0,
-                  boxShadow: token.boxShadow,
-                }}
-              >
-                <AppstoreAddOutlined
-                  style={{ fontSize: 20, color: token.colorPrimary }}
-                />
-              </div>
+              <Form.Item name="icon" noStyle>
+                <IconPicker size={24} />
+              </Form.Item>
               <Flex vertical flex={1}>
                 <Form.Item
                   name="label"

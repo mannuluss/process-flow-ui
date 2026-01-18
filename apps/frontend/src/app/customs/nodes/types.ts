@@ -4,7 +4,7 @@ import type { NodeHandler } from '@process-flow/common';
 export type CustomNodeApp = Node<{
   label: string; //nombre del nodo que se muestra en la interfaz
   initial?: boolean; // indica si el nodo es el inicial
-  //end?: boolean; // indica si el nodo es el final
+  icon?: string; // nombre del icono de Material Design
   handlers?: NodeHandler[]; // salidas del nodo
 }>;
 
