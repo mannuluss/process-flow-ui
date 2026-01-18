@@ -10,14 +10,13 @@ import {
   MiniMap,
   NodeChange,
   NodeMouseHandler,
-  OnConnect,
   ReactFlow,
   useEdgesState,
   useNodesState,
 } from '@xyflow/react';
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import OnConnectEdge from 'src/core/designer/on-connect-event';
+import { useEdgeConnection } from 'src/core/designer/hooks/useEdgeConnection';
 import { setLoading } from 'src/store/configSlice';
 import {
   clearSelection,
@@ -46,7 +45,7 @@ export default function Canvas() {
   const [edges, _setEdges, onEdgesChange] = useEdgesState([] as Edge[]); //useEdgesState(initialEdges);
 
   const menu = React.useRef<ContextMenuRef>(null);
-  const connectEdges = React.useRef<{ onConnect: OnConnect }>(null);
+  const { onConnect } = useEdgeConnection();
   const dispatch = useDispatch();
   const { colorMode, showPanelMinimap, showToolbar } = useAppSelector(
     state => state.config
@@ -103,10 +102,6 @@ export default function Canvas() {
 
   const onContextMenuEdge: EdgeMouseHandler = useCallback((evt, edge) => {
     menu.current?.handleContextMenu(evt, edge, 'Edge');
-  }, []);
-
-  const onConnect: OnConnect = useCallback(connection => {
-    connectEdges.current?.onConnect(connection);
   }, []);
 
   const onNodeSelect: NodeMouseHandler<AppNode> = useCallback(
@@ -206,16 +201,6 @@ export default function Canvas() {
     [commandManager, generateContextApp]
   );
 
-  const onDoubleClickEdge = useCallback(
-    (_evt: React.MouseEvent, edge: Edge) => {
-      commandManager.executeCommand(
-        'editEdge',
-        generateContextApp('Edge', edge)
-      );
-    },
-    [commandManager, generateContextApp]
-  );
-
   return (
     <>
       <ReactFlow
@@ -233,9 +218,8 @@ export default function Canvas() {
         onEdgeClick={onEdgeSelect}
         onPaneClick={onPaneClick}
         onNodeDoubleClick={onDoubleClickNode}
-        onEdgeDoubleClick={onDoubleClickEdge}
         fitView
-        defaultEdgeOptions={{ type: 'step' } as Edge}
+        defaultEdgeOptions={{ type: 'bezier' } as Edge}
         deleteKeyCode={['Delete', 'Backspace']}
         panActivationKeyCode={null}
       >
@@ -244,7 +228,6 @@ export default function Canvas() {
         <Controls />
         <PanelFlowState />
         <ContextMenu ref={menu} />
-        <OnConnectEdge ref={connectEdges} />
         {
           showToolbar && (
             <ToolbarFloating />
