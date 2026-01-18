@@ -5,7 +5,10 @@ import { useAppDispatch } from '../../store/store';
 import { subscribeMenssage } from '../../app/core/services/message.service';
 import { EventFlowTypes } from '../../app/core/types/message';
 import { setConfig } from '../../store/configSlice';
-import { Box } from '@mui/material';
+import { Layout } from 'antd';
+import { EditorHeader } from '../../features/workflow/components/EditorHeader';
+
+const { Content } = Layout;
 
 export default function EditorPage() {
   const { id } = useParams();
@@ -30,8 +33,11 @@ export default function EditorPage() {
   }, [dispatch, id]);
 
   return (
-    <Box sx={{ width: '100vw', height: '100vh' }}>
-      <Canvas />
-    </Box>
+    <Layout style={{ height: '100vh', overflow: 'hidden' }}>
+      <EditorHeader />
+      <Content style={{ position: 'relative', flex: 1 }}>
+        <Canvas />
+      </Content>
+    </Layout>
   );
 }

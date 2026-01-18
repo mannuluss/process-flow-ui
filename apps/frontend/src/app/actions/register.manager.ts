@@ -2,9 +2,15 @@ import {
   addEdgeCommand,
   AddNodeCommand,
   createNodeCommand,
-  updateEdgeCommand,
   updateNodeCommand,
+  openEditNodeCommand,
 } from './commands/add.node.command.ts';
+import {
+  addHandlerCommand,
+  editHandlerCommand,
+  removeHandlerCommand,
+  updateHandlerCommand,
+} from './commands/handler.command.ts';
 import { loadDataCommand } from './commands/load.config.command.ts';
 import {
   removeEdgeCommand,
@@ -26,12 +32,19 @@ export function registerCommands(): void {
 
   commandManager.registerCommand('createNode', createNodeCommand);
   commandManager.registerCommand('addNode', AddNodeCommand);
-  commandManager.registerCommand('editNode', updateNodeCommand);
+  // 'editNode' abre el panel lateral; 'updateNode' aplica los cambios al grafo
+  commandManager.registerCommand('editNode', openEditNodeCommand);
+  commandManager.registerCommand('updateNode', updateNodeCommand);
   commandManager.registerCommand('removeNode', RemoveNodeCommand);
 
   commandManager.registerCommand('addEdge', addEdgeCommand);
-  commandManager.registerCommand('editEdge', updateEdgeCommand);
   commandManager.registerCommand('removeEdge', removeEdgeCommand);
+
+  // Handler commands
+  commandManager.registerCommand('addHandler', addHandlerCommand);
+  commandManager.registerCommand('editHandler', editHandlerCommand);
+  commandManager.registerCommand('updateHandler', updateHandlerCommand);
+  commandManager.registerCommand('removeHandler', removeHandlerCommand);
 
   commandManager.registerCommand('saveGraph', SaveCommand);
   commandManager.registerCommand('setInitialNode', setInitialNodeCommand);

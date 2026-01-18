@@ -17,7 +17,7 @@ import {
 } from '@xyflow/react';
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import OnConnectEdge from 'src/edges/on-connect-event';
+import OnConnectEdge from 'src/core/designer/on-connect-event';
 import { setLoading } from 'src/store/configSlice';
 import {
   clearSelection,
@@ -36,6 +36,8 @@ import { edgeTypes } from '../customs/edges';
 import { nodeTypes } from '../customs/nodes';
 import { AppNode } from '../customs/nodes/types';
 import { EventManager } from './events/EventManager';
+import DesignerToolbar from 'src/features/designer/components/Toolbar/DesignerToolbar';
+import EditorSidePanel from 'src/features/designer/components/EditorSidePanel';
 
 export default function Canvas() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -235,6 +237,7 @@ export default function Canvas() {
         fitView
         defaultEdgeOptions={{ type: 'step' } as Edge}
         deleteKeyCode={['Delete', 'Backspace']}
+        panActivationKeyCode={null}
       >
         <Background />
         {showPanelMinimap && <MiniMap />}
@@ -242,9 +245,15 @@ export default function Canvas() {
         <PanelFlowState />
         <ContextMenu ref={menu} />
         <OnConnectEdge ref={connectEdges} />
-        {showToolbar && <ToolbarFloating />}
+        {
+          showToolbar && (
+            <ToolbarFloating />
+          ) /**TODO: Borrar luego de terminar rediseño */
+        }
+        <DesignerToolbar />
       </ReactFlow>
 
+      <EditorSidePanel />
       <LoadingBackdrop />
       <EventManager />
     </>

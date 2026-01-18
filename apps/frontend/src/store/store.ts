@@ -3,11 +3,13 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
 import configReducer from './configSlice';
 import selectionReducer from './selectionSlice'; // Import the new reducer
+import sidePanelReducer from './sidePanelSlice';
 
 export const store = configureStore({
   reducer: {
     config: configReducer,
     selection: selectionReducer, // Add the new reducer to the store
+    sidePanel: sidePanelReducer,
   },
 });
 

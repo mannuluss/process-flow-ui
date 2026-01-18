@@ -6,7 +6,7 @@ import { addEdge, Connection, useReactFlow } from '@xyflow/react';
 import { Formik } from 'formik';
 import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 
-import { useAppSelector } from '../store/store';
+import { useAppSelector } from '../../store/store';
 
 const defaultOptions = [
   {

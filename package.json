@@ -6,8 +6,9 @@
     "build": "pnpm -r run build",
     "test": "pnpm -r run test",
     "lint": "pnpm -r run lint",
+    "build:packages": "pnpm --filter @process-flow/common build",
     "dev:frontend": "pnpm --filter @process-flow/frontend dev",
-    "dev:backend": "pnpm --filter @process-flow/backend start:dev"
+    "dev:backend": "pnpm --filter @process-flow/backend start"
   },
   "devDependencies": {
     "typescript": "^5.3.3"

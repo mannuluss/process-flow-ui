@@ -27,9 +27,10 @@ Contiene la configuración esencial que hace funcionar la aplicación, pero que 
 *   **`store/`**: Configuración del Store global (Redux/Zustand), middlewares.
 *   **`theme/`**: Definiciones de diseño, tokens de Ant Design (`designSystem.ts`), estilos globales.
 *   **`types/`**: Tipos de TypeScript globales o compartidos entre múltiples features.
+*   **`adapter/`** adaptadores utilizados para mepear o convertir la data en un formato a otro.
 
 ### 2. Shared (`src/shared/`)
-Elementos que son agnósticos al negocio y se usan en toda la aplicación. Podría considerarse nuestro "UI Kit" interno.
+Elementos que son agnósticos al negocio y se usan en toda la aplicación. Considerado nuestro "UI Kit" interno.
 
 *   **`components/`**: Componentes "tontos" o presentacionales (ej: `LoadingSpinner`, `CustomCard`, `StatusBadge`).
 *   **`hooks/`**: Hooks personalizados genéricos (ej: `useDebounce`, `useToggle`, `useLocalStorage`).

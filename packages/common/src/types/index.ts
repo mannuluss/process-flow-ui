@@ -46,17 +46,41 @@ export interface ApiCheckRule extends BaseRule {
 
 export type Rule = RoleCheckRule | DocumentStatusCheckRule | SqlCheckRule | ApiCheckRule;
 
+/**
+ * Represents an output handler for a process node.
+ * Each handler defines a possible transition from this node.
+ */
+export interface NodeHandler {
+  /** Unique identifier for the handler (used as sourceHandle in edges) */
+  id: string;
+  /** Name of the trigger event (e.g., "BTN_SUBMIT", "auto_approve") */
+  trigger: string;
+  /** Validation rules that must pass before the transition */
+  rules?: Rule[];
+}
+
 export interface ProcessNodeData {
   label: string;
   description?: string;
-  isInitial?: boolean;
-  isFinal?: boolean;
+  /**
+   * Optional human-readable identifier (slug) for the node.
+   * Useful if you want to reference nodes by code instead of UUID.
+   */
+  code?: string;
   metadata?: Record<string, any>;
+  /** Output handlers for this node - defines possible transitions */
+  handlers?: NodeHandler[];
 }
 
+/**
+ * Edge data is now simplified since trigger/rules are stored in node handlers.
+ * The edge only needs to reference which handler it connects from.
+ */
 export interface ProcessEdgeData {
-  trigger?: string;
-  rules?: Rule[];
+  /**
+   * Optional metadata for the edge (visual styling, labels, etc.)
+   */
+  metadata?: Record<string, any>;
 }
 
 export interface DataSource {

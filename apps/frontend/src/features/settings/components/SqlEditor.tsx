@@ -11,41 +11,10 @@ import {
   Form,
 } from 'antd';
 import { DatabaseOutlined } from '@ant-design/icons';
-import Editor from '@monaco-editor/react';
 import { useSqlEditor } from '../hooks/useSqlEditor';
+import { MonacoEditorWrapper } from '../../../app/components/shared/MonacoEditorWrapper';
 
 const { Text } = Typography;
-
-// Wrapper for Monaco Editor to work with Form.Item
-const MonacoEditorWrapper = ({ value, onChange }: any) => {
-  const { token } = theme.useToken();
-  return (
-    <div
-      style={{
-        position: 'relative',
-        border: `1px solid ${token.colorBorder}`,
-        borderRadius: token.borderRadiusLG,
-        overflow: 'hidden',
-        height: '300px',
-      }}
-    >
-      <Editor
-        height="100%"
-        defaultLanguage="sql"
-        value={value}
-        theme="vs-dark"
-        options={{
-          minimap: { enabled: false },
-          fontSize: 14,
-          scrollBeyondLastLine: false,
-          automaticLayout: true,
-          padding: { top: 16, bottom: 16 },
-        }}
-        onChange={val => onChange?.(val || '')}
-      />
-    </div>
-  );
-};
 
 export const SqlEditor: React.FC = () => {
   const { token } = theme.useToken();

@@ -116,6 +116,7 @@ export const ActionsMenuWindow: ContextMenuAction[] = [
 ];
 
 export const ActionsToolbar: ContextMenuAction[] = [
+  ActionAddNode,
   ActionEditNode,
   ActionEditEdge,
   ActionRemoveNode,

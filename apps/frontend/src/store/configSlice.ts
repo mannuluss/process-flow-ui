@@ -66,7 +66,7 @@ const initialState: ConfigStateReduxApp = {
   showToolbar: true,
   showPaneDescription: true,
   colorMode: getInitialColorMode(), // Load from localStorage or default
-  defaultTypeNode: 'default', // Default value
+  defaultTypeNode: 'proceso', // Default value
   collapsePanel: getCollapsePanelState(),
   loading: {
     open: false,
