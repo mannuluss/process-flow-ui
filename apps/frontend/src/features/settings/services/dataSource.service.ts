@@ -59,6 +59,20 @@ export class DataSourceService {
     );
     return response.data;
   }
+
+  /**
+   * Executes the query defined in the DataSource with optional parameters.
+   */
+  async executeQuery(
+    id: string,
+    params?: Record<string, any>
+  ): Promise<{ id: string; label: string }[]> {
+    const response = await apiClient.post<any[]>(
+      `/data-source/${id}/execution`,
+      { params }
+    );
+    return response.data;
+  }
 }
 
 export const dataSourceService = new DataSourceService();

@@ -5,18 +5,26 @@ import { AppNode } from 'src/app/customs/nodes/types';
 import { DEFAULT_ICON } from '../../../../../../shared/components/IconPicker';
 import { useCommand } from '@commands/manager/CommandContext';
 import { DEBOUNCE_AUTOSAVE_MS } from 'src/core/const/form';
+import { DataSourceStatus } from 'src/shared/hooks/useDataSourceOptions';
 
 interface UseNodeFormProps {
   payload: AppNode;
   isInitialNode: boolean;
 }
 
+interface NodeFormValues {
+  label: string;
+  code?: string;
+  icon?: string;
+}
+
 interface UseNodeFormReturn {
   form: ReturnType<typeof Form.useForm>[0];
   handleValuesChange: (
     changedValues: unknown,
-    allValues: { label: string; icon?: string }
+    allValues: NodeFormValues
   ) => void;
+  handleStatusChange: (id: string, option?: DataSourceStatus) => void;
   flushSave: () => void;
 }
 
@@ -40,6 +48,7 @@ export const useNodeForm = ({
     if (!isInitialNode) {
       form.setFieldsValue({
         label: payloadData?.label || '',
+        code: payloadData?.code || '',
         icon: payloadData?.icon || DEFAULT_ICON,
       });
     }
@@ -48,12 +57,13 @@ export const useNodeForm = ({
   // Debounced save function
   const debouncedSave = useMemo(
     () =>
-      debounce((values: { label: string; icon?: string }) => {
+      debounce((values: NodeFormValues) => {
         const updatedNode: AppNode = {
           ...payloadRef.current,
           data: {
             ...payloadRef.current.data,
             label: values.label,
+            code: values.code,
             icon: values.icon || DEFAULT_ICON,
           },
         };
@@ -74,10 +84,25 @@ export const useNodeForm = ({
 
   // Handle form value changes - auto save
   const handleValuesChange = useCallback(
-    (_changedValues: unknown, allValues: { label: string; icon?: string }) => {
+    (_changedValues: unknown, allValues: NodeFormValues) => {
       debouncedSave(allValues);
     },
     [debouncedSave]
+  );
+
+  // Handle status select change - updates both code and label
+  const handleStatusChange = useCallback(
+    (id: string, option?: DataSourceStatus) => {
+      const currentValues = form.getFieldsValue();
+      const newValues: NodeFormValues = {
+        ...currentValues,
+        code: id,
+        label: option?.label || id, // Use label from option, or id if custom
+      };
+      form.setFieldsValue(newValues);
+      debouncedSave(newValues);
+    },
+    [form, debouncedSave]
   );
 
   // Flush pending saves (call before close)
@@ -88,6 +113,7 @@ export const useNodeForm = ({
   return {
     form,
     handleValuesChange,
+    handleStatusChange,
     flushSave,
   };
 };

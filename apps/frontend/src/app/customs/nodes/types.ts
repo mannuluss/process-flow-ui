@@ -3,6 +3,7 @@ import type { NodeHandler } from '@process-flow/common';
 
 export type CustomNodeApp = Node<{
   label: string; //nombre del nodo que se muestra en la interfaz
+  code?: string; // código/ID del estado (ej: de DS_STATUS)
   icon?: string; // nombre del icono de Material Design
   handlers?: NodeHandler[]; // salidas del nodo
 }>;

@@ -27,10 +27,11 @@ export const NodeProperties: React.FC<PanelProps<AppNode>> = ({
   const isInitialNode = isInitialNodeType(payload);
 
   // Use the extracted form hook
-  const { form, handleValuesChange, flushSave } = useNodeForm({
-    payload,
-    isInitialNode,
-  });
+  const { form, handleValuesChange, handleStatusChange, flushSave } =
+    useNodeForm({
+      payload,
+      isInitialNode,
+    });
 
   // Subscribe to node changes to get reactive updates for handlers
   const currentNode = useStore(state =>
@@ -111,6 +112,7 @@ export const NodeProperties: React.FC<PanelProps<AppNode>> = ({
             <RegularNodeHeader
               form={form}
               onValuesChange={handleValuesChange}
+              onStatusChange={handleStatusChange}
             />
           )}
         </div>

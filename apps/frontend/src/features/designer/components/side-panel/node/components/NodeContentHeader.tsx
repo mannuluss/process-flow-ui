@@ -3,6 +3,8 @@ import { Flex, Form, Input, Typography, theme } from 'antd';
 import type { FormInstance } from 'antd';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import { IconPicker } from '../../../../../../shared/components/IconPicker';
+import { StatusSelect } from '../../../../../../shared/components/StatusSelect';
+import { DataSourceStatus } from 'src/shared/hooks/useDataSourceOptions';
 
 const { Text, Title } = Typography;
 
@@ -50,28 +52,33 @@ export const InitialNodeHeader: React.FC = () => {
 };
 
 /**
- * Header for Regular Node - Shows form with icon picker and label input
+ * Header for Regular Node - Shows form with icon picker and status select
  */
 interface RegularNodeHeaderProps {
   form: FormInstance;
   onValuesChange: (changedValues: unknown, allValues: any) => void;
+  onStatusChange: (id: string, option?: DataSourceStatus) => void;
 }
 
 export const RegularNodeHeader: React.FC<RegularNodeHeaderProps> = ({
   form,
   onValuesChange,
+  onStatusChange,
 }) => {
   const { token } = theme.useToken();
 
   return (
     <Form form={form} layout="vertical" onValuesChange={onValuesChange}>
+      <Form.Item name="label" hidden>
+        <Input />
+      </Form.Item>
       <Flex gap="middle" align="center">
         <Form.Item name="icon" noStyle>
           <IconPicker size={24} />
         </Form.Item>
         <Flex vertical flex={1}>
           <Form.Item
-            name="label"
+            name="code"
             label={
               <Text
                 style={{
@@ -87,7 +94,10 @@ export const RegularNodeHeader: React.FC<RegularNodeHeaderProps> = ({
             }
             style={{ marginBottom: 16 }}
           >
-            <Input placeholder="Nombre del nodo" />
+            <StatusSelect
+              placeholder="Seleccione o escriba un nombre del estado"
+              onChange={onStatusChange}
+            />
           </Form.Item>
         </Flex>
       </Flex>
