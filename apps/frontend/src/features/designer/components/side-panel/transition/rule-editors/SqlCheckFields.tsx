@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Flex, Form, Input, Typography } from 'antd';
-import { MonacoEditorWrapper } from '../../../../../../app/components/shared/MonacoEditorWrapper';
+import { SqlEditor } from '../../../../../../shared/components/SqlEditor';
 
 const { Text } = Typography;
 
@@ -11,14 +11,17 @@ interface SqlCheckFieldsProps {
 export const SqlCheckFields: React.FC<SqlCheckFieldsProps> = ({
   fieldName,
 }) => {
+  const namePath = useMemo(() => [fieldName, 'params'], [fieldName]);
+  const watchPath = useMemo(() => ['rules', fieldName, 'params'], [fieldName]);
+
   return (
-    <Flex vertical gap={8}>
-      <Form.Item
-        name={[fieldName, 'params', 'sql']}
-        label={<Text style={{ fontSize: 11 }}>Consulta SQL</Text>}
-        style={{ marginBottom: 0 }}
-      >
-        <MonacoEditorWrapper height="150px" />
+    <Flex vertical gap={16}>
+      <Form.Item name={[fieldName, 'params']} noStyle>
+        <SqlEditor
+          showTitle={false}
+          namePath={namePath}
+          watchPath={watchPath}
+        />
       </Form.Item>
       <Form.Item
         name={[fieldName, 'params', 'errorMessage']}

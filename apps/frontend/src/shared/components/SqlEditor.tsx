@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Flex,
   Typography,
@@ -12,78 +12,105 @@ import {
 } from 'antd';
 import { DatabaseOutlined } from '@ant-design/icons';
 import { useSqlEditor } from '../hooks/useSqlEditor';
-import { MonacoEditorWrapper } from '../../../app/components/shared/MonacoEditorWrapper';
+import { MonacoEditorWrapper } from '../../app/components/shared/MonacoEditorWrapper';
 
 const { Text } = Typography;
 
-export const SqlEditor: React.FC = () => {
+interface SqlEditorProps {
+  showTitle?: boolean;
+  namePath?: any[]; // Path relativo para Form.Item
+  watchPath?: any[]; // Path completo para Form.useWatch (incluye parent)
+}
+
+export const SqlEditor: React.FC<SqlEditorProps> = ({
+  showTitle = true,
+  namePath,
+  watchPath,
+}) => {
   const { token } = theme.useToken();
   const form = Form.useFormInstance();
 
-  // Watch form values
-  const tableName = Form.useWatch(['mappingConfig', 'tableName'], form);
-  const idField = Form.useWatch(['mappingConfig', 'idField'], form);
-  const nameField = Form.useWatch(['mappingConfig', 'nameField'], form);
-  const whereClause = Form.useWatch(['mappingConfig', 'whereClause'], form);
+  const getFieldName = useCallback(
+    (name: string) => {
+      return namePath ? [...namePath, name] : name;
+    },
+    [namePath]
+  );
+
+  const getWatchPath = useCallback(
+    (name: string) => {
+      return watchPath
+        ? [...watchPath, name]
+        : namePath
+          ? [...namePath, name]
+          : name;
+    },
+    [watchPath, namePath]
+  );
+
+  // Watch form values - usar watchPath que incluye el parent completo
+  const tableName = Form.useWatch(getWatchPath('tableName'), form);
+  const idField = Form.useWatch(getWatchPath('idField'), form);
+  const nameField = Form.useWatch(getWatchPath('nameField'), form);
+  const whereClause = Form.useWatch(getWatchPath('whereClause'), form);
 
   // Initialize mode based on whether tableName is set
   const [mode, setMode] = useState<'visual' | 'direct'>('direct');
 
   // Set initial mode once
   useEffect(() => {
-    const initialTable = form.getFieldValue(['mappingConfig', 'tableName']);
+    const initialTable = form.getFieldValue(getWatchPath('tableName'));
     if (initialTable) {
       setMode('visual');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const { tables, columns, loadingTables, loadingColumns } =
+  const { tables, columns, loadingTables, loadingColumns, fetchColumns } =
     useSqlEditor(tableName);
 
-  // Update querySql when in visual mode
+  // Update sql field when in visual mode
   useEffect(() => {
     if (mode === 'visual') {
       if (tableName && idField && nameField) {
         const sql = `SELECT ${idField}, ${nameField} FROM ${tableName} ${
           whereClause ? `WHERE ${whereClause}` : ''
         }`;
-        // Only update if different to avoid loops
-        const currentSql = form.getFieldValue('querySql');
+        const currentSql = form.getFieldValue(getFieldName('sql'));
         if (currentSql !== sql) {
-          form.setFieldValue('querySql', sql);
+          form.setFieldValue(getFieldName('sql'), sql);
         }
       }
     }
-  }, [mode, tableName, idField, nameField, whereClause, form]);
+  }, [mode, tableName, idField, nameField, whereClause, form, getFieldName]);
 
-  const handleTableChange = () => {
-    // Clear dependent fields
-    form.setFieldValue(['mappingConfig', 'idField'], undefined);
-    form.setFieldValue(['mappingConfig', 'nameField'], undefined);
+  const handleTableChange = (val: string) => {
+    form.setFieldValue(getFieldName('tableName'), val);
+    form.setFieldValue(getFieldName('idField'), undefined);
+    form.setFieldValue(getFieldName('nameField'), undefined);
+    fetchColumns(val);
   };
 
   const handleModeChange = (val: 'visual' | 'direct') => {
     setMode(val);
-    console.log('Switched mode to', val);
     if (val === 'direct') {
-      // Clear visual builder fields to avoid ambiguity on backend
-      form.setFieldValue(['mappingConfig', 'tableName'], undefined);
-      form.setFieldValue(['mappingConfig', 'idField'], undefined);
-      form.setFieldValue(['mappingConfig', 'nameField'], undefined);
-      form.setFieldValue(['mappingConfig', 'whereClause'], undefined);
+      form.setFieldValue(getFieldName('tableName'), undefined);
+      form.setFieldValue(getFieldName('idField'), undefined);
+      form.setFieldValue(getFieldName('nameField'), undefined);
+      form.setFieldValue(getFieldName('whereClause'), undefined);
     }
-    console.log(form.getFieldsValue());
   };
 
   return (
     <Flex vertical gap={24}>
       {/* Header with Mode Switcher */}
       <Flex justify="space-between" align="center" gap={20} wrap>
-        <Space>
-          <DatabaseOutlined style={{ color: token.colorPrimary }} />
-          <Text strong>Configuración SQL</Text>
-        </Space>
+        {showTitle && (
+          <Space>
+            <DatabaseOutlined style={{ color: token.colorPrimary }} />
+            <Text strong>Configuración SQL</Text>
+          </Space>
+        )}
         <Segmented
           options={[
             { label: 'Visual Builder', value: 'visual' },
@@ -97,8 +124,8 @@ export const SqlEditor: React.FC = () => {
       {/* Editor Content */}
       {mode === 'direct' ? (
         <Flex vertical gap={16}>
-          <Form.Item name="querySql" noStyle>
-            <MonacoEditorWrapper />
+          <Form.Item name={getFieldName('querySql')} noStyle>
+            <MonacoEditorWrapper height="200px" language="sql" />
           </Form.Item>
         </Flex>
       ) : (
@@ -123,7 +150,7 @@ export const SqlEditor: React.FC = () => {
                   >
                     Table Name
                   </Text>
-                  <Form.Item name={['mappingConfig', 'tableName']} noStyle>
+                  <Form.Item name={getFieldName('tableName')} noStyle>
                     <Select
                       style={{ width: '100%' }}
                       options={tables}
@@ -145,7 +172,7 @@ export const SqlEditor: React.FC = () => {
                   >
                     ID Field
                   </Text>
-                  <Form.Item name={['mappingConfig', 'idField']} noStyle>
+                  <Form.Item name={getFieldName('idField')} noStyle>
                     <Select
                       style={{ width: '100%' }}
                       options={columns}
@@ -167,7 +194,7 @@ export const SqlEditor: React.FC = () => {
                   >
                     Name Field
                   </Text>
-                  <Form.Item name={['mappingConfig', 'nameField']} noStyle>
+                  <Form.Item name={getFieldName('nameField')} noStyle>
                     <Select
                       style={{ width: '100%' }}
                       options={columns}
@@ -191,7 +218,7 @@ export const SqlEditor: React.FC = () => {
                 >
                   Where Filter (Optional)
                 </Text>
-                <Form.Item name={['mappingConfig', 'whereClause']} noStyle>
+                <Form.Item name={getFieldName('whereClause')} noStyle>
                   <Input placeholder="e.g. status = 'active'" />
                 </Form.Item>
                 <Text type="secondary" style={{ fontSize: '10px' }}>
@@ -206,10 +233,7 @@ export const SqlEditor: React.FC = () => {
             title="SQL Preview"
             style={{ borderColor: token.colorBorder }}
           >
-            <Form.Item
-              shouldUpdate={(prev, curr) => prev.querySql !== curr.querySql}
-              noStyle
-            >
+            <Form.Item shouldUpdate noStyle>
               {({ getFieldValue }) => (
                 <div
                   style={{
@@ -221,7 +245,7 @@ export const SqlEditor: React.FC = () => {
                     minHeight: '24px',
                   }}
                 >
-                  {getFieldValue('querySql') || (
+                  {getFieldValue(getFieldName('sql')) || (
                     <Text type="secondary" style={{ fontSize: '12px' }}>
                       Select table and fields to generate SQL
                     </Text>

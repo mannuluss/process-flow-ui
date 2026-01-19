@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { dataSourceService } from '../services/dataSource.service';
+import { useState, useEffect, useCallback } from 'react';
+import { dataSourceService } from '../../features/settings/services/dataSource.service';
 import { message } from 'antd';
 
 export const useSqlEditor = (initialTableName?: string) => {
@@ -32,7 +32,7 @@ export const useSqlEditor = (initialTableName?: string) => {
     fetchTables();
   }, []);
 
-  const fetchColumns = async (tableName: string) => {
+  const fetchColumns = useCallback(async (tableName: string) => {
     if (!tableName) {
       setColumns([]);
       return;
@@ -52,14 +52,14 @@ export const useSqlEditor = (initialTableName?: string) => {
     } finally {
       setLoadingColumns(false);
     }
-  };
+  }, []);
 
   // Fetch columns if initialTableName is provided
   useEffect(() => {
     if (initialTableName) {
       fetchColumns(initialTableName);
     }
-  }, [initialTableName]);
+  }, [initialTableName, fetchColumns]);
 
   return {
     tables,

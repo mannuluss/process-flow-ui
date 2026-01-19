@@ -17,7 +17,7 @@ import {
   ArrowLeftOutlined,
   PlayCircleOutlined,
 } from '@ant-design/icons';
-import { SqlEditor } from './SqlEditor';
+import { SqlEditor } from '../../../shared/components/SqlEditor';
 import { ApiEditor } from './ApiEditor';
 import { DataSource } from '@process-flow/common';
 import { dataSourceService } from '../services/dataSource.service';
@@ -48,20 +48,6 @@ export const DataSourceEditor: React.FC<DataSourceEditorProps> = ({
       mappingConfig: { valueField: null, labelField: null, tableName: null },
       ...initialData,
     };
-
-    // if (values.apiHeaders && !Array.isArray(values.apiHeaders)) {
-    //   // @ts-ignore - using a temporary field for the form
-    //   values.apiHeadersList = Object.entries(values.apiHeaders).map(
-    //     ([key, value]) => ({ key, value })
-    //   );
-    // } else if (!values.apiHeadersList) {
-    //   // Default headers
-    //   // @ts-ignore
-    //   values.apiHeadersList = [
-    //     { key: 'Content-Type', value: 'application/json' },
-    //   ];
-    // }
-
     return values;
   };
 
@@ -234,7 +220,14 @@ export const DataSourceEditor: React.FC<DataSourceEditorProps> = ({
             borderColor: token.colorBorder,
           }}
         >
-          {sourceType === 'SQL' ? <SqlEditor /> : <ApiEditor />}
+          {sourceType === 'SQL' ? (
+            <SqlEditor
+              namePath={['mappingConfig']}
+              watchPath={['mappingConfig']}
+            />
+          ) : (
+            <ApiEditor />
+          )}
         </Card>
 
         {/* Test Results */}
