@@ -28,7 +28,7 @@ export interface DocumentStatusCheckRule extends BaseRule {
 export interface SqlCheckRule extends BaseRule {
   type: RuleType.SQL_CHECK_CUSTOM;
   params: {
-    sql: string;
+    querySql: string;
     errorMessage: string;
   };
 }
@@ -62,6 +62,11 @@ export interface NodeHandler {
 export interface ProcessNodeData {
   label: string;
   description?: string;
+  /**
+   * Material icon name for the node (e.g., 'CheckCircle', 'Send', 'Settings').
+   * Used to visually identify the node type.
+   */
+  icon?: string;
   /**
    * Optional human-readable identifier (slug) for the node.
    * Useful if you want to reference nodes by code instead of UUID.
