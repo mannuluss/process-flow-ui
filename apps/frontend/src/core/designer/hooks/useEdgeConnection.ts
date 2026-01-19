@@ -27,7 +27,7 @@ export function useEdgeConnection() {
         sourceHandle: connection.sourceHandle,
         target: connection.target,
         targetHandle: connection.targetHandle,
-        type: 'bezier',
+        type: 'default',
       } as Edge;
 
       commandManager.executeCommand(

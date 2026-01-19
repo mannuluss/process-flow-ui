@@ -235,7 +235,7 @@ export default function Canvas() {
         onPaneClick={onPaneClick}
         onNodeDoubleClick={onDoubleClickNode}
         fitView
-        defaultEdgeOptions={{ type: 'bezier' } as Edge}
+        defaultEdgeOptions={{ type: 'default' } as Edge}
         deleteKeyCode={['Delete', 'Backspace']}
         panActivationKeyCode={null}
       >
