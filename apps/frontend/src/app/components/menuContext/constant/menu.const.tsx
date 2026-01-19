@@ -3,10 +3,15 @@ import { EventFlowTypes, GraphData } from '@core/types/message';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
-import AutorenewIcon from '@mui/icons-material/Autorenew';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
-import { CustomNodeApp } from 'src/app/customs/nodes/types';
+import LinkOffIcon from '@mui/icons-material/LinkOff';
+import { AppNode } from 'src/app/customs/nodes/types';
+import {
+  findInitialNode,
+  hasConnectionFromInitial,
+  isInitialNodeType,
+} from 'src/core/utils/workflow';
 
 import {
   ContextMenuAction,
@@ -55,18 +60,36 @@ export const ActionsMenuEdge: ContextMenuAction[] = [
 
 export const ActionMakeInitialNode: ContextMenuAction = {
   icon: <PlayCircleOutlineIcon fontSize="small" />,
-  title: 'Marcar como inicial',
-  show: (context: MenuActionEventContext<CustomNodeApp>) => {
-    return context.object ? !context.object?.data?.initial : false;
+  title: 'Conectar desde inicio',
+  show: (context: MenuActionEventContext<AppNode>) => {
+    // No mostrar para nodos de tipo initial
+    if (context.object && isInitialNodeType(context.object)) return false;
+    // Verificar si ya existe conexión desde initial
+    const initialNode = findInitialNode(context.state?.getNodes());
+    if (!initialNode) return true;
+    return !hasConnectionFromInitial(
+      context.state?.getEdges() || [],
+      initialNode.id,
+      context.object?.id || ''
+    );
   },
   commandId: 'setInitialNode',
 };
 
 export const ActionResetInitialNode: ContextMenuAction = {
-  title: 'Desmarcar como inicial',
-  icon: <AutorenewIcon fontSize="small" />,
-  show: (context: MenuActionEventContext<CustomNodeApp>) => {
-    return context.object?.data?.initial;
+  title: 'Desconectar del inicio',
+  icon: <LinkOffIcon fontSize="small" />,
+  show: (context: MenuActionEventContext<AppNode>) => {
+    // No mostrar para nodos de tipo initial
+    if (context.object && isInitialNodeType(context.object)) return false;
+    // Verificar si existe conexión desde initial
+    const initialNode = findInitialNode(context.state?.getNodes() || []);
+    if (!initialNode) return false;
+    return hasConnectionFromInitial(
+      context.state?.getEdges() || [],
+      initialNode.id,
+      context.object?.id || ''
+    );
   },
   commandId: 'unSetInitialNode',
 };
@@ -88,6 +111,8 @@ export const ActionsMenuNode: ContextMenuAction[] = [
   {
     title: 'Eliminar nodo',
     icon: <DeleteIcon fontSize="small" />,
+    // No permitir eliminar nodo initial
+    show: context => !context.object || !isInitialNodeType(context.object),
     commandId: 'removeNode',
   },
 ];

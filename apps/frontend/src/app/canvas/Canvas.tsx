@@ -66,7 +66,23 @@ export default function Canvas() {
     },
     [commandManager, dispatch, generateContextApp]
   );
-  //se cargan los nodos y conexiones
+
+  // Inicializar canvas con un workflow vacío al montar el componente
+  // El comando loadData se encarga de crear el nodo initial si no existe
+  useEffect(() => {
+    commandManager.executeCommand(
+      'loadData',
+      generateContextApp('Graph', { nodes: [], connections: [] })
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Solo al montar - las dependencias son estables
+
+  /**
+   * @deprecated Este useEffect es parte del sistema legacy donde el frontend
+   * estaba embebido en otra aplicación que controlaba el flujo de datos.
+   * Se mantiene por compatibilidad pero debería ser removido cuando se
+   * complete la migración al nuevo sistema autónomo.
+   */
   useEffect(() => {
     const sub = subscribeMenssage(EventFlowTypes.LOAD_DATA, loadData);
     return () => {

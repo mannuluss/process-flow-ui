@@ -51,7 +51,6 @@ export function CustomProcessNode({
 
   return (
     <div
-      className={data.initial ? 'initial-node' : ''}
       style={{
         backgroundColor: token.colorBgContainer,
         borderRadius: token.borderRadius,

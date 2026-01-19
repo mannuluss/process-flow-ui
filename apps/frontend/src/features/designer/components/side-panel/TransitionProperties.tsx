@@ -12,7 +12,6 @@ import {
   Typography,
 } from 'antd';
 import {
-  CloseOutlined,
   PlusCircleOutlined,
   ThunderboltOutlined,
   DeleteOutlined,
@@ -26,9 +25,10 @@ import {
   ApiCheckFields,
 } from './transition/rule-editors';
 import { useCommand } from '@commands/manager/CommandContext';
+import { PanelHeader } from './components';
 import type { PanelProps, HandlerPayload } from './types';
 
-const { Text, Title } = Typography;
+const { Text } = Typography;
 
 export const TransitionProperties: React.FC<PanelProps<HandlerPayload>> = ({
   payload,
@@ -78,25 +78,7 @@ export const TransitionProperties: React.FC<PanelProps<HandlerPayload>> = ({
       vertical
       style={{ height: '100%', backgroundColor: token.colorBgContainer }}
     >
-      {/* Header */}
-      <Flex
-        justify="space-between"
-        align="center"
-        style={{
-          padding: '16px',
-          borderBottom: `1px solid ${token.colorBorderSecondary}`,
-        }}
-      >
-        <Title level={5} style={{ margin: 0 }}>
-          Propiedades de Transición
-        </Title>
-        <Button
-          type="text"
-          icon={<CloseOutlined />}
-          onClick={handleClose}
-          style={{ color: token.colorTextSecondary }}
-        />
-      </Flex>
+      <PanelHeader title="Propiedades de Transición" onClose={handleClose} />
 
       {/* Content */}
       <Flex vertical flex={1} style={{ overflowY: 'auto' }}>

@@ -2,8 +2,7 @@ import { useEffect, useCallback, useMemo, useRef } from 'react';
 import { Form, MenuProps } from 'antd';
 import { NodeHandler, Rule, RuleType } from '@process-flow/common';
 import debounce from 'lodash.debounce';
-
-const DEBOUNCE_MS = 400;
+import { DEBOUNCE_AUTOSAVE_MS } from 'src/core/const/form';
 
 const getDefaultRule = (type: RuleType): Rule => {
   switch (type) {
@@ -65,7 +64,7 @@ export const useTransitionForm = ({
           trigger: values.trigger,
           rules: values.rules,
         });
-      }, DEBOUNCE_MS),
+      }, DEBOUNCE_AUTOSAVE_MS),
     [onUpdate]
   );
 

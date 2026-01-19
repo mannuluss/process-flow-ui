@@ -1,96 +1,49 @@
-import React, { useEffect, useMemo, useRef, useCallback } from 'react';
+import React from 'react';
 import { useReactFlow, useStore } from '@xyflow/react';
-import debounce from 'lodash.debounce';
-import { AppNode, ProcesoCustomNode } from 'src/app/customs/nodes/types';
+import { AppNode } from 'src/app/customs/nodes/types';
 import { NodeHandler } from '@process-flow/common';
-import { Button, Card, Flex, Form, Input, List, theme, Typography } from 'antd';
-import {
-  CloseOutlined,
-  PlusOutlined,
-  ThunderboltFilled,
-  RightOutlined,
-  DeleteOutlined,
-} from '@ant-design/icons';
-import { RuleTypeIcon } from '../../../../shared/components/RuleTypeIcon';
-import {
-  IconPicker,
-  DEFAULT_ICON,
-} from '../../../../shared/components/IconPicker';
+import { Button, Flex, theme } from 'antd';
+import { DeleteOutlined } from '@ant-design/icons';
 import { useCommand } from '@commands/manager/CommandContext';
+import { useNodeForm } from './node/hooks/useNodeForm';
+import {
+  HandlersList,
+  InitialNodeHeader,
+  RegularNodeHeader,
+} from './node/components';
 import type { PanelProps } from './types';
+import { PanelHeader } from './components';
+import { isInitialNodeType } from 'src/core/utils/workflow';
 
-const { Text, Title } = Typography;
-
-export const NodeProperties: React.FC<PanelProps<ProcesoCustomNode>> = ({
+export const NodeProperties: React.FC<PanelProps<AppNode>> = ({
   payload,
   onClose,
 }) => {
   const { getEdges, getNodes } = useReactFlow();
   const { token } = theme.useToken();
-  const [form] = Form.useForm();
   const { commandManager, generateContextApp } = useCommand();
+
+  // Check if this is the initial node
+  const isInitialNode = isInitialNodeType(payload);
+
+  // Use the extracted form hook
+  const { form, handleValuesChange, flushSave } = useNodeForm({
+    payload,
+    isInitialNode,
+  });
 
   // Subscribe to node changes to get reactive updates for handlers
   const currentNode = useStore(state =>
     state.nodes.find(n => n.id === payload.id)
-  ) as ProcesoCustomNode | undefined;
+  ) as AppNode | undefined;
 
   // Get handlers from the current node (reactive) or fallback to payload
+  const payloadData = payload.data as any;
+  const currentData = currentNode?.data as any;
   const handlers: NodeHandler[] =
-    currentNode?.data?.handlers || payload.data.handlers || [];
+    currentData?.handlers || payloadData?.handlers || [];
   const nodes = getNodes();
   const edges = getEdges();
-
-  useEffect(() => {
-    form.setFieldsValue({
-      label: payload.data.label || '',
-      icon: payload.data.icon || DEFAULT_ICON,
-    });
-  }, [payload, form]);
-
-  // Ref para mantener payload actualizado en el closure del debounce
-  const payloadRef = useRef(payload);
-  useEffect(() => {
-    payloadRef.current = payload;
-  }, [payload]);
-
-  // Debounced save function
-  const debouncedSave = useMemo(
-    () =>
-      debounce((values: { label: string; icon?: string }) => {
-        const updatedNode: AppNode = {
-          ...payloadRef.current,
-          data: {
-            ...payloadRef.current.data,
-            label: values.label,
-            icon: values.icon || DEFAULT_ICON,
-          },
-        };
-        commandManager.executeCommand(
-          'updateNode',
-          generateContextApp('Node', updatedNode)
-        );
-      }, 400),
-    [commandManager, generateContextApp]
-  );
-
-  // Cleanup debounce on unmount
-  useEffect(() => {
-    return () => {
-      debouncedSave.cancel();
-    };
-  }, [debouncedSave]);
-
-  const handleValuesChange = useCallback(
-    (_changedValues: unknown, allValues: { label: string; icon?: string }) => {
-      debouncedSave(allValues);
-    },
-    [debouncedSave]
-  );
-
-  const flushSave = useCallback(() => {
-    debouncedSave.flush();
-  }, [debouncedSave]);
 
   const handleClose = () => {
     flushSave();
@@ -127,8 +80,8 @@ export const NodeProperties: React.FC<PanelProps<ProcesoCustomNode>> = ({
       e => e.source === payload.id && e.sourceHandle === handler.id
     );
     if (!edge) return null;
-    const targetNode = nodes.find(n => n.id === edge.target) as AppNode;
-    return targetNode?.data?.label || edge.target;
+    const targetNode = nodes.find(n => n.id === edge.target);
+    return (targetNode?.data as any)?.label || edge.target;
   };
 
   return (
@@ -136,214 +89,68 @@ export const NodeProperties: React.FC<PanelProps<ProcesoCustomNode>> = ({
       vertical
       style={{ height: '100%', backgroundColor: token.colorBgContainer }}
     >
-      {/* Header */}
-      <Flex
-        justify="space-between"
-        align="center"
-        style={{
-          padding: '16px',
-          borderBottom: `1px solid ${token.colorBorderSecondary}`,
-        }}
-      >
-        <Title level={5} style={{ margin: 0 }}>
-          Propiedades de Nodo
-        </Title>
-        <Button
-          type="text"
-          icon={<CloseOutlined />}
-          onClick={handleClose}
-          style={{ color: token.colorTextSecondary }}
-        />
-      </Flex>
+      <PanelHeader title="Propiedades de Nodo" onClose={handleClose} />
 
       {/* Content */}
       <Flex vertical flex={1} style={{ overflowY: 'auto' }}>
-        {/* Node Header / Icon */}
+        {/* Node Header - Different for initial node */}
         <div
           style={{
             padding: '24px',
-            backgroundColor: token.colorFillQuaternary,
-            borderBottom: `1px solid ${token.colorBorderSecondary}`,
+            backgroundColor: isInitialNode
+              ? `${token.colorSuccess}10`
+              : token.colorFillQuaternary,
+            borderBottom: `1px solid ${isInitialNode ? token.colorSuccessBorder : token.colorBorderSecondary}`,
             position: 'relative',
             overflow: 'hidden',
           }}
         >
-          <Form
-            form={form}
-            layout="vertical"
-            onValuesChange={handleValuesChange}
-          >
-            <Flex gap="middle" align="center">
-              <Form.Item name="icon" noStyle>
-                <IconPicker size={24} />
-              </Form.Item>
-              <Flex vertical flex={1}>
-                <Form.Item
-                  name="label"
-                  label={
-                    <Text
-                      style={{
-                        fontSize: 10,
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.05em',
-                        color: token.colorTextSecondary,
-                        fontWeight: 'bold',
-                      }}
-                    >
-                      Nombre del Estado
-                    </Text>
-                  }
-                  style={{ marginBottom: 16 }}
-                >
-                  <Input placeholder="Nombre del nodo" />
-                </Form.Item>
-              </Flex>
-            </Flex>
-          </Form>
+          {isInitialNode ? (
+            <InitialNodeHeader />
+          ) : (
+            <RegularNodeHeader
+              form={form}
+              onValuesChange={handleValuesChange}
+            />
+          )}
         </div>
 
         {/* Handlers List */}
-        <div style={{ padding: '24px' }}>
-          <Flex
-            justify="space-between"
-            align="center"
-            style={{ marginBottom: 16 }}
-          >
-            <Text
-              style={{
-                fontSize: 10,
-                textTransform: 'uppercase',
-                letterSpacing: '0.05em',
-                color: token.colorTextSecondary,
-                fontWeight: 'bold',
-              }}
-            >
-              Handlers de Salida
-            </Text>
-            <Button
-              type="text"
-              size="small"
-              icon={<PlusOutlined />}
-              onClick={handleAddHandler}
-              style={{
-                fontSize: 10,
-                fontWeight: 'bold',
-                color: token.colorPrimary,
-                backgroundColor: token.colorPrimaryBg,
-              }}
-            >
-              AGREGAR
-            </Button>
-          </Flex>
-
-          <List
-            dataSource={handlers}
-            locale={{ emptyText: 'No hay handlers de salida configurados.' }}
-            renderItem={handler => {
-              const triggerName = handler.trigger || 'Sin Evento';
-              const targetLabel = getTargetLabel(handler);
-              const rules = handler.rules || [];
-              const ruleCount = rules.length;
-
-              return (
-                <Card
-                  hoverable
-                  size="small"
-                  variant="borderless"
-                  onClick={() => handleEditHandler(handler)}
-                  style={{
-                    marginBottom: 8,
-                    backgroundColor: token.colorFillQuaternary,
-                    borderColor: token.colorBorderSecondary,
-                  }}
-                >
-                  <Flex justify="space-between" align="center">
-                    <Flex vertical gap="small" style={{ flex: 1 }}>
-                      <Flex gap={8} align="center">
-                        <div
-                          style={{
-                            width: 32,
-                            height: 32,
-                            borderColor: token.colorWarningBorder,
-                            backgroundColor: token.colorWarningBg,
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            color: token.colorWarning,
-                            flexShrink: 0,
-                          }}
-                        >
-                          <ThunderboltFilled />
-                        </div>
-                        <Text strong ellipsis>
-                          {triggerName}
-                        </Text>
-                      </Flex>
-                      <Flex vertical gap={8} wrap>
-                        {targetLabel ? (
-                          <Text type="secondary">
-                            Conectado a: <Text strong>{targetLabel}</Text>
-                          </Text>
-                        ) : (
-                          <Text type="warning" italic>
-                            Sin conexión
-                          </Text>
-                        )}
-
-                        <Card variant="outlined" size="small">
-                          {ruleCount > 0 ? (
-                            <Flex vertical gap={4} style={{ marginTop: 4 }}>
-                              {rules.map((rule, idx) => (
-                                <Flex key={idx} gap={8}>
-                                  <RuleTypeIcon type={rule.type} size={12} />
-                                  {rule.type}
-                                </Flex>
-                              ))}
-                            </Flex>
-                          ) : (
-                            <Text type="secondary">
-                              Sin reglas (Transición directa)
-                            </Text>
-                          )}
-                        </Card>
-                      </Flex>
-                    </Flex>
-                    <RightOutlined
-                      style={{ color: token.colorTextQuaternary }}
-                    />
-                  </Flex>
-                </Card>
-              );
-            }}
-          />
-        </div>
+        <HandlersList
+          handlers={handlers}
+          getTargetLabel={getTargetLabel}
+          onAddHandler={handleAddHandler}
+          onEditHandler={handleEditHandler}
+        />
       </Flex>
 
-      {/* Footer */}
-      <div
-        style={{
-          padding: '16px',
-          borderTop: `1px solid ${token.colorBorderSecondary}`,
-          backgroundColor: token.colorBgContainer,
-          zIndex: 10,
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 8,
-        }}
-      >
-        <Button
-          danger
-          icon={<DeleteOutlined />}
-          block
-          onClick={handleDelete}
+      {/* Footer - Hidden for initial node */}
+      {!isInitialNode && (
+        <div
           style={{
-            backgroundColor: token.colorErrorBg,
-            borderColor: token.colorErrorBorder,
+            padding: '16px',
+            borderTop: `1px solid ${token.colorBorderSecondary}`,
+            backgroundColor: token.colorBgContainer,
+            zIndex: 10,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 8,
           }}
         >
-          Eliminar Nodo
-        </Button>
-      </div>
+          <Button
+            danger
+            icon={<DeleteOutlined />}
+            block
+            onClick={handleDelete}
+            style={{
+              backgroundColor: token.colorErrorBg,
+              borderColor: token.colorErrorBorder,
+            }}
+          >
+            Eliminar Nodo
+          </Button>
+        </div>
+      )}
     </Flex>
   );
 };
