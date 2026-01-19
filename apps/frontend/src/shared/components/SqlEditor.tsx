@@ -12,7 +12,7 @@ import {
 } from 'antd';
 import { DatabaseOutlined } from '@ant-design/icons';
 import { useSqlEditor } from '../hooks/useSqlEditor';
-import { MonacoEditorWrapper } from '../../app/components/shared/MonacoEditorWrapper';
+import { MonacoEditorWrapper } from './MonacoEditorWrapper';
 
 const { Text } = Typography;
 

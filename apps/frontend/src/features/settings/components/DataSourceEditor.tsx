@@ -64,7 +64,7 @@ export const DataSourceEditor: React.FC<DataSourceEditorProps> = ({
       // Ensure we only send relevant fields based on type
       querySql:
         values.sourceType === 'SQL' && !values.mappingConfig?.tableName
-          ? values.querySql
+          ? values.mappingConfig.querySql
           : null,
       apiUrl: values.sourceType === 'API' ? values.apiUrl : undefined,
       apiMethod: values.sourceType === 'API' ? values.apiMethod : undefined,
