@@ -64,7 +64,6 @@ export const setInitialNodeCommand: CommandHandler<
     source: initialNode.id,
     sourceHandle: handlerId,
     target: targetNode.id,
-    type: 'step',
   };
   evt.state.addEdges([newEdge]);
 
