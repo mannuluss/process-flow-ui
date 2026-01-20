@@ -1,15 +1,10 @@
 import { apiClient } from '../../../core/api/client';
 import environments from '../../../environments/environments';
-
-export interface Workflow {
-  id: string;
-  name: string;
-  description: string;
-  isActive: boolean;
-  updatedAt: string;
-  createdAt: string;
-  definition: any;
-}
+import type {
+  Workflow,
+  CreateWorkflowDto,
+  UpdateWorkflowDto,
+} from '@process-flow/common';
 
 class WorkflowService {
   private readonly baseUrl = `${environments.apiUrl}/workflow`;
@@ -24,12 +19,12 @@ class WorkflowService {
     return response.data;
   }
 
-  async create(data: Partial<Workflow>): Promise<Workflow> {
+  async create(data: CreateWorkflowDto): Promise<Workflow> {
     const response = await apiClient.post<Workflow>(this.baseUrl, data);
     return response.data;
   }
 
-  async update(id: string, data: Partial<Workflow>): Promise<Workflow> {
+  async update(id: string, data: UpdateWorkflowDto): Promise<Workflow> {
     const response = await apiClient.patch<Workflow>(
       `${this.baseUrl}/${id}`,
       data
@@ -61,3 +56,4 @@ class WorkflowService {
 }
 
 export const workflowService = new WorkflowService();
+export type { Workflow, CreateWorkflowDto, UpdateWorkflowDto };

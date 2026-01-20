@@ -32,7 +32,7 @@ export function EventManager() {
       type: EventFlowTypes.ALL_DATA,
       payload: {
         nodes,
-        connections: edges,
+        edges,
       },
     });
   }, [nodes, edges]);

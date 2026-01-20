@@ -21,7 +21,7 @@ const createDefaultInitialNode = (): InitialCustomNode => ({
  */
 export const loadDataCommand: CommandHandler = context => {
   const nodes = context.object?.nodes ?? [];
-  const edges = context.object?.connections ?? [];
+  const edges = context.object?.edges ?? [];
 
   // Verificar si existe un nodo initial
   const hasInitialNode = !!findInitialNode(nodes);

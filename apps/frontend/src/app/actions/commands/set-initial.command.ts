@@ -72,7 +72,7 @@ export const setInitialNodeCommand: CommandHandler<
     type: EventFlowTypes.ALL_DATA,
     payload: {
       nodes: evt.state.getNodes(),
-      connections: evt.state.getEdges(),
+      edges: evt.state.getEdges(),
     },
   });
 };
@@ -127,7 +127,7 @@ export const unSetInitialNodeCommand: CommandHandler<
     type: EventFlowTypes.ALL_DATA,
     payload: {
       nodes: evt.state.getNodes(),
-      connections: evt.state.getEdges(),
+      edges: evt.state.getEdges(),
     },
   });
 };

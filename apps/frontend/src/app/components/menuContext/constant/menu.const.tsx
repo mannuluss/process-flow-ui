@@ -135,7 +135,7 @@ export const ActionsMenuWindow: ContextMenuAction[] = [
       ).json();
       //se le informa al padre que se va a editar un nodo.
       context.state.setNodes(example.nodes);
-      context.state.setEdges(example.connections);
+      context.state.setEdges(example.edges);
     },
   },
 ];

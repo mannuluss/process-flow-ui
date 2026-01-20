@@ -66,7 +66,7 @@ type UpdateEdgePayload = Edge;
 /**
  * Estructura de datos que representa el grafo completo.
  */
-export type GraphData = { nodes: AppNode[]; connections: Edge[] };
+export type GraphData = { nodes: AppNode[]; edges: any[] };
 type LoadActionsPayload = {
   actions: any[] /* ... estructura de acciones ... */;
 };

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Layout,
   Flex,
@@ -11,6 +11,11 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from 'src/store/store';
 import { resetSidePanel } from 'src/store/sidePanelSlice';
+import { useStore } from '@xyflow/react';
+import { useWorkflow } from '../context/WorkflowContext';
+import { useWorkflowSave } from '../hooks/useWorkflowSave';
+import { WorkflowMetadataModal } from './WorkflowMetadataModal';
+import type { WorkflowEdge, WorkflowMetadata } from '@process-flow/common';
 
 const { Header } = Layout;
 const { Text, Title } = Typography;
@@ -19,10 +24,62 @@ export const EditorHeader: React.FC = () => {
   const { token } = theme.useToken();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const nodes = useStore<any[]>(s => s.nodes);
+  const edges = useStore(s => s.edges);
+  const { metadata, isNew, updateMetadata } = useWorkflow();
+  const { saveWorkflow, isSaving } = useWorkflowSave();
+  const [showMetadataModal, setShowMetadataModal] = useState(false);
 
   const backAction = () => {
     dispatch(resetSidePanel());
     navigate('/home');
+  };
+
+  const actionSave = () => {
+    // Si es nuevo workflow, mostrar modal para capturar metadata
+    if (isNew) {
+      setShowMetadataModal(true);
+    } else {
+      // Si ya existe, guardar directamente
+      handleSave();
+    }
+  };
+
+  const handleSave = async () => {
+    await saveWorkflow({
+      nodes,
+      edges: edges as WorkflowEdge[],
+      onSuccess: workflowId => {
+        console.log('Workflow saved with ID:', workflowId);
+        // Actualizar URL si es nuevo
+        if (isNew) {
+          navigate(`/editor/${workflowId}`, { replace: true });
+        }
+      },
+    });
+  };
+
+  const handleMetadataConfirm = async (values: WorkflowMetadata) => {
+    // Actualizar contexto primero
+    updateMetadata(values);
+    setShowMetadataModal(false);
+
+    // Guardar con los valores nuevos directamente (no esperar a que se actualice el estado)
+    await saveWorkflow({
+      nodes,
+      edges: edges as WorkflowEdge[],
+      metadata: {
+        name: values.name,
+        description: values.description,
+      },
+      onSuccess: workflowId => {
+        navigate(`/editor/${workflowId}`, { replace: true });
+      },
+    });
+  };
+
+  const handleEditMetadata = () => {
+    setShowMetadataModal(true);
   };
 
   return (
@@ -66,16 +123,30 @@ export const EditorHeader: React.FC = () => {
               level={5}
               style={{ margin: 0, color: token.colorTextBase, lineHeight: 1 }}
             >
-              Proceso de Aprobación Genérico
+              {metadata.name}
             </Title>
+            <Button
+              type="text"
+              size="small"
+              icon={
+                <span
+                  className="material-symbols-outlined"
+                  style={{ fontSize: 16 }}
+                >
+                  edit
+                </span>
+              }
+              onClick={handleEditMetadata}
+              style={{
+                color: token.colorTextSecondary,
+                padding: '0 4px',
+                height: 'auto',
+              }}
+            />
           </Flex>
           <Flex align="center" gap={8}>
             <Text style={{ fontSize: 12, color: token.colorTextSecondary }}>
-              Mis Proyectos
-            </Text>
-            <Text style={{ fontSize: 12, color: token.colorBorder }}>•</Text>
-            <Text style={{ fontSize: 12, color: token.colorTextSecondary }}>
-              Editado hace 5 min
+              {isNew ? 'Sin guardar' : 'Guardado'}
             </Text>
           </Flex>
         </Flex>
@@ -94,11 +165,13 @@ export const EditorHeader: React.FC = () => {
             </span>
           }
           style={{
-            backgroundColor: token.colorPrimary,
             color: token.colorBgBase,
             fontWeight: 'bold',
             boxShadow: 'none',
           }}
+          onClick={actionSave}
+          loading={isSaving}
+          disabled={isSaving}
         >
           Guardar
         </Button>
@@ -167,6 +240,14 @@ export const EditorHeader: React.FC = () => {
           }}
         />
       </Flex>
+
+      <WorkflowMetadataModal
+        open={showMetadataModal}
+        initialValues={metadata}
+        onConfirm={handleMetadataConfirm}
+        onCancel={() => setShowMetadataModal(false)}
+        confirmLoading={isSaving}
+      />
     </Header>
   );
 };

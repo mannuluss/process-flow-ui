@@ -37,6 +37,7 @@ import { AppNode } from '../customs/nodes/types';
 import { EventManager } from './events/EventManager';
 import DesignerToolbar from 'src/features/designer/components/Toolbar/DesignerToolbar';
 import EditorSidePanel from 'src/features/designer/components/EditorSidePanel';
+import { useWorkflowLoad } from 'src/features/workflow/hooks/useWorkflowLoad';
 
 export default function Canvas() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -55,6 +56,9 @@ export default function Canvas() {
   );
   const { commandManager, generateContextApp } = useCommand();
 
+  // Cargar el workflow cuando el Canvas esté montado
+  useWorkflowLoad();
+
   const loadData = useCallback(
     (msj: CrossAppMessage) => {
       commandManager.executeCommand(
@@ -66,16 +70,6 @@ export default function Canvas() {
     },
     [commandManager, dispatch, generateContextApp]
   );
-
-  // Inicializar canvas con un workflow vacío al montar el componente
-  // El comando loadData se encarga de crear el nodo initial si no existe
-  useEffect(() => {
-    commandManager.executeCommand(
-      'loadData',
-      generateContextApp('Graph', { nodes: [], connections: [] })
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Solo al montar - las dependencias son estables
 
   /**
    * @deprecated Este useEffect es parte del sistema legacy donde el frontend

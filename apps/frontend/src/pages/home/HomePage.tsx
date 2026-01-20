@@ -48,14 +48,11 @@ const HomePage: React.FC = () => {
   }, []);
 
   const handleCreateFlow = () => {
-    // TODO: Implement create flow logic properly
-    // For now, we can navigate to a 'new' route or create a placeholder
-    const newFlowId = 'new';
-    navigate(`/workflow/${newFlowId}`);
+    navigate('/editor/new');
   };
 
   const handleOpen = (id: string) => {
-    navigate(`/workflow/${id}`);
+    navigate(`/editor/${id}`);
   };
 
   const handleDuplicate = async (id: string) => {
