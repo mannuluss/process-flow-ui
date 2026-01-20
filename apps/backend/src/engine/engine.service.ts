@@ -3,7 +3,6 @@ import { DataSource as TypeOrmDataSource } from 'typeorm';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import { DataSourceService } from '../data-source/data-source.service';
-import { WorkflowDefinition } from '../workflow/entities/workflow.entity';
 import {
   Rule,
   RuleType,
@@ -11,6 +10,8 @@ import {
   DocumentStatusCheckRule,
   SqlCheckRule,
   ApiCheckRule,
+  NodeHandler,
+  WorkflowDefinition,
 } from '@process-flow/common';
 
 @Injectable()
@@ -23,7 +24,8 @@ export class EngineService {
 
   /**
    * Determines the initial node for a new process instance.
-   * It looks for a node of type 'initial' and evaluates its outgoing edges.
+   * It looks for a node of type 'initial' and evaluates its handlers to find
+   * a valid outgoing transition.
    */
   async getInitialNode(
     definition: WorkflowDefinition,
@@ -34,31 +36,36 @@ export class EngineService {
     const initialNode = definition.nodes.find((n) => n.type === 'initial');
 
     if (!initialNode) {
-      // Fallback: If no 'initial' node exists, look for a node marked with isInitial data (Legacy support or simple mode)
-      const legacyInitial = definition.nodes.find((n) => n.data?.isInitial);
-      if (legacyInitial) return legacyInitial.id;
-
       throw new BadRequestException(
         'Workflow definition has no "initial" node defined.',
       );
     }
 
-    // 2. Find edges starting from this initial node
-    const edges = definition.edges.filter((e) => e.source === initialNode.id);
+    // 2. Get handlers from the initial node
+    const handlers: NodeHandler[] = initialNode.data?.handlers || [];
 
-    // 3. Evaluate edges to find the target node
-    for (const edge of edges) {
-      // Check Trigger
-      if (edge.data?.trigger && edge.data.trigger !== trigger) {
+    // 3. Evaluate handlers to find a valid transition
+    for (const handler of handlers) {
+      // Check Trigger - skip if trigger doesn't match
+      if (handler.trigger && handler.trigger !== trigger) {
         continue;
       }
 
       // Check Rules
       const rulesPassed = await this.evaluateRules(
-        edge.data?.rules || [],
+        handler.rules || [],
         context,
       );
-      if (rulesPassed) {
+      if (!rulesPassed) {
+        continue;
+      }
+
+      // Find the edge that connects from this handler (sourceHandle === handler.id)
+      const edge = definition.edges.find(
+        (e) => e.source === initialNode.id && e.sourceHandle === handler.id,
+      );
+
+      if (edge) {
         return edge.target;
       }
     }
@@ -70,6 +77,7 @@ export class EngineService {
 
   /**
    * Evaluates transitions from a current node based on a trigger and context.
+   * Reads handlers from the node's data and finds the matching edge by sourceHandle.
    */
   async evaluateTransition(
     definition: WorkflowDefinition,
@@ -77,22 +85,38 @@ export class EngineService {
     trigger: string,
     context: Record<string, any>,
   ): Promise<string> {
-    // 1. Find edges starting from the current node
-    const edges = definition.edges.filter((e) => e.source === currentNodeId);
+    // 1. Find the current node
+    const currentNode = definition.nodes.find((n) => n.id === currentNodeId);
 
-    // 2. Evaluate edges to find the target node
-    for (const edge of edges) {
-      // Check Trigger
-      if (edge.data?.trigger && edge.data.trigger !== trigger) {
+    if (!currentNode) {
+      throw new BadRequestException(`Node "${currentNodeId}" not found.`);
+    }
+
+    // 2. Get handlers from the current node
+    const handlers: NodeHandler[] = currentNode.data?.handlers || [];
+
+    // 3. Evaluate handlers to find a valid transition
+    for (const handler of handlers) {
+      // Check Trigger - skip if trigger doesn't match
+      if (handler.trigger !== trigger) {
         continue;
       }
 
       // Check Rules
       const rulesPassed = await this.evaluateRules(
-        edge.data?.rules || [],
+        handler.rules || [],
         context,
       );
-      if (rulesPassed) {
+      if (!rulesPassed) {
+        continue;
+      }
+
+      // Find the edge that connects from this handler (sourceHandle === handler.id)
+      const edge = definition.edges.find(
+        (e) => e.source === currentNodeId && e.sourceHandle === handler.id,
+      );
+
+      if (edge) {
         return edge.target;
       }
     }
@@ -159,7 +183,7 @@ export class EngineService {
     context: Record<string, any>,
   ): Promise<boolean> {
     try {
-      let sql = rule.params.sql;
+      let sql = rule.params.querySql;
 
       // TODO: Find a way to avoid SQL injection. Currently using simple string replacement.
       // We should implement a proper parser or use TypeORM parameters if possible.

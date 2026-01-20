@@ -109,3 +109,6 @@ export interface DataSource {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+// Export workflow types
+export * from './workflow.types';

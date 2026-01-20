@@ -5,22 +5,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { ProcessNodeData, ProcessEdgeData } from '@process-flow/common';
-
-export interface WorkflowDefinition {
-  nodes: {
-    id: string;
-    type: string;
-    data: ProcessNodeData;
-    position: { x: number; y: number };
-  }[];
-  edges: {
-    id: string;
-    source: string;
-    target: string;
-    data: ProcessEdgeData;
-  }[];
-}
+import type { WorkflowDefinition } from '@process-flow/common';
 
 @Entity('workflows')
 export class Workflow {

@@ -91,7 +91,10 @@ export class ProcessInstanceService {
 
     // Check if final node
     const nextNode = workflow.definition.nodes.find((n) => n.id === nextNodeId);
-    if (nextNode?.data?.isFinal) {
+    const hasOutgoing = workflow.definition.edges.some(
+      (e) => e.source === nextNodeId,
+    );
+    if (nextNode?.type === 'end' || !hasOutgoing) {
       instance.status = ProcessStatus.COMPLETED;
     }
 
