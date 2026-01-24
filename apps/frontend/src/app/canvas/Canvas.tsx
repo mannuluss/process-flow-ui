@@ -25,12 +25,9 @@ import {
 } from 'src/store/selectionSlice';
 import { useAppSelector } from 'src/store/store';
 
-import LoadingBackdrop from '../components/custom/loading-backdrop';
 import ContextMenu, {
   ContextMenuRef,
 } from '../components/menuContext/context-menu';
-import ToolbarFloating from '../components/toolbar-floating/toolbar-floating';
-import PanelFlowState from '../components/panels/panel-flow-state';
 import { edgeTypes } from '../customs/edges';
 import { nodeTypes } from '../customs/nodes';
 import { AppNode } from '../customs/nodes/types';
@@ -236,18 +233,11 @@ export default function Canvas() {
         <Background />
         {showPanelMinimap && <MiniMap />}
         <Controls />
-        <PanelFlowState />
         <ContextMenu ref={menu} />
-        {
-          showToolbar && (
-            <ToolbarFloating />
-          ) /**TODO: Borrar luego de terminar rediseño */
-        }
         <DesignerToolbar />
       </ReactFlow>
 
       <EditorSidePanel />
-      <LoadingBackdrop />
       <EventManager />
     </>
   );
