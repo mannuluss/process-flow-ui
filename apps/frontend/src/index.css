@@ -1,93 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
+
 :root {
-  /* Default Light Theme */
-  --background-color: #fff;
-  --xy-node-background-color: #fff;
-  --text-color: #213547;
-  --node-background: #fff;
-  --node-border: #c3c8bb;
-  --edge-color: #b1b1b7;
-  --minimap-background: #f8f8f8;
-  --minimap-mask: rgb(240, 240, 240, 0.6);
-  --controls-background: #f8f8f8;
-  --controls-border: #ddd;
-  --controls-button-bg: #fff;
+  /* Palette from Design System */
+  --color-primary: #30e87a;
+  --color-background-dark: #112117;
+  --color-surface-dark: #1a3224;
+  --color-surface-light: #244732;
+  --color-text-muted: #93c8a8;
+  --color-text-white: #ffffff;
+  --color-border: #244732;
 
-  /* HOVER */
-  --xy-node-boxshadow-hover: 0 1px 4px 1px #c3c8bb;
+  /* React Flow Overrides (to match theme) */
+  --xy-node-background-color: var(--color-surface-dark);
+  --xy-node-border-color: var(--color-border);
+  --xy-node-color: var(--color-text-white);
+  --xy-handle-background-color: var(--color-primary);
+  --xy-edge-stroke: var(--color-text-muted);
 
-  /* SELECTED */
-  --xy-node-boxshadow-selected: 0 1px 4px 1px #c3c8bb;
-  --xy-node-border-color-selected: #c3c8bb;
-
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Inter', sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: var(--text-color);
-  background-color: var(--background-color);
+  color-scheme: dark;
+  color: var(--color-text-white);
+  background-color: var(--color-background-dark);
 }
 
-/* Dark Theme */
-.dark {
-  --background-color: #242424;
-  --xy-node-background-color: #242424;
-  --text-color: rgb(255, 255, 255, 0.87);
-  --node-background: #3a3a3a;
-  --node-border: #555;
-  --edge-color: #888;
-  --minimap-background: #2a2a2a;
-  --minimap-mask: rgb(42, 42, 42, 0.6);
-  --controls-background: #2a2a2a;
-  --controls-border: #444;
-  --controls-button-bg: #333;
-  --xy-minimap-node-background-color-props: #3a3a3a;
-
-  /* edges */
-  --xy-edge-stroke-selected: #218040;
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-color: var(--color-background-dark);
+  color: var(--color-text-white);
 }
 
-html,
-body,
 #root {
   height: 100%;
-  margin: 0;
 }
 
-/* Apply theme variables to React Flow elements */
-.react-flow__node {
-  background-color: var(--node-background);
-  color: var(--text-color);
-  border-color: var(--node-border);
+/* Scrollbar Customization */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-background-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-surface-light);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary);
 }
 
 .react-flow__edge path {
-  stroke: var(--edge-color);
-}
-
-.react-flow__minimap {
-  background-color: var(--minimap-background);
-}
-
-.react-flow__minimap-mask {
-  fill: var(--minimap-mask);
-}
-
-.react-flow__controls {
-  background-color: var(--controls-background);
-  border: 1px solid var(--controls-border);
-}
-
-.react-flow__controls-button {
-  background-color: var(--controls-button-bg);
-  border-bottom: 1px solid var(--controls-border);
-  fill: var(--text-color);
-}
-
-.react-flow__controls-button:hover {
-  background-color: var(--node-background);
+  stroke: var(--xy-edge-stroke);
 }
 
 .react-flow__background {
-  background-color: var(--background-color);
+  background-color: var(--color-background-dark);
+}
+
+.react-flow__controls {
+  background-color: var(--color-surface-dark);
+  border-color: var(--color-border);
+}
+
+.react-flow__controls-button {
+  background-color: var(--color-surface-dark);
+  border-bottom-color: var(--color-border);
+  fill: var(--color-text-white);
+}
+
+.react-flow__controls-button:hover {
+  background-color: var(--color-surface-light);
 }

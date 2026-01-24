@@ -25,6 +25,10 @@ export const designSystem: ThemeConfig = {
     colorBorderSecondary: colors.surfaceDark,
     borderRadius: 8,
     fontFamily: 'Inter, sans-serif',
+    //warning colors
+    colorWarning: '#fbbf24',
+    colorWarningBg: '#2f3b20',
+    colorWarningBorder: '#55531b',
   },
   components: {
     Layout: {
