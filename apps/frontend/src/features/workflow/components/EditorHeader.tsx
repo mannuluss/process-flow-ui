@@ -14,8 +14,14 @@ import { resetSidePanel } from 'src/store/sidePanelSlice';
 import { useStore } from '@xyflow/react';
 import { useWorkflow } from '../context/WorkflowContext';
 import { useWorkflowSave } from '../hooks/useWorkflowSave';
+import { useWorkflowIO, WorkflowExportData } from '../hooks/useWorkflowIO';
 import { WorkflowMetadataModal } from './WorkflowMetadataModal';
-import type { WorkflowEdge, WorkflowMetadata } from '@process-flow/common';
+import type {
+  WorkflowEdge,
+  WorkflowMetadata,
+  WorkflowNode,
+} from '@process-flow/common';
+import { useCommand } from '@commands/manager/CommandContext';
 
 const { Header } = Layout;
 const { Text, Title } = Typography;
@@ -28,6 +34,8 @@ export const EditorHeader: React.FC = () => {
   const edges = useStore(s => s.edges);
   const { metadata, isNew, updateMetadata } = useWorkflow();
   const { saveWorkflow, isSaving } = useWorkflowSave();
+  const { exportWorkflow, triggerImport, getFileInputProps } = useWorkflowIO();
+  const { commandManager, generateContextApp } = useCommand();
   const [showMetadataModal, setShowMetadataModal] = useState(false);
 
   const backAction = () => {
@@ -80,6 +88,34 @@ export const EditorHeader: React.FC = () => {
 
   const handleEditMetadata = () => {
     setShowMetadataModal(true);
+  };
+
+  const handleExport = () => {
+    exportWorkflow({
+      name: metadata.name,
+      description: metadata.description,
+      nodes: nodes as WorkflowNode[],
+      edges: edges as WorkflowEdge[],
+    });
+  };
+
+  const handleImport = () => {
+    triggerImport((data: WorkflowExportData) => {
+      // Update metadata from imported workflow with "(copy)" suffix
+      updateMetadata({
+        name: `${data.workflow.name} (copy)`,
+        description: data.workflow.description,
+      });
+
+      // Load nodes and edges to canvas
+      commandManager.executeCommand(
+        'loadData',
+        generateContextApp('Graph', {
+          nodes: data.workflow.definition.nodes || [],
+          edges: data.workflow.definition.edges || [],
+        })
+      );
+    });
   };
 
   return (
@@ -190,6 +226,7 @@ export const EditorHeader: React.FC = () => {
                     file_upload
                   </span>
                 ),
+                onClick: handleImport,
               },
               {
                 key: 'export',
@@ -202,6 +239,7 @@ export const EditorHeader: React.FC = () => {
                     file_download
                   </span>
                 ),
+                onClick: handleExport,
               },
             ],
           }}
@@ -248,6 +286,9 @@ export const EditorHeader: React.FC = () => {
         onCancel={() => setShowMetadataModal(false)}
         confirmLoading={isSaving}
       />
+
+      {/* Hidden file input for import */}
+      <input {...getFileInputProps()} />
     </Header>
   );
 };

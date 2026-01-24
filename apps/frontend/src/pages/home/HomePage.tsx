@@ -10,18 +10,25 @@ import {
   Flex,
   Tabs,
 } from 'antd';
+import { useNavigate } from 'react-router-dom';
 import {
+  DownloadOutlined,
+  UploadOutlined,
   PlusOutlined,
   MoreOutlined,
   EditOutlined,
   CopyOutlined,
   DeleteOutlined,
 } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom';
 import {
   workflowService,
   Workflow,
 } from '../../features/workflow/services/workflow.service';
+import {
+  useWorkflowIO,
+  WorkflowExportData,
+} from '../../features/workflow/hooks/useWorkflowIO';
+import { WorkflowNode, WorkflowEdge } from '@process-flow/common';
 
 const { Title, Paragraph } = Typography;
 
@@ -29,6 +36,7 @@ const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const [workflows, setWorkflows] = useState<Workflow[]>([]);
   const [loading, setLoading] = useState(false);
+  const { exportWorkflow, triggerImport, getFileInputProps } = useWorkflowIO();
 
   const fetchWorkflows = async () => {
     setLoading(true);
@@ -75,6 +83,44 @@ const HomePage: React.FC = () => {
       console.error(error);
       message.error('Failed to delete workflow');
     }
+  };
+
+  const handleExport = async (id: string) => {
+    try {
+      const workflow = await workflowService.getOne(id);
+      exportWorkflow({
+        name: workflow.name,
+        description: workflow.description,
+        nodes: (workflow.definition?.nodes || []) as WorkflowNode[],
+        edges: (workflow.definition?.edges || []) as WorkflowEdge[],
+      });
+    } catch (error) {
+      console.error(error);
+      message.error('Failed to prepare export');
+    }
+  };
+
+  const handleGlobalImport = () => {
+    triggerImport(async (data: WorkflowExportData) => {
+      try {
+        setLoading(true);
+        await workflowService.create({
+          name: `${data.workflow.name} (copy)`,
+          description: data.workflow.description,
+          definition: data.workflow.definition,
+        });
+        message.success('Workflow importado y creado correctamente');
+        fetchWorkflows();
+        // Opcional: navegar al editor si el usuario lo prefiere
+        // navigate(`/editor/${newWorkflow.id}`);
+      } catch (error) {
+        console.error(error);
+        message.error('Error al crear el workflow importado');
+      } finally {
+        setLoading(true);
+        fetchWorkflows();
+      }
+    });
   };
 
   const columns = [
@@ -125,6 +171,12 @@ const HomePage: React.FC = () => {
             onClick: () => handleDuplicate(record.id),
           },
           {
+            key: 'export',
+            label: 'Export JSON',
+            icon: <DownloadOutlined />,
+            onClick: () => handleExport(record.id),
+          },
+          {
             key: 'delete',
             label: 'Delete',
             icon: <DeleteOutlined />,
@@ -171,20 +223,35 @@ const HomePage: React.FC = () => {
             for your automations.
           </Paragraph>
         </div>
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
-          size="large"
-          onClick={handleCreateFlow}
-          style={{
-            background: '#30e87a',
-            borderColor: '#30e87a',
-            color: '#112117',
-            fontWeight: 'bold',
-          }}
-        >
-          Crear Nuevo Flujo
-        </Button>
+        <Flex gap={12}>
+          <Button
+            icon={<UploadOutlined />}
+            size="large"
+            onClick={handleGlobalImport}
+            style={{
+              background: 'transparent',
+              borderColor: '#244732',
+              color: '#93c8a8',
+              fontWeight: 'bold',
+            }}
+          >
+            Importar
+          </Button>
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            size="large"
+            onClick={handleCreateFlow}
+            style={{
+              background: '#30e87a',
+              borderColor: '#30e87a',
+              color: '#112117',
+              fontWeight: 'bold',
+            }}
+          >
+            Crear Nuevo Flujo
+          </Button>
+        </Flex>
       </Flex>
 
       {/* Filters */}
@@ -202,6 +269,9 @@ const HomePage: React.FC = () => {
         rowKey="id"
         loading={loading}
       />
+
+      {/* Hidden file input for import */}
+      <input {...getFileInputProps()} />
     </div>
   );
 };
