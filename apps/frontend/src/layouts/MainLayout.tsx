@@ -1,5 +1,7 @@
 import React from 'react';
-import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { Outlet, useNavigate, useLocation, useMatches } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../store/store';
+import { setSidebarCollapsed } from '../store/configSlice';
 import {
   Layout,
   Menu,
@@ -21,6 +23,8 @@ import {
   SearchOutlined,
   UserOutlined,
   DeploymentUnitOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
 } from '@ant-design/icons';
 import { ItemType, MenuItemType } from 'antd/es/menu/interface';
 
@@ -30,7 +34,23 @@ const { Text } = Typography;
 const MainLayout: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const matches = useMatches();
+  const dispatch = useAppDispatch();
   const { token } = theme.useToken();
+
+  const collapsed = useAppSelector(state => state.config.sidebarCollapsed);
+
+  // Sync sidebar state with route metadata only on navigation
+  React.useEffect(() => {
+    const shouldCollapse = matches.some(
+      match => (match.handle as any)?.sidebarCollapsed === true
+    );
+    dispatch(setSidebarCollapsed(shouldCollapse));
+  }, [location.pathname]); // Only run on route change
+
+  const onCollapse = (value: boolean) => {
+    dispatch(setSidebarCollapsed(value));
+  };
 
   const menuItems: ItemType<MenuItemType>[] = [
     {
@@ -60,9 +80,16 @@ const MainLayout: React.FC = () => {
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider
-        width={260}
+        width={210}
+        collapsedWidth={80}
+        collapsible
+        collapsed={collapsed}
+        onCollapse={onCollapse}
+        breakpoint="md"
+        trigger={null} // We will use a custom trigger for better design
         style={{
           borderRight: `1px solid ${token.colorBorder}`,
+          background: token.colorBgContainer,
         }}
       >
         <Flex
@@ -71,15 +98,47 @@ const MainLayout: React.FC = () => {
           style={{ height: '100%', padding: '16px' }}
         >
           <Flex vertical gap={24}>
-            {/* Logo Area */}
-            <Flex align="center" gap={8} style={{ paddingLeft: '8px' }}>
-              <DeploymentUnitOutlined
-                style={{ fontSize: '28px', color: token.colorPrimary }}
-              />
-              <Text strong style={{ fontSize: '18px' }}>
-                FlowDesigner
-              </Text>
+            {/* Logo Area & Manual Toggle */}
+            <Flex
+              align="center"
+              justify={collapsed ? 'center' : 'space-between'}
+              style={{
+                paddingLeft: collapsed ? '0' : '8px',
+                transition: 'all 0.2s',
+              }}
+            >
+              <Flex align="center" gap={12}>
+                <DeploymentUnitOutlined
+                  style={{
+                    fontSize: collapsed ? '32px' : '28px',
+                    color: token.colorPrimary,
+                  }}
+                />
+                {!collapsed && (
+                  <Text
+                    strong
+                    style={{ fontSize: '18px', whiteSpace: 'nowrap' }}
+                  >
+                    StateFlow
+                  </Text>
+                )}
+              </Flex>
             </Flex>
+
+            {/* Custom Toggle Button */}
+            <Button
+              type="text"
+              icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+              onClick={() => onCollapse(!collapsed)}
+              style={{
+                width: '32px',
+                height: '32px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: collapsed ? '0 auto' : '0 0 0 auto',
+              }}
+            />
 
             {/* Navigation */}
             <Menu
@@ -94,24 +153,26 @@ const MainLayout: React.FC = () => {
           </Flex>
 
           {/* Sidebar Footer */}
-          <div
-            style={{
-              borderTop: `1px solid ${token.colorBorder}`,
-              paddingTop: '16px',
-            }}
-          >
-            <Button
-              block
-              type="primary"
-              ghost
+          {!collapsed && (
+            <div
               style={{
-                background: `${token.colorPrimary}1A`, // 10% opacity
-                fontWeight: 'bold',
+                borderTop: `1px solid ${token.colorBorder}`,
+                paddingTop: '16px',
               }}
             >
-              Upgrade Pro
-            </Button>
-          </div>
+              <Button
+                block
+                type="primary"
+                ghost
+                style={{
+                  background: `${token.colorPrimary}1A`, // 10% opacity
+                  fontWeight: 'bold',
+                }}
+              >
+                Upgrade Pro
+              </Button>
+            </div>
+          )}
         </Flex>
       </Sider>
 

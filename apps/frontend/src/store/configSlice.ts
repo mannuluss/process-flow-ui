@@ -24,6 +24,7 @@ export interface ConfigStateReduxApp {
   defaultTypeNode: string;
   collapsePanel: boolean;
   loading: LoadingState;
+  sidebarCollapsed: boolean;
 }
 
 const getInitialColorMode = (): 'light' | 'dark' | 'system' => {
@@ -72,6 +73,7 @@ const initialState: ConfigStateReduxApp = {
     open: false,
     message: null, // Optional message to show during loading
   },
+  sidebarCollapsed: false,
 };
 
 const configSlice = createSlice({
@@ -121,6 +123,9 @@ const configSlice = createSlice({
         state.loading.message = '';
       }
     },
+    setSidebarCollapsed(state, action: PayloadAction<boolean>) {
+      state.sidebarCollapsed = action.payload;
+    },
   },
 });
 
@@ -131,5 +136,6 @@ export const {
   setColorMode,
   setCollapsePanel,
   setLoading,
+  setSidebarCollapsed,
 } = configSlice.actions;
 export default configSlice.reducer;
