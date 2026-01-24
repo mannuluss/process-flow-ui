@@ -23,7 +23,7 @@
     "baseUrl": "./",
     "types": ["vitest/globals"],
     "paths": {
-      "@commands/*": ["./src/app/actions/*"],
+      "@commands/*": ["./src/core/operations/*"],
       "@core/*": ["./src/app/core/*"]
     }
   },

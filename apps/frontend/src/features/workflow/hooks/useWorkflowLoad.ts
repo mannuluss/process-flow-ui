@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useWorkflow } from '../context/WorkflowContext';
 import { workflowService } from '../services/workflow.service';
-import { useCommand } from '@commands/manager/CommandContext';
+import { useCommand } from '@commands/context/CommandContext';
 
 /**
  * Hook que carga el workflow desde el backend cuando el Canvas está montado.

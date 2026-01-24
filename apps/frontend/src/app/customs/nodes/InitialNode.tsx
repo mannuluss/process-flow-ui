@@ -7,7 +7,7 @@ import type { NodeHandler } from '@process-flow/common';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 
 import { InitialCustomNode } from './types';
-import { useCommand } from '../../actions/manager/CommandContext';
+import { useCommand } from '@commands/context/CommandContext';
 import { RuleTypeIcon } from '../../../shared/components/RuleTypeIcon';
 
 const { Text } = Typography;

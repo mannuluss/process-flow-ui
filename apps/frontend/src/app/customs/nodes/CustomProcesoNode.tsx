@@ -6,7 +6,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import type { NodeHandler } from '@process-flow/common';
 
 import { ProcesoCustomNode } from './types';
-import { useCommand } from '../../actions/manager/CommandContext';
+import { useCommand } from '@commands/context/CommandContext';
 import { HandlerItem } from './HandlerItem';
 import { NodeIcon } from '../../../shared/components/IconPicker';
 

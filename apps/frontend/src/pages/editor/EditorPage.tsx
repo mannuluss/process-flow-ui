@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Layout } from 'antd';
-import Canvas from '../../app/canvas/Canvas';
+import Canvas from '../../features/workflow/components/Canvas';
 import { useAppDispatch } from '../../store/store';
 import { subscribeMenssage } from '../../app/core/services/message.service';
 import { EventFlowTypes } from '../../app/core/types/message';

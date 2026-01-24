@@ -21,7 +21,7 @@ import type {
   WorkflowMetadata,
   WorkflowNode,
 } from '@process-flow/common';
-import { useCommand } from '@commands/manager/CommandContext';
+import { useCommand } from '@commands/context/CommandContext';
 
 const { Header } = Layout;
 const { Text, Title } = Typography;

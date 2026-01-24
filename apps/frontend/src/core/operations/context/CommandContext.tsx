@@ -8,7 +8,7 @@ import React, { createContext, ReactNode, useContext } from 'react';
 import { AppNode } from 'src/app/customs/nodes/types';
 import { useAppSelector } from 'src/store/store';
 
-import commandManagerInstance, { CommandManager } from './command.manager';
+import commandManagerInstance, { CommandManager } from '../command.manager';
 
 // Define the shape of the context data
 interface CommandContextType {

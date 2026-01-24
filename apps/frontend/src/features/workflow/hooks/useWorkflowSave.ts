@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { message } from 'antd';
 import { useWorkflow } from '../context/WorkflowContext';
-import { useCommand } from '@commands/manager/CommandContext';
+import { useCommand } from '@commands/context/CommandContext';
 import {
   SaveCommandContext,
   SaveCommandResult,

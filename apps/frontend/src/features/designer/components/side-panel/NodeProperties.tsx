@@ -4,7 +4,7 @@ import { AppNode } from 'src/app/customs/nodes/types';
 import { NodeHandler } from '@process-flow/common';
 import { Button, Flex, theme } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
-import { useCommand } from '@commands/manager/CommandContext';
+import { useCommand } from '@commands/context/CommandContext';
 import { useNodeForm } from './node/hooks/useNodeForm';
 import {
   HandlersList,

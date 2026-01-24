@@ -3,7 +3,7 @@ import { Edge } from '@xyflow/react';
 import React, { forwardRef, useImperativeHandle } from 'react';
 import { AppNode } from 'src/app/customs/nodes/types.ts';
 
-import { useCommand } from '../../actions/manager/CommandContext.tsx';
+import { useCommand } from '@commands/context/CommandContext.tsx';
 import { ContextMenuActionByType } from './constant/menu.const';
 import {
   ContextMenuAction,

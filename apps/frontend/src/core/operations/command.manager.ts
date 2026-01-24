@@ -4,7 +4,7 @@ import {
   CommandHandler,
   ICommand,
   ICommandRegistry,
-} from '../interfaces/command.interfaces';
+} from './interfaces/command.interfaces';
 
 /**
  * Gestor centralizado para registrar y ejecutar comandos.

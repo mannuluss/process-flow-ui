@@ -1,7 +1,7 @@
 import './designer-toolbar.style.scss';
 import { Button, Space, Tooltip } from 'antd';
 import { ActionsToolbar } from 'src/app/components/menuContext/constant/menu.const';
-import { useCommand } from '@commands/manager/CommandContext';
+import { useCommand } from '@commands/context/CommandContext';
 import { useAppSelector } from 'src/store/store';
 
 const actions = ActionsToolbar;

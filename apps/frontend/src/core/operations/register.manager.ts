@@ -21,8 +21,9 @@ import {
   setInitialNodeCommand,
   unSetInitialNodeCommand,
 } from './commands/set-initial.command.ts';
-import commandManager from './manager/command.manager.ts';
+import commandManager from './command.manager.ts';
 
+//TODO: estos actualmente son solo los comandos del designer, por lo que se debe crear otro manager para los comandos de la aplicacion y mover este a la carpeta de commands/designer
 /**
  * Proveedor para registrar todos los comandos de la aplicación..
  */

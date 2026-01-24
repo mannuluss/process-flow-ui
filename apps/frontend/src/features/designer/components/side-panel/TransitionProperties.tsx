@@ -24,7 +24,7 @@ import {
   SqlCheckFields,
   ApiCheckFields,
 } from './transition/rule-editors';
-import { useCommand } from '@commands/manager/CommandContext';
+import { useCommand } from '@commands/context/CommandContext';
 import { PanelHeader } from './components';
 import type { PanelProps, HandlerPayload } from './types';
 

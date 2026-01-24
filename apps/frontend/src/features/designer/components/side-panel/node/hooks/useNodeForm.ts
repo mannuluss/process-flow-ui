@@ -3,7 +3,7 @@ import { Form } from 'antd';
 import debounce from 'lodash.debounce';
 import { AppNode } from 'src/app/customs/nodes/types';
 import { DEFAULT_ICON } from '../../../../../../shared/components/IconPicker';
-import { useCommand } from '@commands/manager/CommandContext';
+import { useCommand } from '@commands/context/CommandContext';
 import { DEBOUNCE_AUTOSAVE_MS } from 'src/core/const/form';
 import { DataSourceStatus } from 'src/shared/hooks/useDataSourceOptions';
 

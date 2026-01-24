@@ -3,7 +3,7 @@ import { Connection, Edge, useReactFlow } from '@xyflow/react';
 import { v4 as uuidv4 } from 'uuid';
 import { subscribeMenssage } from '@core/services/message.service';
 import { EventFlowTypes } from '@core/types/message';
-import { useCommand } from '@commands/manager/CommandContext';
+import { useCommand } from '@commands/context/CommandContext';
 
 /**
  * Hook para manejar la conexión entre nodos.

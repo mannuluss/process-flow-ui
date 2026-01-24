@@ -1,4 +1,4 @@
-import { useCommand } from '@commands/manager/CommandContext';
+import { useCommand } from '@commands/context/CommandContext';
 import { subscribeMenssage } from '@core/services/message.service';
 import { CrossAppMessage, EventFlowTypes } from '@core/types/message';
 import {
@@ -27,11 +27,11 @@ import { useAppSelector } from 'src/store/store';
 
 import ContextMenu, {
   ContextMenuRef,
-} from '../components/menuContext/context-menu';
-import { edgeTypes } from '../customs/edges';
-import { nodeTypes } from '../customs/nodes';
-import { AppNode } from '../customs/nodes/types';
-import { EventManager } from './events/EventManager';
+} from '../../../app/components/menuContext/context-menu';
+import { edgeTypes } from '../../../app/customs/edges';
+import { nodeTypes } from '../../../app/customs/nodes';
+import { AppNode } from '../../../app/customs/nodes/types';
+import { EventManager } from '../../../app/canvas/events/EventManager';
 import DesignerToolbar from 'src/features/designer/components/Toolbar/DesignerToolbar';
 import EditorSidePanel from 'src/features/designer/components/EditorSidePanel';
 import { useWorkflowLoad } from 'src/features/workflow/hooks/useWorkflowLoad';
