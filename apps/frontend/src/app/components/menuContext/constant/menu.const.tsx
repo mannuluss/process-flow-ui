@@ -62,8 +62,10 @@ export const ActionMakeInitialNode: ContextMenuAction = {
   icon: <PlayCircleOutlineIcon fontSize="small" />,
   title: 'Conectar desde inicio',
   show: (context: MenuActionEventContext<AppNode>) => {
+    // Si no hay un objeto seleccionado, no mostrar
+    if (!context.object) return false;
     // No mostrar para nodos de tipo initial
-    if (context.object && isInitialNodeType(context.object)) return false;
+    if (isInitialNodeType(context.object)) return false;
     // Verificar si ya existe conexión desde initial
     const initialNode = findInitialNode(context.state?.getNodes());
     if (!initialNode) return true;
