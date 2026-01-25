@@ -127,42 +127,6 @@ export const ApiEditor: React.FC = () => {
           }
         </Form.Item>
       </Flex>
-
-      {/* Mapeo */}
-      <Typography.Title level={4}>Mapeo de Respuesta</Typography.Title>
-      <Flex vertical gap={16}>
-        <Form.Item
-          name={['mappingConfig', 'responsePath']}
-          label="Ruta de Datos (JSON Path)"
-          help="Ruta para encontrar el array de resultados en la respuesta JSON. Dejar vacío si la respuesta es el array."
-        >
-          <Input
-            prefix={<span style={{ fontFamily: 'monospace' }}>$.</span>}
-            placeholder="data.results"
-          />
-        </Form.Item>
-
-        <Flex gap={16}>
-          <div style={{ flex: 1 }}>
-            <Form.Item
-              name={['mappingConfig', 'valueField']}
-              label="Campo de Valor (ID)"
-              rules={[{ required: true, message: 'Campo ID requerido' }]}
-            >
-              <Input placeholder="id" />
-            </Form.Item>
-          </div>
-          <div style={{ flex: 1 }}>
-            <Form.Item
-              name={['mappingConfig', 'labelField']}
-              label="Campo de Etiqueta (Nombre)"
-              rules={[{ required: true, message: 'Campo Nombre requerido' }]}
-            >
-              <Input placeholder="name" />
-            </Form.Item>
-          </div>
-        </Flex>
-      </Flex>
     </Flex>
   );
 };

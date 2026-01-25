@@ -13,9 +13,6 @@ interface UseDataSourceOptionsReturn {
   refetch: () => Promise<void>;
 }
 
-// Cache para evitar múltiples llamadas al mismo DataSource
-const optionsCache = new Map<string, DataSourceStatus[]>();
-
 /**
  * Hook para obtener opciones desde un DataSource
  * @param dataSourceId - ID del DataSource (ej: "DS_STATUS")
@@ -30,21 +27,12 @@ export const useDataSourceOptions = (
   const [error, setError] = useState<string | null>(null);
 
   const fetchOptions = useCallback(async () => {
-    // Check cache first
-    const cached = optionsCache.get(dataSourceId);
-    if (cached) {
-      setOptions(cached);
-      setLoading(false);
-      //se continua por si acaso para recargar las opciones
-    }
-
     setLoading(true);
     setError(null);
 
     try {
       const data = await dataSourceService.executeQuery(dataSourceId, params);
       setOptions(data);
-      optionsCache.set(dataSourceId, data);
     } catch (err) {
       const message =
         err instanceof Error ? err.message : 'Error al cargar opciones';
@@ -60,24 +48,8 @@ export const useDataSourceOptions = (
   }, [fetchOptions]);
 
   const refetch = useCallback(async () => {
-    // Clear cache and refetch
-    optionsCache.delete(dataSourceId);
     await fetchOptions();
-  }, [dataSourceId, fetchOptions]);
+  }, [fetchOptions]);
 
   return { options, loading, error, refetch };
-};
-
-/**
- * Invalida el cache de un DataSource específico
- */
-export const invalidateDataSourceCache = (dataSourceId: string) => {
-  optionsCache.delete(dataSourceId);
-};
-
-/**
- * Limpia todo el cache de DataSources
- */
-export const clearDataSourceCache = () => {
-  optionsCache.clear();
 };

@@ -44,7 +44,7 @@ export const WorkflowLoader: React.FC<WorkflowLoaderProps> = ({ children }) => {
           justify="center"
           style={{
             position: 'fixed',
-            top: 0,
+            top: '64px',
             left: 0,
             right: 0,
             bottom: 0,

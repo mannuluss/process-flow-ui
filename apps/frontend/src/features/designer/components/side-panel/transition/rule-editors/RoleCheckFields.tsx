@@ -1,5 +1,6 @@
 import React from 'react';
 import { Form, Select, Typography } from 'antd';
+import { useDataSourceOptions } from '@shared/hooks/useDataSourceOptions';
 
 const { Text } = Typography;
 
@@ -10,6 +11,8 @@ interface RoleCheckFieldsProps {
 export const RoleCheckFields: React.FC<RoleCheckFieldsProps> = ({
   fieldName,
 }) => {
+  const { options, loading } = useDataSourceOptions('DB_ROLES');
+
   return (
     <Form.Item
       name={[fieldName, 'params', 'allowedRoles']}
@@ -18,13 +21,13 @@ export const RoleCheckFields: React.FC<RoleCheckFieldsProps> = ({
     >
       <Select
         mode="tags"
-        placeholder="Escriba y presione enter (Ej: ADMIN)"
+        placeholder="Seleccione roles"
         style={{ width: '100%' }}
-        options={[
-          { value: 'ADMIN', label: 'ADMIN' },
-          { value: 'USER', label: 'USER' },
-          { value: 'MANAGER', label: 'MANAGER' },
-        ]}
+        loading={loading}
+        options={options.map(opt => ({
+          label: opt.label,
+          value: opt.id,
+        }))}
       />
     </Form.Item>
   );

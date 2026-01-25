@@ -23,23 +23,6 @@ export class DataSourceService {
   async create(createDataSourceDto: CreateDataSourceDto) {
     // Initial status is PENDING
     let status = DataSourceStatus.PENDING;
-
-    // Try to test connection immediately upon creation
-
-    // if (
-    //   createDataSourceDto.sourceType === DataSourceType.SQL &&
-    //   createDataSourceDto.querySql
-    // ) {
-    //   await this.executeSql(createDataSourceDto.querySql, {});
-    //   status = DataSourceStatus.SUCCESS;
-    // } else if (
-    //   createDataSourceDto.sourceType === DataSourceType.API &&
-    //   createDataSourceDto.apiUrl
-    // ) {
-    //   // Create a temp object for execution
-    //   const tempDS = { ...createDataSourceDto } as DataSource;
-    //   await this.executeApi(tempDS, {});
-    // }
     const exec = await this.testConfig(createDataSourceDto, {});
     if (exec.status === 'success') {
       status = DataSourceStatus.SUCCESS;
@@ -172,12 +155,14 @@ export class DataSourceService {
         const { tableName, idField, nameField, whereClause } =
           dataSource.mappingConfig;
         // We assume validation was done at creation/update
-        const sql = `SELECT ${idField} as id, ${nameField} as name FROM ${tableName} ${whereClause ? `WHERE ${whereClause}` : ''}`;
+        const sql = `SELECT ${idField} as id, ${nameField} as label FROM ${tableName} ${whereClause ? `WHERE ${whereClause}` : ''}`;
         return this.executeSql(sql, params);
       }
-      return this.executeSql(dataSource.querySql, params);
+      const result = await this.executeSql(dataSource.querySql, params);
+      return this.applyFieldMapping(result, dataSource.mappingConfig);
     } else {
-      return this.executeApi(dataSource, params);
+      const result = await this.executeApi(dataSource, params);
+      return this.applyFieldMapping(result, dataSource.mappingConfig);
     }
   }
 
@@ -224,6 +209,23 @@ export class DataSourceService {
     }
 
     return response.data;
+  }
+
+  private applyFieldMapping(data: any, mappingConfig: any) {
+    // Como lo que se hace es agregar los campos de id y label, si estos estan presentes en la data
+    // estos serian sobreescritos
+    // TODO: Verificar si es necesario hacer esto o solo enviar la data con id y label
+    if (!Array.isArray(data)) return data;
+
+    const { valueField, labelField } = mappingConfig || {};
+
+    if (!valueField || !labelField) return data;
+
+    return data.map((item) => ({
+      ...item,
+      id: item[valueField],
+      label: item[labelField],
+    }));
   }
 
   private replaceParamsInString(

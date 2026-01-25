@@ -24,7 +24,8 @@
     "types": ["vitest/globals"],
     "paths": {
       "@commands/*": ["./src/core/operations/*"],
-      "@core/*": ["./src/app/core/*"]
+      "@core/*": ["./src/app/core/*"],
+      "@shared/*": ["./src/shared/*"]
     }
   },
   "include": ["src"],

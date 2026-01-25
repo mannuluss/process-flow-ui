@@ -17,7 +17,8 @@ import {
   ArrowLeftOutlined,
   PlayCircleOutlined,
 } from '@ant-design/icons';
-import { SqlEditor } from '../../../shared/components/SqlEditor';
+import { SqlEditor } from '@shared/components/SqlEditor';
+import { MappingConfigData } from '@shared/components/MappingConfigData';
 import { ApiEditor } from './ApiEditor';
 import { DataSource } from '@process-flow/common';
 import { dataSourceService } from '../services/dataSource.service';
@@ -38,6 +39,8 @@ export const DataSourceEditor: React.FC<DataSourceEditorProps> = ({
   const { token } = theme.useToken();
   const [form] = Form.useForm();
   const sourceType = Form.useWatch('sourceType', form);
+  const mappingConfig = Form.useWatch('mappingConfig', form); // Watch mapping config for test preview
+  const typeSql = Form.useWatch('typeSql', form);
   const [testing, setTesting] = useState(false);
   const [testResult, setTestResult] = useState<any>(null);
 
@@ -62,10 +65,7 @@ export const DataSourceEditor: React.FC<DataSourceEditorProps> = ({
     return {
       ...values,
       // Ensure we only send relevant fields based on type
-      querySql:
-        values.sourceType === 'SQL' && !values.mappingConfig?.tableName
-          ? values.mappingConfig.querySql
-          : null,
+      querySql: values.querySql,
       apiUrl: values.sourceType === 'API' ? values.apiUrl : undefined,
       apiMethod: values.sourceType === 'API' ? values.apiMethod : undefined,
       apiHeaders: values.sourceType === 'API' ? apiHeaders : undefined,
@@ -230,6 +230,11 @@ export const DataSourceEditor: React.FC<DataSourceEditorProps> = ({
           )}
         </Card>
 
+        {/* Mapping Configuration */}
+        {typeSql !== 'visual' && (
+          <MappingConfigData showPath={sourceType === 'API'} />
+        )}
+
         {/* Test Results */}
         <Card
           title="Prueba de Conexión"
@@ -249,13 +254,19 @@ export const DataSourceEditor: React.FC<DataSourceEditorProps> = ({
               {Array.isArray(testResult) ? (
                 <Table
                   dataSource={testResult}
-                  columns={Object.keys(testResult[0] || {}).map(key => ({
-                    title: key,
-                    dataIndex: key,
-                    key,
-                    render: (text: any) =>
-                      typeof text === 'object' ? JSON.stringify(text) : text,
-                  }))}
+                  columns={Object.keys(testResult[0] || {}).map(key => {
+                    let title = key;
+                    if (mappingConfig?.valueField === key) title += ' (ID)';
+                    if (mappingConfig?.labelField === key) title += ' (Label)';
+
+                    return {
+                      title,
+                      dataIndex: key,
+                      key,
+                      render: (text: any) =>
+                        typeof text === 'object' ? JSON.stringify(text) : text,
+                    };
+                  })}
                   size="small"
                   pagination={false}
                   rowKey={(_record, index) => index?.toString() || ''}

@@ -11,7 +11,7 @@ const getDefaultRule = (type: RuleType): Rule => {
     case RuleType.DOCUMENT_STATUS_CHECK:
       return { type, params: { documentId: '', requiredStatus: '' } };
     case RuleType.SQL_CHECK_CUSTOM:
-      return { type, params: { sql: '', errorMessage: '' } };
+      return { type, params: { querySql: '', errorMessage: '' } };
     case RuleType.API_CHECK_CUSTOM:
       return {
         type,

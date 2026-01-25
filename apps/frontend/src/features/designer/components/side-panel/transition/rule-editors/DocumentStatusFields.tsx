@@ -1,5 +1,6 @@
 import React from 'react';
 import { Flex, Form, Select, Typography } from 'antd';
+import { useDataSourceOptions } from '@shared/hooks/useDataSourceOptions';
 
 const { Text } = Typography;
 
@@ -10,6 +11,11 @@ interface DocumentStatusFieldsProps {
 export const DocumentStatusFields: React.FC<DocumentStatusFieldsProps> = ({
   fieldName,
 }) => {
+  const { options: documentOptions, loading: loadingDocs } =
+    useDataSourceOptions('DS_DOCUMENT');
+  const { options: statusOptions, loading: loadingStatus } =
+    useDataSourceOptions('DS_DOCUMENT_STATUS');
+
   return (
     <Flex vertical gap={8}>
       <Form.Item
@@ -19,10 +25,11 @@ export const DocumentStatusFields: React.FC<DocumentStatusFieldsProps> = ({
       >
         <Select
           placeholder="Seleccione Documento"
-          options={[
-            { value: 'invoice', label: 'Factura' },
-            { value: 'order', label: 'Orden de Compra' },
-          ]}
+          loading={loadingDocs}
+          options={documentOptions.map(opt => ({
+            label: opt.label,
+            value: opt.id, // Assuming the ID is the value here
+          }))}
         />
       </Form.Item>
       <Form.Item
@@ -32,11 +39,11 @@ export const DocumentStatusFields: React.FC<DocumentStatusFieldsProps> = ({
       >
         <Select
           placeholder="Seleccione Estado"
-          options={[
-            { value: 'APPROVED', label: 'Aprobado' },
-            { value: 'PENDING', label: 'Pendiente' },
-            { value: 'REJECTED', label: 'Rechazado' },
-          ]}
+          loading={loadingStatus}
+          options={statusOptions.map(opt => ({
+            label: opt.label,
+            value: opt.id, // Assuming value is the ID or Code
+          }))}
         />
       </Form.Item>
     </Flex>

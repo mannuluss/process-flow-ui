@@ -32,6 +32,9 @@ export const SqlEditor: React.FC<SqlEditorProps> = ({
 
   const getFieldName = useCallback(
     (name: string) => {
+      if (name === 'querySql' || name === 'typeSql') {
+        return name;
+      }
       return namePath ? [...namePath, name] : name;
     },
     [namePath]
@@ -93,6 +96,7 @@ export const SqlEditor: React.FC<SqlEditorProps> = ({
 
   const handleModeChange = (val: 'visual' | 'direct') => {
     setMode(val);
+    form.setFieldValue(getFieldName('typeSql'), val);
     if (val === 'direct') {
       form.setFieldValue(getFieldName('tableName'), undefined);
       form.setFieldValue(getFieldName('idField'), undefined);
@@ -111,14 +115,16 @@ export const SqlEditor: React.FC<SqlEditorProps> = ({
             <Text strong>Configuración SQL</Text>
           </Space>
         )}
-        <Segmented
-          options={[
-            { label: 'Visual Builder', value: 'visual' },
-            { label: 'Direct SQL', value: 'direct' },
-          ]}
-          value={mode}
-          onChange={val => handleModeChange(val as 'visual' | 'direct')}
-        />
+        <Form.Item name={getFieldName('typeSql')} noStyle>
+          <Segmented
+            options={[
+              { label: 'Visual Builder', value: 'visual' },
+              { label: 'Direct SQL', value: 'direct' },
+            ]}
+            value={mode}
+            onChange={val => handleModeChange(val as 'visual' | 'direct')}
+          />
+        </Form.Item>
       </Flex>
 
       {/* Editor Content */}
