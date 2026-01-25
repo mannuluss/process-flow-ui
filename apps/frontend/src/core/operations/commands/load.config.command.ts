@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { CommandHandler } from '@commands/interfaces/command.interfaces';
-import { InitialCustomNode } from 'src/app/customs/nodes/types';
-import { findInitialNode } from 'src/core/utils/workflow';
+import { InitialCustomNode } from '@core/designer/types';
+import { findInitialNode } from '@core/utils/workflow';
 
 /**
  * Crea el nodo initial por defecto.

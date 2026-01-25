@@ -2,8 +2,8 @@ import { sendMessage } from '@core/services/message.service';
 import { EventFlowTypes } from '@core/types/message';
 import { Edge } from '@xyflow/react';
 import { MenuActionEventContext } from 'src/app/components/menuContext/interface/contextActionEvent';
-import { AppNode } from 'src/app/customs/nodes/types';
-import { isInitialNodeType } from 'src/core/utils/workflow';
+import { AppNode } from '@core/designer/types';
+import { isInitialNodeType } from '@core/utils/workflow';
 
 export function removeEdgeCommand(context: MenuActionEventContext<Edge>) {
   console.info('[GRAPH] removeEdgeCommand', context);

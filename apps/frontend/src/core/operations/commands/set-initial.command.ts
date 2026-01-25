@@ -3,8 +3,8 @@ import { CommandHandler } from '@commands/interfaces/command.interfaces';
 import { sendMessage } from '@core/services/message.service';
 import { EventFlowTypes } from '@core/types/message';
 import { MenuActionEventContext } from 'src/app/components/menuContext/interface/contextActionEvent';
-import { AppNode } from 'src/app/customs/nodes/types';
-import { findInitialNode, findEdgeFromInitial } from 'src/core/utils/workflow';
+import { AppNode } from '../../designer/types';
+import { findInitialNode, findEdgeFromInitial } from '../../utils/workflow';
 
 /**
  * Comando para conectar un nodo al nodo initial.

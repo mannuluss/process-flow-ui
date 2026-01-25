@@ -1,7 +1,7 @@
 import { Dropdown, MenuProps } from 'antd';
 import { Edge } from '@xyflow/react';
 import React, { forwardRef, useImperativeHandle } from 'react';
-import { AppNode } from 'src/app/customs/nodes/types.ts';
+import { AppNode } from '@core/designer/types';
 
 import { useCommand } from '@commands/context/CommandContext.tsx';
 import { ContextMenuActionByType } from './constant/menu.const';

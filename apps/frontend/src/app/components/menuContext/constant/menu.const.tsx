@@ -6,12 +6,12 @@ import AddIcon from '@mui/icons-material/Add';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import LinkOffIcon from '@mui/icons-material/LinkOff';
-import { AppNode } from 'src/app/customs/nodes/types';
+import { AppNode } from '@core/designer/types';
 import {
   findInitialNode,
   hasConnectionFromInitial,
   isInitialNodeType,
-} from 'src/core/utils/workflow';
+} from '@core/utils/workflow';
 
 import {
   ContextMenuAction,

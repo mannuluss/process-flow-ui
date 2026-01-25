@@ -1,5 +1,16 @@
+import type { NodeTypes } from '@xyflow/react';
+
 import type { BuiltInNode, Node } from '@xyflow/react';
 import type { NodeHandler } from '@process-flow/common';
+import { CustomProcessNode } from '../components/CustomProcesoNode';
+import { InitialNode } from '../components/InitialNode';
+
+export const nodeTypes = {
+  proceso: CustomProcessNode,
+  initial: InitialNode,
+} satisfies NodeTypes;
+
+// CUSTOM DATA NODE
 
 export type CustomNodeApp = Node<{
   label: string; //nombre del nodo que se muestra en la interfaz

@@ -1,10 +1,10 @@
 import { useEffect, useCallback, useMemo, useRef } from 'react';
 import { Form } from 'antd';
 import debounce from 'lodash.debounce';
-import { AppNode } from 'src/app/customs/nodes/types';
+import { AppNode } from '@core/designer/types';
 import { DEFAULT_ICON } from '../../../../../../shared/components/IconPicker';
 import { useCommand } from '@commands/context/CommandContext';
-import { DEBOUNCE_AUTOSAVE_MS } from 'src/core/const/form';
+import { DEBOUNCE_AUTOSAVE_MS } from '@core/const/form';
 import { DataSourceStatus } from 'src/shared/hooks/useDataSourceOptions';
 
 interface UseNodeFormProps {

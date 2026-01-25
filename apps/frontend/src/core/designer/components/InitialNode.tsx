@@ -6,9 +6,9 @@ import { ThunderboltOutlined } from '@ant-design/icons';
 import type { NodeHandler } from '@process-flow/common';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 
-import { InitialCustomNode } from './types';
+import { InitialCustomNode } from '@core/designer/types';
 import { useCommand } from '@commands/context/CommandContext';
-import { RuleTypeIcon } from '../../../shared/components/RuleTypeIcon';
+import { RuleTypeIcon } from '@shared/components/RuleTypeIcon';
 
 const { Text } = Typography;
 

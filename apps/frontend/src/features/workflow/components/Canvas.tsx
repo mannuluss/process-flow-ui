@@ -16,7 +16,7 @@ import {
 } from '@xyflow/react';
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { useEdgeConnection } from 'src/core/designer/hooks/useEdgeConnection';
+import { useEdgeConnection } from '@core/designer/hooks/useEdgeConnection';
 import { setLoading } from 'src/store/configSlice';
 import {
   clearSelection,
@@ -28,10 +28,8 @@ import { useAppSelector } from 'src/store/store';
 import ContextMenu, {
   ContextMenuRef,
 } from '../../../app/components/menuContext/context-menu';
-import { edgeTypes } from '../../../app/customs/edges';
-import { nodeTypes } from '../../../app/customs/nodes';
-import { AppNode } from '../../../app/customs/nodes/types';
-import { EventManager } from '../../../app/canvas/events/EventManager';
+import { edgeTypes, nodeTypes, AppNode } from '@core/designer/types';
+import { EventManager } from '@core/operations/EventManager';
 import DesignerToolbar from 'src/features/designer/components/Toolbar/DesignerToolbar';
 import EditorSidePanel from 'src/features/designer/components/EditorSidePanel';
 import { useWorkflowLoad } from 'src/features/workflow/hooks/useWorkflowLoad';
@@ -45,9 +43,7 @@ export default function Canvas() {
   const menu = React.useRef<ContextMenuRef>(null);
   const { onConnect } = useEdgeConnection();
   const dispatch = useDispatch();
-  const { colorMode, showPanelMinimap, showToolbar } = useAppSelector(
-    state => state.config
-  );
+  const { colorMode, showPanelMinimap } = useAppSelector(state => state.config);
   const { selectedNode, selectedEdge } = useAppSelector(
     state => state.selection
   );

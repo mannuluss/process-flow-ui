@@ -1,5 +1,5 @@
 import type { NodeHandler } from '@process-flow/common';
-import type { AppNode } from 'src/app/customs/nodes/types';
+import type { AppNode } from '@core/designer/types';
 
 /**
  * Base props that all panel components receive

@@ -38,7 +38,9 @@ export const WorkflowProvider: React.FC<WorkflowProviderProps> = ({
   children,
   workflowId: initialWorkflowId,
 }) => {
-  const [workflowId, setWorkflowIdState] = useState<string | null>(initialWorkflowId ?? null);
+  const [workflowId, setWorkflowIdState] = useState<string | null>(
+    initialWorkflowId ?? null
+  );
   const [metadata, setMetadata] = useState<WorkflowMetadata>(defaultMetadata);
   const [isModified, setIsModified] = useState(false);
   const [isLoading, setIsLoading] = useState(true); // Empieza en true porque vamos a cargar

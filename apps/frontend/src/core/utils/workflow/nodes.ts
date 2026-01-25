@@ -1,5 +1,5 @@
 import { Node, Edge } from '@xyflow/react';
-import { InitialCustomNode } from 'src/app/customs/nodes/types';
+import { InitialCustomNode } from '../../designer/types';
 
 /**
  * Workflow node utilities

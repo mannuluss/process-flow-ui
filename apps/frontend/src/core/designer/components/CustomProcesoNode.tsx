@@ -5,7 +5,7 @@ import { Button, Flex, theme, Typography } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import type { NodeHandler } from '@process-flow/common';
 
-import { ProcesoCustomNode } from './types';
+import { ProcesoCustomNode } from '../../../core/designer/types';
 import { useCommand } from '@commands/context/CommandContext';
 import { HandlerItem } from './HandlerItem';
 import { NodeIcon } from '../../../shared/components/IconPicker';

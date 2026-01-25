@@ -1,7 +1,7 @@
 import type { NodeHandler } from '@process-flow/common';
 import { v4 as uuidv4 } from 'uuid';
 
-import type { AppNode } from '../../customs/nodes/types';
+import type { AppNode } from '../../designer/types';
 import { CommandContext } from '../interfaces/command.event';
 import { CommandHandler } from '../interfaces/command.interfaces';
 import { store } from 'src/store/store';

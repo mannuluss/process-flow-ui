@@ -1,6 +1,6 @@
 import React from 'react';
 import { useReactFlow, useStore } from '@xyflow/react';
-import { AppNode } from 'src/app/customs/nodes/types';
+import { AppNode } from '@core/designer/types';
 import { NodeHandler } from '@process-flow/common';
 import { Button, Flex, theme } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
@@ -13,7 +13,7 @@ import {
 } from './node/components';
 import type { PanelProps } from './types';
 import { PanelHeader } from './components';
-import { isInitialNodeType } from 'src/core/utils/workflow';
+import { isInitialNodeType } from '@core/utils/workflow';
 
 export const NodeProperties: React.FC<PanelProps<AppNode>> = ({
   payload,

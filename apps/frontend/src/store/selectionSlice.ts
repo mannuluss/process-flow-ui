@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Edge } from '@xyflow/react';
-import { AppNode } from 'src/app/customs/nodes/types';
+import { AppNode } from '@core/designer/types';
 
 export interface SelectionState {
   selectedNode: AppNode | null;

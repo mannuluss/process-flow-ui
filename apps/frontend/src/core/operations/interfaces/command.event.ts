@@ -1,7 +1,7 @@
 import { Edge, ReactFlowInstance } from '@xyflow/react';
 import { RootState } from 'src/store/store';
 
-import { AppNode } from '../../customs/nodes/types';
+import { AppNode } from '../../designer/types';
 
 /**
  * Los tipos de menus contextuales soportados por la aplicacion

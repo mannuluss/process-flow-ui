@@ -3,7 +3,7 @@ import { EventFlowTypes } from '@core/types/message';
 import { addEdge, Edge, ReactFlowInstance } from '@xyflow/react';
 import { v4 as uuidv4 } from 'uuid';
 
-import { AppNode } from '../../customs/nodes/types';
+import { AppNode } from '../../designer/types';
 import { CommandContext } from '../interfaces/command.event';
 import { CommandHandler } from '../interfaces/command.interfaces';
 import { store } from 'src/store/store';
