@@ -25,3 +25,8 @@ coverage
 *.sln
 *.sw?
 .idea
+
+
+# Environment variables
+apps/backend/.env
+apps/frontend/.env

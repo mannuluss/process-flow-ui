@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  database:
+    image: postgres:16-alpine
+    container_name: process-flow-db
+    environment:
+      POSTGRES_USER: ${DB_USERNAME:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+      POSTGRES_DB: ${DB_NAME:-process_flow}
+    ports:
+      - "${DB_PORT_EXTERNAL:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    #build:
+    #  context: ..
+    #  dockerfile: docker/Dockerfile
+    image: ghcr.io/mannuluss/process-flow-ui:latest
+    container_name: process-flow-app
+    depends_on:
+      database:
+        condition: service_healthy
+    ports:
+      - "${APP_PORT:-8080}:8080"
+    environment:
+      - DB_TYPE=postgres
+      - DB_HOST=database
+      - DB_PORT=5432
+      - DB_USERNAME=${DB_USERNAME:-postgres}
+      - DB_PASSWORD=${DB_PASSWORD:-postgres}
+      - DB_NAME=${DB_NAME:-process_flow}
+      - DB_SCHEMA=${DB_SCHEMA:-public}
+      - DB_SYNCHRONIZE=${DB_SYNCHRONIZE:-false}
+      - NODE_ENV=production
+    restart: always
+
+volumes:
+  postgres_data:

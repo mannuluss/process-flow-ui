@@ -1,3 +1,28 @@
-node_modules/
-dist/
-.vscode/
+# Deny node_modules everywhere
+**/node_modules
+**/dist
+**/.next
+**/coverage
+
+# Deny system and IDE files
+.git
+.vscode
+.idea
+.DS_Store
+Thumbs.db
+
+# Deny logs and temp
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+.agent
+.gemini
+brain
+.antigravityignore
+
+# Deny env files
+.env
+.env.local
+.env.production
+.env.development

@@ -1,0 +1,17 @@
+name: Frontend PR Check
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'apps/frontend/**'
+      - 'packages/common/**'
+      - 'pnpm-lock.yaml'
+
+jobs:
+  build:
+    uses: ./.github/workflows/reusable-frontend-build.yml
+    with:
+      artifact-name: frontend-dist-pr-${{ github.event.pull_request.number }}
+      retention-days: 2

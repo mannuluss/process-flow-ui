@@ -1,0 +1,38 @@
+.initial-node-container {
+  transition: all 0.3s ease;
+
+  &.selected {
+    animation: glow-pulse 2s ease-in-out infinite alternate;
+  }
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+
+  .initial-handler-item {
+    &:hover {
+      background-color: rgba(82, 196, 26, 0.25) !important;
+      border-color: rgba(82, 196, 26, 1) !important;
+    }
+  }
+
+  .add-handler-btn {
+    &:hover {
+      background-color: rgba(82, 196, 26, 0.15) !important;
+      border-color: rgba(82, 196, 26, 0.8) !important;
+    }
+  }
+}
+
+@keyframes glow-pulse {
+  from {
+    box-shadow: 0 0 20px rgba(82, 196, 26, 0.3),
+                0 0 8px rgba(82, 196, 26, 0.2),
+                inset 0 0 20px rgba(82, 196, 26, 0.05);
+  }
+  to {
+    box-shadow: 0 0 25px rgba(82, 196, 26, 0.5),
+                0 0 12px rgba(82, 196, 26, 0.35),
+                inset 0 0 25px rgba(82, 196, 26, 0.1);
+  }
+}

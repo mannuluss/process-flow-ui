@@ -1,0 +1,73 @@
+name: Reusable Frontend Build
+
+on:
+  workflow_call:
+    inputs:
+      artifact-name:
+        required: false
+        type: string
+        default: frontend-dist
+      retention-days:
+        required: false
+        type: number
+        default: 2
+      base-path:
+        required: false
+        type: string
+        default: '/'
+      skip-lint:
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - uses: pnpm/action-setup@v3
+        name: Install pnpm
+        with:
+          version: 10
+          run_install: false
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - uses: actions/cache@v4
+        name: Setup pnpm cache
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Linting
+        if: ${{ !inputs.skip-lint }}
+        run: pnpm --filter @process-flow/frontend run lint:js
+
+      - name: Build Common Package
+        run: pnpm --filter @process-flow/common build
+
+      - name: Build Frontend
+        run: pnpm --filter @process-flow/frontend build
+        env:
+          VITE_BASE_PATH: ${{ inputs.base-path }}
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.artifact-name }}
+          path: apps/frontend/dist
+          retention-days: ${{ inputs.retention-days }}
