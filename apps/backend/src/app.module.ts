@@ -35,7 +35,7 @@ import { EngineModule } from './engine/engine.module';
     EngineModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '..', 'public'),
-      exclude: ['/api/(.*)'],
+      serveRoot: '/ui',
     }),
   ],
   controllers: [AppController],

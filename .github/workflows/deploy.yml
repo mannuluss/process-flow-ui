@@ -1,38 +1,30 @@
-name: Deploy to GitHub Pages
+name: Deploy to Production
 
 on:
-  push:
+  workflow_run:
+    workflows: ["Release and Publish Unified (Master) Build"]
+    types:
+      - completed
     branches:
       - main
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write # Necesario para hacer push a la rama gh-pages
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
         with:
-          node-version: '20' # Especifica la versión de Node.js
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            # Pull the latest image
+            docker pull ghcr.io/${{ github.repository }}:latest
 
-      - name: Install dependencies
-        run: npm install
-
-      - name: lint and format
-        run: |
-          npm run lint:js          # Verificar código
-          npm run format        # verificar formateo del codigo
-          npm run lint:css    # Verificar CSS/SCSS
-
-      - name: Build application
-        run: npm run build # Comando para compilar tu aplicación, según tu package.json
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist # Directorio donde se guardan los archivos de compilación
+            # Restart the service (assuming docker-compose is used on the server)
+            # You might need to adjust this depending on your server setup
+            cd /opt/process-flow-ui
+            docker-compose pull
+            docker-compose up -d

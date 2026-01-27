@@ -33,9 +33,9 @@ Se utilizará una arquitectura de **Monorepo** gestionada con **pnpm workspaces*
 │   └── seeds/              # Datos de prueba
 │
 ├── docker/                 # Configuración de contenedores
-│   ├── backend/Dockerfile
-│   ├── frontend/Dockerfile
-│   └── nginx.conf
+│   ├── docker-compose.yml
+│   ├── Dockerfile
+│   └── .env
 │
 ├── docker-compose.yml      # Orquestación local
 ├── package.json            # Root config
@@ -45,13 +45,14 @@ Se utilizará una arquitectura de **Monorepo** gestionada con **pnpm workspaces*
 ---
 
 ## 2. Stack Tecnológico
+
 - **Lenguaje:** TypeScript (Estricto).
 - **Runtime:** Node.js (LTS).
 - **Framework Backend:** **NestJS**.
-  - *Razón:* Provee arquitectura modular, inyección de dependencias y validación robusta, similar a Spring Boot pero en el ecosistema JS.
+  - _Razón:_ Provee arquitectura modular, inyección de dependencias y validación robusta, similar a Spring Boot pero en el ecosistema JS.
 - **Base de Datos:** PostgreSQL.
 - **ORM & Migraciones:** **TypeORM**.
-  - *Razón:* Excelente manejo de esquemas relacionales y migraciones automáticas.
+  - _Razón:_ Excelente manejo de esquemas relacionales y migraciones automáticas.
 - **Validación de Reglas:** Motor propio basado en **Strategy Pattern**.
 
 ---
@@ -61,13 +62,17 @@ Se utilizará una arquitectura de **Monorepo** gestionada con **pnpm workspaces*
 El backend se dividirá en módulos funcionales para mantener la separación de responsabilidades.
 
 ### A. `WorkflowModule` (Gestión)
+
 Encargado del CRUD de las definiciones.
+
 - **Controller:** `POST /workflows`, `GET /workflows/:id`.
 - **Service:** Guarda y versiona el JSON del grafo.
 - **Validación:** Verifica que el JSON del grafo sea válido (nodos conectados, estructura correcta) antes de guardar.
 
 ### B. `EngineModule` (El Corazón)
+
 Encargado de la ejecución de la máquina de estados.
+
 - **Controller:** `POST /engine/execute`.
 - **Service:** `WorkflowEngineService`.
   - Método `executeTransition(instanceId, trigger, context)`.
@@ -77,7 +82,9 @@ Encargado de la ejecución de la máquina de estados.
   - Actualiza el estado en BD y registra en el Log.
 
 ### C. `RulesModule` (Evaluador)
+
 Implementa el patrón Strategy para evaluar las condiciones.
+
 - **Interface:** `RuleStrategy { validate(params, context): Promise<boolean> }`.
 - **Implementaciones:**
   - `RoleCheckStrategy`: Valida roles del usuario.
@@ -86,7 +93,9 @@ Implementa el patrón Strategy para evaluar las condiciones.
 - **Factory:** Selecciona la estrategia según el `type` definido en el JSON de la arista.
 
 ### D. `DataSourceModule` (Integración Low-Code)
+
 Maneja la ejecución de consultas SQL dinámicas para el frontend y las reglas.
+
 - **Gestión de Conexiones:**
   - **Conexión Sistema:** Acceso RW a las tablas del motor (`workflows`, `instances`).
   - **Conexión Negocio:** Acceso RO (Read-Only) a las tablas de la empresa (para consultas dinámicas).
@@ -164,6 +173,7 @@ Para cumplir con el requisito de seguridad en las consultas dinámicas:
 El proyecto tendrá un `Dockerfile` optimizado (Multi-stage build) y un `docker-compose.yml` para desarrollo local.
 
 **Estructura de Contenedores:**
+
 - `app-backend`: Node.js (NestJS).
 - `app-frontend`: Nginx sirviendo los estáticos de Vite.
 - `db-postgres`: PostgreSQL 15+.
