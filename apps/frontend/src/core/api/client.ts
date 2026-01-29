@@ -1,7 +1,9 @@
 import axios from 'axios';
+import environments from '@environments';
 
 // Create axios instance with default config
 export const apiClient = axios.create({
+  baseURL: environments.apiUrl,
   headers: {
     'Content-Type': 'application/json',
   },
