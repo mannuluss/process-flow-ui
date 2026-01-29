@@ -36,6 +36,6 @@ export const router = createBrowserRouter(
     },
   ],
   {
-    basename: environments.production ? environments.basePath : '/',
+    basename: environments.basePath,
   }
 );
