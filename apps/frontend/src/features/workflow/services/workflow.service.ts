@@ -1,5 +1,4 @@
 import { apiClient } from '../../../core/api/client';
-import environments from '../../../environments/environments';
 import type {
   Workflow,
   CreateWorkflowDto,
