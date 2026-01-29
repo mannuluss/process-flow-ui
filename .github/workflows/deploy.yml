@@ -2,7 +2,7 @@ name: Deploy to Production
 
 on:
   workflow_run:
-    workflows: ["Release and Publish Unified (Master) Build"]
+    workflows: ["Release and Publish"]
     types:
       - completed
     branches:
@@ -25,6 +25,6 @@ jobs:
 
             # Restart the service (assuming docker-compose is used on the server)
             # You might need to adjust this depending on your server setup
-            cd /opt/process-flow-ui
+            cd ~/services/process-flow-ui
             docker-compose pull
             docker-compose up -d
