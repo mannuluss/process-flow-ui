@@ -59,6 +59,8 @@ jobs:
       skip-lint: true
 
   deploy-gh-pages:
+    # TODO: temporal for testing
+    if: false
     needs: build-frontend-demo
     runs-on: ubuntu-latest
     environment:
