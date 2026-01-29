@@ -7,7 +7,7 @@ import type {
 } from '@process-flow/common';
 
 class WorkflowService {
-  private readonly baseUrl = `${environments.apiUrl}/workflow`;
+  private readonly baseUrl = '/workflow';
 
   async getAll(): Promise<Workflow[]> {
     const response = await apiClient.get<Workflow[]>(this.baseUrl);
