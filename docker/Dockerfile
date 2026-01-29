@@ -11,7 +11,6 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 # Build common package first
 RUN pnpm --filter @process-flow/common build
 # Build frontend
-ENV VITE_BASE_PATH=/ui/
 RUN pnpm --filter @process-flow/frontend build
 # Build backend
 RUN pnpm --filter @process-flow/backend build
