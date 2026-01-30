@@ -5,6 +5,7 @@ on:
     workflows: ["Release and Publish"]
     types:
       - completed
+  workflow_dispatch:
 
 jobs:
   deploy:
