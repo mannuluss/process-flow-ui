@@ -25,4 +25,5 @@ jobs:
             # You might need to adjust this depending on your server setup
             cd ~/services/process-flow-ui
             docker-compose pull
+            docker-compose down
             docker-compose up -d
